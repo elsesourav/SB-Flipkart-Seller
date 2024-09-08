@@ -1,0 +1,46 @@
+{
+   "name": "SB Flipkart Seller",
+   "version": "0.1.0",
+   "description": "Help for flipkart seller to help fast listing (copyright by SouravBarui2024)",
+   "manifest_version": 3,
+   "permissions": [
+      "scripting",
+      "storage",
+      "tabs",
+      "activeTab",
+      "declarativeNetRequest",
+      "declarativeNetRequestFeedback",
+      "webRequest",
+      "declarativeNetRequestWithHostAccess"
+   ],
+   "host_permissions": ["*://*/*"],
+   "background": {
+      "service_worker": "./backgroundScripts/background.js"
+   },
+   "content_scripts": [
+      {
+         "matches": ["*://*/*"],
+         "js": ["./utils.js", "./querySelector.js", "./contentScripts/content.js"]
+      }
+   ],
+   "web_accessible_resources": [
+      {
+         "resources": ["assets/*", "css/*"],
+         "matches": ["*://*/*"]
+      }
+   ],
+   "action": {
+      "default_icon": {
+         "16": "assets/icon.png",
+         "24": "assets/icon.png",
+         "32": "assets/icon.png"
+      },
+      "default_title": "Testing",
+      "default_popup": "./popup/popup.html"
+   },
+   "icons": {
+      "16": "assets/icon.png",
+      "48": "assets/icon.png",
+      "128": "assets/icon.png"
+   }
+}

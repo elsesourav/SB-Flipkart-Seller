@@ -1,0 +1,42 @@
+@font-face {
+   font-family: f1b;
+   src: url("../fonts/Exo-Bold.ttf") format("truetype");
+}
+@font-face {
+   font-family: f2b;
+   src: url("../fonts/Oswald-Bold.ttf") format("truetype");
+}
+@font-face {
+   font-family: f3;
+   src: url("../fonts/Roboto-Regular.ttf") format("truetype");
+}
+@font-face {
+   font-family: f5b;
+   src: url("../fonts/AlegreyaSansSC-Bold.ttf") format("truetype");
+}
+@font-face {
+   font-family: f6;
+   src: url("../fonts/Nunito-Regular.ttf") format("truetype");
+}
+@font-face {
+   font-family: f6b;
+   src: url("../fonts/Nunito-Bold.ttf") format("truetype");
+}
+@font-face {
+   font-family: f7;
+   src: url("../fonts/RobotoSlab-Regular.ttf") format("truetype");
+}
+@font-face {
+   font-family: f7b;
+   src: url("../fonts/RobotoSlab-Bold.ttf") format("truetype");
+}
+
+@font-face {
+   font-family: f8b;
+   src: url("../fonts/JosefinSans-Bold.ttf") format("truetype");
+}
+@font-face {
+   font-family: f9b;
+   src: url("../fonts/Mali-Bold.ttf") format("truetype");
+}
+
