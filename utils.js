@@ -56,13 +56,61 @@ function reloadLocation() {
 }
 
 // create element
-const CE = (tagName, className = [], inrHtml = "", parent = null) => {
-   const e = document.createElement(tagName);
-   if (className) e.classList.add(...className);
-   if (inrHtml) e.innerHTML = inrHtml;
-   if (parent) parent.appendChild(e);
-   return e;
-};
+function CE(first, ...children) {
+   let element;
+
+   if (first instanceof Node) {
+      element = document.createElement("div");
+      element.appendChild(first);
+   } else if (typeof first === "object" && first !== null) {
+      const tag = first.tag || "div";
+      element = document.createElement(tag);
+
+      for (const [attr, value] of Object.entries(first)) {
+         if (attr !== "tag") {
+            element.setAttribute(attr, value);
+         }
+      }
+   } else if (typeof first === "string" || typeof first === "number") {
+      element = document.createElement("div");
+      element.innerText = first;
+   }
+
+   children.forEach(child => {
+      if (typeof child === "string" || typeof child === "number") {
+         element.innerText = child;
+      } else if (child instanceof Node) {
+         element.appendChild(child);
+      }
+   });
+
+   element.parent = (parent) => {
+      if (parent) {
+         parent.appendChild(element);
+      }
+   }
+   return element;
+}
+
+/* 
+   ---Example 1: Create a simple <div> element and append it to the body
+   const div = CE({});
+   document.body.appendChild(div);
+
+   ---Example 2: Create a <p> element with text content and append it to the body
+   const p = CE({ tag: 'p' }, 'Hello, world!');
+   document.body.appendChild(p); 
+
+   ---Example 3: Create an <img> element with attributes and append it to the body
+   const img = CE({ tag: 'img', src: 'image.jpg', alt: 'Image' });
+   document.body.appendChild(img);
+
+   ---Example 4: Create a <div> with a <span> child element and append it to the body
+   const span = document.createElement('span');
+   span.textContent = 'Child Element';
+   const divWithChild = CE({ tag: 'div' }, span);
+   document.body.appendChild(divWithChild); 
+*/
 
 function setDataToLocalStorage(key, object) {
    var data = JSON.stringify(object);

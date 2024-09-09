@@ -20,7 +20,7 @@
    "content_scripts": [
       {
          "matches": ["*://*/*"],
-         "js": ["./utils.js", "./querySelector.js", "./contentScripts/content.js"]
+         "js": ["./utils.js", "./querySelector.js", "./contentScripts/style.js", "./contentScripts/content.js"]
       }
    ],
    "web_accessible_resources": [
