@@ -1,3 +1,41 @@
+// ---------------- setup -------------------
+async function init() {
+   chromeStorageGetLocal(storageSingleListKey, (val) => {
+      if (val) {
+         singleListValues = val;
+
+         // load images 
+         for (let i = 0; i < 4; i++) {
+            if (singleListValues[`image_${i}`]) {
+               const { url, width, height } = singleListValues[`image_${i}`];
+               setImageInInput(i, url, width, height);
+            } else {
+               setImageInInput(i, "", 0, 0);
+            }
+         }
+
+         // load input fields
+         inputs.forEach((inp) => {
+            if (inp.type !== "file") {
+               if (inp.type === "number") inp.value = val[inp.name] || 0;
+               else inp.value = val[inp.name] || "";
+            }
+         });
+      }
+   });
+
+   // load settings
+   chromeStorageGetLocal(storageSettingsKey, (val) => {
+      if (val) {
+         settings = val;
+         settings.singleListingOpen.forEach((is, i) => {
+            I("#myListing .basic-grid")[i].classList.toggle("active", is);
+         });
+      }
+   });
+}
+init();
+
 // increase decrease button (only switch limit .input)
 const numInpLimit = I(".inp.num .inp-limit");
 
@@ -13,9 +51,40 @@ I(".inp.num .dec").click((_, i) => {
    }
 });
 
-I(".open-close").click((_, __, element) => {
-   element.parentNode.toggle("active");
+I(".open-close").click((_, i, element) => {
+   element.parentElement.toggle("active");
+   const is = element.parentElement.classList.contains("active");
+
+   settings.singleListingOpen[i] = is;
+   chromeStorageSetLocal(storageSettingsKey, settings);
 });
+
+let holdTimer;
+let clearSingleListingButton = I("#MyListingClearBtn .clear");
+
+function __clear_data__() {
+   holdTimer = setTimeout(() => {
+      clearSingleListingButton.addClass("complete");
+      chromeStorageGetLocal(storageSingleListKey, (val) => {
+         for (const key in val) {
+            if (typeof val[key] === "string") {
+               val[key] = "";
+            } else {
+               val[key] = 0;
+            }
+         }
+         chromeStorageSetLocal(storageSingleListKey, val);
+         init();
+      });
+   }, 1000);
+}
+function __clear_timer__() {
+   clearTimeout(holdTimer);
+   clearSingleListingButton.removeClass("complete");
+}
+clearSingleListingButton.on("mousedown", __clear_data__);
+clearSingleListingButton.on("mouseup", __clear_timer__);
+clearSingleListingButton.on("mouseleave", __clear_timer__);
 
 const imageInputFields = I(".take-inp.image .inp-image");
 const imageView = I(".take-inp.image .img-box");
@@ -65,55 +134,29 @@ imageInputFields.on("change", (_, i, fileInput) => {
       singleListValues[fileInput.name] = {};
       saveSingleListData();
    }
-
 });
 
 function saveSingleListData() {
    chromeStorageSetLocal(storageSingleListKey, singleListValues);
 }
-
-(async () => {
-   await chromeStorageGetLocal(storageSingleListKey, (val) => {
-      if (val) singleListValues = val;
-   });
-   for (let i = 0; i < 4; i++) {
-      const { url, width, height } = singleListValues[`image_${i}`];
-      setImageInInput(i, url, width, height);
-   }
-})();
-
-// I(".input").on("input", (e) => {
-//    saveData();
-// });
-
 const inputs = I(".take-inp .input-b");
-// const textAreaInputs = I("textarea");
 
-// // setup
-// (async () => {
-//    await chromeStorageGet(storageKey, (val) => {
-//       values = val;
-//    });
-//    inputs.forEach((inp) => {
-//       inp.value = values[inp.name];
-//    });
-
-//    textAreaInputs.forEach((inp) => {
-//       inp.value = values[inp.name];
-//    });
-// })();
+inputs.on("change", (e) => {
+   saveData();
+});
 
 function saveData() {
    chromeStorageGetLocal(storageSingleListKey, (val) => {
-      inputs.forEach((inp) => {
-         values[inp.name] = inp.value;
+      inputs.forEach((inp, i) => {
+         if (inp.type !== "file") {
+            if (inp.type === "number") val[inp.name] = inp.value || 0;
+            else val[inp.name] = inp.value || "";
+         }
       });
-      
-      textAreaInputs.forEach((inp) => {
-         values[inp.name] = inp.value;
-      });
-      
-      chromeStorageSet(storageSingleListKey, values);
-   });
 
+      singleListValues = val;
+      console.log(val);
+
+      chromeStorageSetLocal(storageSingleListKey, val);
+   });
 }

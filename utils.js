@@ -2,10 +2,16 @@
 
 const storageKey = "SB_Seller";
 const storageSingleListKey = "SB_Seller_Single_List";
+const storageSettingsKey = "SB_Seller_Settings";
 
 const URL = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
+   singleAddListing: "https://seller.flipkart.com/index.html#dashboard/addListings",
 };
+
+let settings = {
+   singleListingOpen: [true, false, false, false],
+}
 
 let values = {
    listing_status: "ACTIVE",
@@ -33,32 +39,6 @@ let values = {
 };
 
 let singleListValues = {
-   listing_status: "ACTIVE",
-   minimum_order_quantity: "1",
-   service_profile: "NON_FBF",
-   procurement_type: "REGULAR",
-   shipping_days: 1,
-   stock_size: 30,
-   shipping_provider: "FLIPKART",
-   local_shipping_fee_from_buyer: 0,
-   zonal_shipping_fee_from_buyer: 0,
-   national_shipping_fee_from_buyer: 0,
-   hsn: 1209,
-   tax_code: "GST_5",
-   country_of_origin: "IN",
-   manufacturer_details: "SBarui",
-   packer_details: "SBarui",
-   importer_details: "",
-   earliest_mfg_date: "2024-07-28",
-   shelf_life: 12,
-   weight_p0: 0.03,
-   length_p0: 17,
-   breadth_p0: 16,
-   height_p0: 3,
-   image_0: "",
-   image_1: "",
-   image_2: "",
-   image_3: "",
 };
 
 /* ----  local storage set and get ---- */

@@ -10,6 +10,11 @@
    --s: 12px; /* adjust this to control the size of switch input[type="checkbox"]*/
 
    --grid-min: 45px;
+
+   user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   -webkit-user-select: none;
 }
 
 * {
@@ -247,23 +252,14 @@ main {
             .inp {
                position: relative;
                width: 100%;
-               height: 100%;
+               height: calc(var(--s) * 3.5);
                display: grid;
                place-items: center;
                grid-template-columns: 2fr 3fr 2fr;
-               overflow: hidden;
+               /* overflow: hidden; */
 
                &.text, &.selection {
                   grid-template-columns: 1fr;
-               }
-
-               &::before {
-                  content: "";
-                  position: absolute;
-                  right: 0;
-                  width: 1px;
-                  height: 80%;
-                  background-color: light-dark(#aaa, #444);
                }
 
                /* ----------- number input ----------- */
@@ -298,11 +294,24 @@ main {
                }
                textarea {
                   height: 70%;
-                  font-size: calc(var(--s) * 1.3);
+                  font-size: calc(var(--s) * 1.1);
                   resize: none;
+                  letter-spacing: 0;
                   font-family: f3;
                   text-align: left;
                   padding: calc(var(--s) / 2);
+
+                  &:focus {
+                     position: absolute;
+                     bottom: 0;
+                     right: 0;
+                     background: #000;
+                     width: 260px;
+                     height: 80px;
+                     z-index: 100;
+                     padding: 10px;
+                     box-shadow: 0 0 80px #000;
+                  }
                }
 
                select {
@@ -467,4 +476,34 @@ input[type="number"]::-webkit-inner-spin-button {
 /* Firefox */
 input[type="number"] {
    -moz-appearance: textfield;
+}
+
+#MyListingClearBtn {
+   position: relative;
+   width: 100%;
+   height: calc(var(--s) * 6);
+   display: grid;
+   place-items: center;
+
+   .clear {
+      position: relative;
+      font-size: calc(var(--s) * 2);
+      font-family: f1b;
+      border-radius: 6px;
+      padding: calc(var(--s) / 2) calc(var(--s) * 2);
+      cursor: pointer;
+      background: #ffffff;
+      color: #000000;
+      transition: ease-out background 300ms;
+      
+      &:active {
+         background: #ff0000;
+         transition: ease-out background 1s;
+      }
+
+      &.complete {
+         transition: ease-out background 300ms;
+         background: #00ff00;
+      }
+   }
 }
