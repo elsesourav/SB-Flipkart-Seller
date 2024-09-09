@@ -49,20 +49,3 @@ const updateTab = (tabId, newUrl) => {
       resolve(true);
    });
 };
-
-const getNeededAgent = (pc_limit, mobile_limit) => {
-   return pc_limit === false && mobile_limit > 0
-      ? userAgent.mobile
-      : userAgent.pc;
-};
-
-const updateStorageDefaultSwitch = (name, is) => {
-   return new Promise((resolve) => {
-      chromeStorageGet(storageKey, async (values) => {
-         const { localSaved } = values;
-         localSaved[name] = is;
-         await chromeStorageSet(storageKey, values);
-         resolve();
-      });
-   });
-};

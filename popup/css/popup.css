@@ -115,6 +115,58 @@ header {
    background-color: light-dark(var(--black), var(--white));
 }
 
+
+nav {
+   position: relative;
+   width: 100%;
+   padding: 8px;
+   display: grid;
+   place-items: center;
+
+   .options {
+      position: relative;
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      place-items: center;
+      gap: 10px;
+
+      .btn {
+         position: relative;
+         width: 100%;
+         border-radius: 6px;
+         padding: 10px;
+         background-color: light-dark(#00f, #000);
+         color: #fff;
+         text-align: center;
+         font-size: calc(var(--s) * 1.6);
+         font-family: f1b;
+         border: solid 1px light-dark(#0003, #fff3);
+         transition: background-color 300ms, border 300ms;
+         cursor: pointer;
+         
+         .option-btn {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            -ms-progress-appearance: none;
+            cursor: var(--cursor); 
+         }
+
+         &:active,
+         &:has( input[type="radio"]:checked) {
+            background-color: light-dark(#000, #00f);
+            border: solid 1px light-dark(#fff3, #0003);
+         }
+      }
+   }
+}
+
 main {
    position: relative;
    width: 100%;
@@ -123,6 +175,22 @@ main {
    align-items: center;
    animation: opacity linear 400ms;
 }
+main > div {
+   position: relative;
+   opacity: 1;
+   transition: ease-in opacity 300ms;
+
+   @starting-style {
+      opacity: 0;
+   }
+}
+
+body:has( .btn:first-child input:checked) #myListing,
+body:has( .btn:last-child input:checked) #mappingContainer {
+   display: none;
+   opacity: 1;
+}
+
 
 .basic-grid {
    position: relative;
@@ -162,7 +230,14 @@ main {
       }
    }
 
-   &.active {
+   &.no-flip {
+      height: auto;
+      padding: var(--s) 0;
+      padding-top: calc(var(--s) * 3);
+      overflow-y: auto;
+   }
+
+   &:not(.no-flip).active {
       height: fit-content;
       padding-bottom: calc(var(--s));
 
@@ -180,7 +255,7 @@ main {
    .take-inp {
       position: relative;
       width: calc(var(--ww) - var(--s));
-      height: calc(var(--s) * 3.4);
+      height: calc(var(--s) * 3.8);
       border-radius: calc(var(--s) / 4);
       outline: solid 1px #0001;
       display: grid;
@@ -252,7 +327,7 @@ main {
             .inp {
                position: relative;
                width: 100%;
-               height: calc(var(--s) * 3.5);
+               height: 100%;
                display: grid;
                place-items: center;
                grid-template-columns: 2fr 3fr 2fr;
@@ -293,8 +368,7 @@ main {
                   font-size: calc(var(--s) * 1.2);
                }
                textarea {
-                  height: 70%;
-                  font-size: calc(var(--s) * 1.1);
+                  font-size: calc(var(--s) * 1);
                   resize: none;
                   letter-spacing: 0;
                   font-family: f3;
@@ -306,7 +380,7 @@ main {
                      bottom: 0;
                      right: 0;
                      background: #000;
-                     width: 260px;
+                     width: 100%;
                      height: 80px;
                      z-index: 100;
                      padding: 10px;
@@ -478,7 +552,8 @@ input[type="number"] {
    -moz-appearance: textfield;
 }
 
-#MyListingClearBtn {
+#MyListingClearBtn,
+#MyMappingClearBtn {
    position: relative;
    width: 100%;
    height: calc(var(--s) * 6);

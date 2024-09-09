@@ -43,8 +43,447 @@
       <!-- add different switch options -->
       <p class="br-tag"></p>
 
+      <nav>
+         <div class="options">
+            <div class="btn">
+               <input
+                  type="radio"
+                  name="btn"
+                  id="mapping"
+                  class="m option-btn"
+                  checked
+               />
+               <label for="btn">MAPPING</label>
+            </div>
+            <div class="btn">
+               <input
+                  type="radio"
+                  name="btn"
+                  id="single_listing"
+                  class="s option-btn"
+               />
+               <label for="btn">SINGLE LISTING</label>
+            </div>
+         </div>
+      </nav>
+
       <main>
-         <div id="othersListing"></div>
+         <div id="mappingContainer">
+            <div class="basic-grid no-flip">
+               <div class="take-inp">
+                  <span>SKU ID</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp text">
+                           <textarea
+                              name="seller_SKU_ID"
+                              class="input-a"
+                           ></textarea>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>L. Status</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp selection">
+                           <select name="listing_status" class="input-a">
+                              <option>Select One</option>
+                              <option value="ACTIVE">Active</option>
+                              <option value="INACTIVE">Inactive</option>
+                           </select>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>MRP</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="mrp"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>Your MRP</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="your_selling_price"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>Min Qnty</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp selection">
+                           <select
+                              name="minimum_order_quantity"
+                              class="input-a"
+                           >
+                              <option>Select One</option>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                           </select>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>Procur..t </span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp selection">
+                           <select name="procurement_type" class="input-a">
+                              <option>Select One</option>
+                              <option value="REGULAR">InStock</option>
+                              <option value="EXPRESS">Express</option>
+                              <option value="DOMESTIC">
+                                 Domestic Procurement
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>SLA</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="shipping_days"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>Stock</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="stock_size"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>LD.charge</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="local_shipping_fee_from_buyer"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>ZD.charge</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="zonal_shipping_fee_from_buyer"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>ND.charge</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="national_shipping_fee_from_buyer"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>P.Length</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="length_p0"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>P.Breadth</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="breadth_p0"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>P.Height</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="height_p0"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>P.Weight</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="weight_p0"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>HSN</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="hsn"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>M.Details</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp text">
+                           <textarea
+                              name="manufacturer_details"
+                              id="ManufacturerDetails"
+                              class="input-a"
+                           ></textarea>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>P.Details</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp text">
+                           <textarea
+                              name="packer_details"
+                              class="input-a"
+                           ></textarea>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>I.Details</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp text">
+                           <textarea
+                              name="importer_details"
+                              class="input-a inp-limit"
+                           ></textarea>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>M.date</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp text">
+                           <input
+                              name="earliest_mfg_date"
+                              type="date"
+                              class="input-a inp-limit"
+                           />
+                        </div>
+                     </div>
+                  </section>
+               </div>
+
+               <div class="take-inp">
+                  <span>E.Life</span>
+                  <section>
+                     <div class="take-value">
+                        <div class="inp num">
+                           <button class="dec">
+                              <i class="sbi-minus-square"></i>
+                           </button>
+                           <input
+                              name="shelf_life"
+                              type="number"
+                              inputmode="numeric"
+                              class="input-a inp-limit"
+                           />
+                           <button class="inc">
+                              <i class="sbi-plus-square"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </section>
+               </div>
+            </div>
+
+            <div id="MyMappingClearBtn">
+               <div class="clear">CLEAR ALL</div>
+            </div>
+         </div>
 
          <div id="myListing">
             <!----------- images  ------------>
@@ -175,7 +614,6 @@
                            </button>
                            <input
                               name="mrp"
-                              value="121"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -198,7 +636,6 @@
                            </button>
                            <input
                               name="your_selling_price"
-                              value="121"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -257,7 +694,6 @@
                            </button>
                            <input
                               name="shipping_days"
-                              value="2"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -280,7 +716,6 @@
                            </button>
                            <input
                               name="stock_size"
-                              value="25"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -303,7 +738,6 @@
                            </button>
                            <input
                               name="local_shipping_fee_from_buyer"
-                              value="0"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -326,7 +760,6 @@
                            </button>
                            <input
                               name="zonal_shipping_fee_from_buyer"
-                              value="0"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -349,7 +782,6 @@
                            </button>
                            <input
                               name="national_shipping_fee_from_buyer"
-                              value="0"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -372,7 +804,6 @@
                            </button>
                            <input
                               name="length_p0"
-                              value="17"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -395,7 +826,6 @@
                            </button>
                            <input
                               name="breadth_p0"
-                              value="16"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -418,7 +848,6 @@
                            </button>
                            <input
                               name="height_p0"
-                              value="3"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -441,7 +870,6 @@
                            </button>
                            <input
                               name="weight_p0"
-                              value="0.05"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -464,7 +892,6 @@
                            </button>
                            <input
                               name="hsn"
-                              value="1209"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"
@@ -484,7 +911,6 @@
                         <div class="inp text">
                            <textarea
                               name="manufacturer_details"
-                              value="SBarui"
                               id="ManufacturerDetails"
                               class="input-b"
                            ></textarea>
@@ -500,7 +926,6 @@
                         <div class="inp text">
                            <textarea
                               name="packer_details"
-                              value="SBarui"
                               class="input-b"
                            ></textarea>
                         </div>
@@ -547,7 +972,6 @@
                            </button>
                            <input
                               name="shelf_life"
-                              value="12"
                               type="number"
                               inputmode="numeric"
                               class="input-b inp-limit"

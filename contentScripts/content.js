@@ -7,6 +7,11 @@ function getMappingData() {
       });
    });
 }
+function updateMappingValues(values) {
+   runtimeSendMessage("c_b_update_mapping", values, (r) => {
+      console.log("Copy Successfully");
+   });
+}
 function updateListingValues(values) {
    runtimeSendMessage("c_b_update_single_listing", values, (r) => {
       console.log("Copy Successfully");
@@ -24,6 +29,9 @@ function getSingleListingData() {
 function ifMatchSingleListingLocation() {
    const l = window.location.href;
    return l.includes(URL.singleListing) || l.includes(URL.singleAddListing);
+}
+function ifFlipkartSearchLocation() {
+   return window.location.href.includes(URL.flipkartSearch);
 }
 function ifHaveSaveButton() {
    const [isSaveBtn] = [
@@ -82,9 +90,9 @@ function waitForUploadingImage() {
 function setup_single_listing() {
    let openBtn, copyBtn;
    CE(
-      { id: "__fwl__", style: style.fw },
-      (openBtn = CE({ style: style.btn }, "Fill Inputs")),
-      (copyBtn = CE({ style: style.btn + style.copyBtn }, "Copy Inputs"))
+      { id: "__fwl__", class: "__fw__" },
+      (openBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (copyBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
    openBtn.addEventListener("click", async () => {
@@ -125,7 +133,7 @@ function setup_single_listing() {
       editButtons[1].click();
       await wait(500);
 
-      setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "SBarui");
+      setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
 
       setIfNotValue(I("#listing_status"), val?.listing_status || false);
 
@@ -365,111 +373,175 @@ function setup_single_listing() {
 function setup_mapping() {
    let openBtn, copyBtn;
    CE(
-      { id: "__fwm__", style: style.fw },
-      (openBtn = CE({ style: style.btn }, "Fill Inputs")),
-      (copyBtn = CE({ style: style.btn + style.copyBtn }, "Copy Inputs"))
+      { id: "__fwm__", class: "__fw__" },
+      (openBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (copyBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
    openBtn.addEventListener("click", async () => {
-      values = await getMappingData();
+      const val = await getMappingData();
       await wait(100);
 
-      setIfNotValue(I("#listing_status"), values.listing_status);
-      setIfNotValue(I("#minimum_order_quantity"), values.minimum_order_quantity);
-      setIfNotValue(I("#service_profile"), values.service_profile);
-      setIfNotValue(I("#procurement_type"), values.procurement_type);
-      setIfNotValue(I("#shipping_days"), values.shipping_days);
-      setIfNotValue(I("#stock_size"), values.stock_size);
-
-      setIfNotValue(I("#shipping_provider"), values.shipping_provider);
+      setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
+      setIfNotValue(I("#listing_status"), val?.listing_status || false);
+      setIfNotValue(I("#mrp"), val?.mrp || 499);
+      setIfNotValue(
+         I("#flipkart_selling_price"),
+         val?.your_selling_price || 499
+      );
+      setIfNotValue(
+         I("#minimum_order_quantity"),
+         val?.minimum_order_quantity || 1
+      );
+      setIfNotValue(I("#service_profile"), "NON_FBF");
+      setIfNotValue(I("#procurement_type"), val?.procurement_type || 1);
+      setIfNotValue(I("#shipping_days"), val?.shipping_days || 1);
+      setIfNotValue(I("#stock_size"), val?.stock_size || 1);
+      setIfNotValue(I("#shipping_provider"), "FLIPKART");
       setIfNotValue(
          I("#local_shipping_fee_from_buyer"),
-         values.local_shipping_fee_from_buyer
+         val?.local_shipping_fee_from_buyer || 1
       );
       setIfNotValue(
          I("#zonal_shipping_fee_from_buyer"),
-         values.zonal_shipping_fee_from_buyer
+         val?.zonal_shipping_fee_from_buyer || 1
       );
       setIfNotValue(
          I("#national_shipping_fee_from_buyer"),
-         values.national_shipping_fee_from_buyer
+         val?.national_shipping_fee_from_buyer || 1
       );
-
-      setIfNotValue(I(`input[name="length_p0"]`), values.length_p0);
-      setIfNotValue(I(`input[name="breadth_p0"]`), values.breadth_p0);
-      setIfNotValue(I(`input[name="height_p0"]`), values.height_p0);
-      setIfNotValue(I(`input[name="weight_p0"]`), values.weight_p0);
-
-      setIfNotValue(I(`#hsn`), values.hsn);
-      setIfNotValue(I("#tax_code"), values.tax_code);
-      setIfNotValue(I(`#country_of_origin`), values.country_of_origin);
-      setIfNotValue(I(`#manufacturer_details`), values.manufacturer_details);
-      setIfNotValue(I(`#packer_details`), values.packer_details);
-
-      setIfNotValue(I(`#importer_details`), values.importer_details);
-      setIfNotValue(I(`#earliest_mfg_date`), values.earliest_mfg_date);
-      setIfNotValue(I(`#shelf_life`), values.shelf_life);
+      setIfNotValue(I("[name='length_p0']"), val?.length_p0 || 1);
+      setIfNotValue(I("[name='breadth_p0']"), val?.breadth_p0 || 1);
+      setIfNotValue(I("[name='height_p0']"), val?.height_p0 || 1);
+      setIfNotValue(I("[name='weight_p0']"), val?.weight_p0 || 1);
+      setIfNotValue(I("#hsn"), val?.hsn || 1);
+      setIfNotValue(I("#tax_code"), "GST_5");
+      setIfNotValue(I("#country_of_origin"), "IN");
+      setIfNotValue(I("#manufacturer_details"), val?.manufacturer_details || 1);
+      setIfNotValue(I("#packer_details"), val?.packer_details || 1);
+      setIfNotValue(I("#earliest_mfg_date"), val?.earliest_mfg_date || 1);
+      setIfNotValue(I("#shelf_life"), val?.shelf_life || 1);
+      setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
    });
 
    copyBtn.addEventListener("click", async () => {
       tempVal = {};
 
-      setIfNotValue(I("#listing_status"), values.listing_status);
-      setIfNotValue(I("#minimum_order_quantity"), values.minimum_order_quantity);
-      setIfNotValue(I("#service_profile"), values.service_profile);
-      setIfNotValue(I("#procurement_type"), values.procurement_type);
-      setIfNotValue(I("#shipping_days"), values.shipping_days);
-      setIfNotValue(I("#stock_size"), values.stock_size);
-
-      setIfNotValue(I("#shipping_provider"), values.shipping_provider);
-      setIfNotValue(
+      setInObject(I("#sku_id"), "seller_SKU_ID");
+      setInObject(I("#listing_status"), "listing_status");
+      setInObject(I("#mrp"), "mrp");
+      setInObject(I("#flipkart_selling_price"), "your_selling_price");
+      setInObject(I("#minimum_order_quantity"), "minimum_order_quantity");
+      setInObject(I("#procurement_type"), "procurement_type");
+      setInObject(I("#shipping_days"), "shipping_days");
+      setInObject(I("#stock_size"), "stock_size");
+      setInObject(
          I("#local_shipping_fee_from_buyer"),
-         values.local_shipping_fee_from_buyer
+         "local_shipping_fee_from_buyer"
       );
-      setIfNotValue(
+      setInObject(
          I("#zonal_shipping_fee_from_buyer"),
-         values.zonal_shipping_fee_from_buyer
+         "zonal_shipping_fee_from_buyer"
       );
-      setIfNotValue(
+      setInObject(
          I("#national_shipping_fee_from_buyer"),
-         values.national_shipping_fee_from_buyer
+         "national_shipping_fee_from_buyer"
       );
+      setInObject(I("[name='length_p0']"), "length_p0");
+      setInObject(I("[name='breadth_p0']"), "breadth_p0");
+      setInObject(I("[name='height_p0']"), "height_p0");
+      setInObject(I("[name='weight_p0']"), "weight_p0");
+      setInObject(I("#hsn"), "hsn");
+      setInObject(I("#manufacturer_details"), "manufacturer_details");
+      setInObject(I("#packer_details"), "packer_details");
+      setInObject(I("#earliest_mfg_date"), "earliest_mfg_date");
+      setInObject(I("#shelf_life"), "shelf_life");
 
-      setIfNotValue(I(`input[name="length_p0"]`), values.length_p0);
-      setIfNotValue(I(`input[name="breadth_p0"]`), values.breadth_p0);
-      setIfNotValue(I(`input[name="height_p0"]`), values.height_p0);
-      setIfNotValue(I(`input[name="weight_p0"]`), values.weight_p0);
+      updateMappingValues(tempVal);
+   });
+}
 
-      setIfNotValue(I(`#hsn`), values.hsn);
-      setIfNotValue(I("#tax_code"), values.tax_code);
-      setIfNotValue(I(`#country_of_origin`), values.country_of_origin);
-      setIfNotValue(I(`#manufacturer_details`), values.manufacturer_details);
-      setIfNotValue(I(`#packer_details`), values.packer_details);
+function setup_flipkart_product_url() {
+   let openBtn, closeBtn, main;
+   CE(
+      { id: "__fws__", class: "__fw__" },
+      (openBtn = CE({ class: "__btn__" }, "OPEN URL")),
+      (closeBtn = CE({ class: "__btn__ __1__" }, "CLOSE"))
+   ).parent(document.body);
+   
+   closeBtn.style.display = "none";
 
-      setIfNotValue(I(`#importer_details`), values.importer_details);
-      setIfNotValue(I(`#earliest_mfg_date`), values.earliest_mfg_date);
-      setIfNotValue(I(`#shelf_life`), values.shelf_life);
+   main = document.createElement("div");
+   main.setAttribute("id", "__flipkartFW__");
 
-      console.log(tempVal);
-      
+   openBtn.addEventListener("click", () => {
+      closeBtn.style.display = "block";
+      openBtn.style.display = "none";
+
+      const set = new Set(
+         [...document.querySelectorAll("a[target='_blank']")].map(
+            (a) => a.parentNode
+         )
+      );
+   
+      const itemWidth = 100 / 3 - (10 * 2) / 3;
+
+      set.forEach((el) => {
+         const link = el.querySelector('a[target="_blank"]');
+         if (link) {
+            el.style.cssText = `
+            flex: 0 0 ${itemWidth}%;
+            margin: 5px;
+            box-sizing: border-box;
+            cursor: pointer;
+         `;
+            el.addEventListener("click", (evt) => {
+               evt.stopPropagation();
+               evt.preventDefault();
+               navigator.clipboard
+                  .writeText(link.href)
+                  .then(() =>
+                     console.log("Link copied to clipboard:", link.href)
+                  )
+                  .catch((err) => console.error("Failed to copy link:", err));
+            });
+            main.appendChild(el);
+         }
+      });
+      document.body.appendChild(main);
+      main.style.display = "flex";
+   });
+
+   closeBtn.addEventListener("click", () => {
+      closeBtn.style.display = "none";
+      openBtn.style.display = "block";
+      main.style.display = "none";
+      main.innerHTML = "";
    });
 }
 
 window.onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
+      setStyle();
       setup_single_listing();
+   }
+
+   if (ifFlipkartSearchLocation()) {
+      setStyle();
+      setup_flipkart_product_url();
    }
 };
 
 window.addEventListener("mousedown", async (_) => {
    await wait(1000);
-   console.clear();
+   // console.clear();
 
    if (ifMatchSingleListingLocation()) {
       const fwl = I("#__fwl__")[0];
       const isFWL = fwl instanceof Node;
 
       if (ifHaveSaveButton() && !isFWL) {
+         setStyle();
          setup_single_listing();
       } else if (ifHaveSaveButton() && isFWL) {
          fwl.style.display = "flex";
@@ -481,12 +553,27 @@ window.addEventListener("mousedown", async (_) => {
       const isFWM = fwm instanceof Node;
 
       if (ifHaveFloatingDialog() && !isFWM) {
+         setStyle();
          setup_mapping();
       } else if (ifHaveFloatingDialog() && isFWM) {
          fwm.style.display = "flex";
       } else if (fwm) {
          fwm.style.display = "none";
       }
+   }
+
+   const fw = I("#__fws__")[0];
+   const is = fw instanceof Node;
+
+   if (ifFlipkartSearchLocation()) {
+      if (!is) {
+         setStyle();
+         setup_flipkart_product_url();
+      } else if (is) {
+         fw.style.display = "flex";
+      }
+   } else if (is) {
+      fw.style.display = "none";
    }
 });
 
@@ -563,4 +650,3 @@ function multipleValueSetInObjByIndex(idName, proName) {
    const elements = document.querySelectorAll(`#${idName}`);
    tempVal[proName] = [...elements].map((e) => e.selectedIndex).join("_");
 }
-
