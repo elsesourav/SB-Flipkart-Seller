@@ -1,7 +1,7 @@
 {
-   "name": "SB Flipkart Seller",
+   "name": "Seller Automation ES",
    "version": "1.0.0",
-   "description": "Help for flipkart seller. To faster Mapping Listing and many more things have. (`_') (copyright by SouravBarui2024)",
+   "description": "A tool for online sellers, automating listings and mapping to streamline e-commerce operations. (Copyright © SouravBarui2024).",
    "manifest_version": 3,
    "permissions": [
       "scripting",
@@ -20,7 +20,7 @@
    "content_scripts": [
       {
          "matches": ["*://*/*"],
-         "js": ["./utils.js", "./querySelector.js", "./contentScripts/style.js", "./contentScripts/content.js"]
+         "js": ["./utils.js", "./querySelector.js", "./contentScripts/style.js", "./contentScripts/miniFun.js", "./contentScripts/content.js"]
       }
    ],
    "web_accessible_resources": [
@@ -31,16 +31,16 @@
    ],
    "action": {
       "default_icon": {
-         "16": "assets/icon.png",
-         "24": "assets/icon.png",
-         "32": "assets/icon.png"
+         "16": "assets/icons/icon.png",
+         "24": "assets/icons/icon.png",
+         "32": "assets/icons/icon.png"
       },
       "default_title": "Testing",
       "default_popup": "./popup/popup.html"
    },
    "icons": {
-      "16": "assets/icon.png",
-      "48": "assets/icon.png",
-      "128": "assets/icon.png"
+      "16": "assets/icons/icon.png",
+      "48": "assets/icons/icon.png",
+      "128": "assets/icons/icon.png"
    }
 }

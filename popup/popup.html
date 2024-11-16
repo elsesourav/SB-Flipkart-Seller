@@ -11,7 +11,11 @@
          rel="stylesheet"
          type="text/css"
       />
-      <link href="./../popup/css/popup.css" rel="stylesheet" type="text/css" />
+      <link href="./../popup/css/base.css" rel="stylesheet" type="text/css" />
+      <link href="./../popup/css/header.css" rel="stylesheet" type="text/css" />
+      <link href="./../popup/css/checkboxs.css" rel="stylesheet" type="text/css" />
+      <link href="./../popup/css/main.css" rel="stylesheet" type="text/css" />
+      <link href="./../popup/css/grid.css" rel="stylesheet" type="text/css" />
 
       <script defer src="./../querySelector.js"></script>
       <script defer src="./../utils.js"></script>
@@ -24,10 +28,10 @@
    ------------------------------------------------------------------>
       <header>
          <div class="logo">
-            <img src="./../assets/icon.png" alt="extension icon" />
+            <img src="./../assets/icons/icon.png" alt="extension icon" />
          </div>
          <section>
-            <p>SB Flipkart Seller</p>
+            <p>Seller Automation ES</p>
             <b>
                &copy;
                <span class="first">else</span>
@@ -67,18 +71,20 @@
          </div>
       </nav>
 
+      <p class="gap"></p>
       <main>
          <div id="mappingContainer">
             <div class="basic-grid no-flip">
                <div class="take-inp">
-                  <span>SKU ID</span>
+                  <span>SKU Name</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
-                           <textarea
-                              name="seller_SKU_ID"
+                        <div class="inp text"> 
+                           <input
+                              type="text"
+                              name="SKU_NAME"
                               class="input-a"
-                           ></textarea>
+                           />
                         </div>
                      </div>
                   </section>
@@ -90,7 +96,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="listing_status" class="input-a">
-                              <option>Select One</option>
+                              <option>SELECT</option>
                               <option value="ACTIVE">Active</option>
                               <option value="INACTIVE">Inactive</option>
                            </select>
@@ -152,7 +158,7 @@
                               name="minimum_order_quantity"
                               class="input-a"
                            >
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="1">1</option>
                               <option value="2">2</option>
                            </select>
@@ -167,7 +173,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="procurement_type" class="input-a">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="REGULAR">InStock</option>
                               <option value="EXPRESS">Express</option>
                               <option value="DOMESTIC">
@@ -403,7 +409,7 @@
                   <span>M.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="manufacturer_details"
                               id="ManufacturerDetails"
@@ -418,7 +424,7 @@
                   <span>P.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="packer_details"
                               class="input-a"
@@ -432,7 +438,7 @@
                   <span>I.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="importer_details"
                               class="input-a inp-limit"
@@ -446,7 +452,7 @@
                   <span>M.date</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <input
                               name="earliest_mfg_date"
                               type="date"
@@ -579,7 +585,7 @@
                   <span>SKU ID</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="seller_SKU_ID"
                               class="input-b"
@@ -595,7 +601,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="listing_status" class="input-b">
-                              <option>Select One</option>
+                              <option>SELECT</option>
                               <option value="ACTIVE">Active</option>
                               <option value="INACTIVE">Inactive</option>
                            </select>
@@ -657,7 +663,7 @@
                               name="minimum_order_quantity"
                               class="input-b"
                            >
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="1">1</option>
                               <option value="2">2</option>
                            </select>
@@ -672,7 +678,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="procurement_type" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="REGULAR">InStock</option>
                               <option value="EXPRESS">Express</option>
                               <option value="DOMESTIC">
@@ -908,7 +914,7 @@
                   <span>M.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="manufacturer_details"
                               id="ManufacturerDetails"
@@ -923,7 +929,7 @@
                   <span>P.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="packer_details"
                               class="input-b"
@@ -937,7 +943,7 @@
                   <span>I.Details</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="importer_details"
                               class="input-b inp-limit"
@@ -951,7 +957,7 @@
                   <span>M.date</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <input
                               name="earliest_mfg_date"
                               type="date"
@@ -1006,7 +1012,7 @@
                   <span>Model ID</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea name="model_id" class="input-b"></textarea>
                         </div>
                      </div>
@@ -1017,7 +1023,7 @@
                   <span>Cmn Nm</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="common_name"
                               placeholder="Use _"
@@ -1032,7 +1038,7 @@
                   <span>Qnty</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea name="quantity" class="input-b"></textarea>
                         </div>
                      </div>
@@ -1045,6 +1051,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="quantity_in" class="input-b">
+                              <option selected>SELECT</option>
                               <option value="per packet">Per Packet</option>
                               <option value="kg">Kg</option>
                               <option value="g">g</option>
@@ -1058,7 +1065,7 @@
                   <span>Suitable</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="suitable_for"
                               placeholder="Use 1_2 for all"
@@ -1075,7 +1082,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="organic" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="Yes">Yes</option>
                               <option value="No">No</option>
                            </select>
@@ -1088,7 +1095,7 @@
                   <span>Sales Pkg</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="sales_package"
                               placeholder="Use _"
@@ -1103,7 +1110,7 @@
                   <span>Seed Type</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="seed_type"
                               placeholder="Use 1_2"
@@ -1138,7 +1145,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="flowering_plant" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="Yes">Yes</option>
                               <option value="No">No</option>
                            </select>
@@ -1151,7 +1158,7 @@
                   <span>Descrip..n</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="description"
                               class="input-b"
@@ -1165,7 +1172,7 @@
                   <span>Keywords</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="search_keywords"
                               placeholder="Use _"
@@ -1180,7 +1187,7 @@
                   <span>Features</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="key_features"
                               placeholder="Use _"
@@ -1195,7 +1202,7 @@
                   <span>VideoURL</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="video_URL"
                               placeholder="NA"
@@ -1210,7 +1217,7 @@
                   <span>Family</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea name="family" class="input-b"></textarea>
                         </div>
                      </div>
@@ -1221,7 +1228,7 @@
                   <span>Since Nm</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="scientific_name"
                               class="input-b"
@@ -1235,7 +1242,7 @@
                   <span>Uses</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="uses"
                               placeholder="Use _"
@@ -1250,7 +1257,7 @@
                   <span>Soil Req</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="soil_nutrient_requirements"
                               placeholder="Use _"
@@ -1265,7 +1272,7 @@
                   <span>Sow Metd</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="sowing_method"
                               class="input-b"
@@ -1279,7 +1286,7 @@
                   <span>Season</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="season"
                               placeholder="Use 1_2_3_4 all"
@@ -1294,7 +1301,7 @@
                   <span>Pack of</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea name="pack_of" class="input-b"></textarea>
                         </div>
                      </div>
@@ -1305,7 +1312,7 @@
                   <span>Max Life</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="max_shelf_life"
                               class="input-b"
@@ -1319,7 +1326,7 @@
                   <span>EAN/UPC</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea name="EAN_UPC" class="input-b"></textarea>
                         </div>
                      </div>
@@ -1332,7 +1339,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="soil_type" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="Heavy Clay (80% Clay + 20% Sand)">
                                  Heavy Clay (80% Clay + 20% Sand)
                               </option>
@@ -1364,7 +1371,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="sunlight" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="3 - 5 hours a day">
                                  3 - 5 hours a day
                               </option>
@@ -1386,7 +1393,7 @@
                      <div class="take-value">
                         <div class="inp selection">
                            <select name="watering" class="input-b">
-                              <option>Select One</option>
+                              <option selected>SELECT</option>
                               <option value="250 ml for 2 days">
                                  250 ml for 2 days
                               </option>
@@ -1406,7 +1413,7 @@
                   <span>Germin..n</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="germination_time"
                               class="input-b"
@@ -1420,7 +1427,7 @@
                   <span>Instru..ns</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="care_instructions"
                               placeholder="Use _"
@@ -1435,7 +1442,7 @@
                   <span>Otr Feat.s</span>
                   <section>
                      <div class="take-value">
-                        <div class="inp text">
+                        <div class="inp area">
                            <textarea
                               name="other_features"
                               placeholder="Use _"

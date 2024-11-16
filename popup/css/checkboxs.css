@@ -1,0 +1,89 @@
+/* ----------- checkbox input ----------- */
+input[type="checkbox"] {
+   --S: calc(var(--s) * 1.3);
+   height: calc(var(--S) + var(--S) / 5);
+   width: auto;
+   aspect-ratio: 2.25;
+   border-radius: var(--S);
+   outline: solid 1px #7773;
+   margin: calc(var(--S) / 2);
+   display: grid;
+   cursor: pointer;
+   background-color: var(--switch-color-off);
+   box-sizing: content-box;
+   overflow: hidden;
+   transition: 300ms 100ms;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+}
+
+input[type="checkbox"]:before {
+   content: "";
+   padding: calc(var(--S) / 10);
+   --_g: radial-gradient(circle closest-side at calc(100% - var(--S) / 2) 50%,
+         #000 96%,
+         #0000);
+   background: var(--_g) 0 / var(--_p, var(--S)) 100% no-repeat content-box,
+      var(--_g) var(--_p, 0) / var(--S) 100% no-repeat content-box, #fff;
+   mix-blend-mode: darken;
+   filter: blur(calc(var(--S) / 12)) contrast(11);
+   transition: 400ms, background-position 400ms 100ms,
+      padding cubic-bezier(0,
+         calc(var(--_i, -1) * 200),
+         1,
+         calc(var(--_i, -1) * 200)) 250ms 100s;
+}
+
+input[type="checkbox"]:checked {
+   background-color: var(--switch-color-on);
+}
+
+input[type="checkbox"]:checked:before {
+   padding: calc(var(--S) / 10 + 0.05px) calc(var(--S) / 10);
+   --_p: 100%;
+   --_i: 1;
+}
+
+/*  remove number input increase decrease */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+   -moz-appearance: textfield;
+}
+
+#MyListingClearBtn,
+#MyMappingClearBtn {
+   position: relative;
+   width: 100%;
+   height: calc(var(--s) * 6);
+   display: grid;
+   place-items: center;
+
+   .clear {
+      position: relative;
+      font-size: calc(var(--s) * 2);
+      font-family: f1b;
+      border-radius: 6px;
+      padding: calc(var(--s) / 2) calc(var(--s) * 2);
+      cursor: pointer;
+      background: #ffffff;
+      color: #000000;
+      transition: ease-out background 300ms;
+
+      &:active {
+         background: #ff0000;
+         transition: ease-out background 1s;
+      }
+
+      &.complete {
+         transition: ease-out background 300ms;
+         background: #00ff00;
+      }
+   }
+}

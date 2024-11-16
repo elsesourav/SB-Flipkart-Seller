@@ -1,64 +1,5 @@
 let = tempVal = {};
 
-function getMappingData() {
-   return new Promise((resolve) => {
-      runtimeSendMessage("c_b_mapping_request", (r) => {
-         resolve(r);
-      });
-   });
-}
-function updateMappingValues(values) {
-   runtimeSendMessage("c_b_update_mapping", values, (r) => {
-      console.log("Copy Successfully");
-   });
-}
-function updateListingValues(values) {
-   runtimeSendMessage("c_b_update_single_listing", values, (r) => {
-      console.log("Copy Successfully");
-   });
-}
-
-function getSingleListingData() {
-   return new Promise((resolve) => {
-      runtimeSendMessage("c_b_single_listing_request", (r) => {
-         resolve(r);
-      });
-   });
-}
-
-function ifMatchSingleListingLocation() {
-   const l = window.location.href;
-   return l.includes(URL.singleListing) || l.includes(URL.singleAddListing);
-}
-function ifFlipkartSearchLocation() {
-   return window.location.href.includes(URL.flipkartSearch);
-}
-function ifHaveSaveButton() {
-   const [isSaveBtn] = [
-      ...document.querySelectorAll(`[data-testid="button"]`),
-   ].filter((e) => e.innerText == "Save & Go Back");
-
-   return isSaveBtn;
-}
-function ifHaveFloatingDialog() {
-   return document.querySelector(
-      `.ReactModalPortal > div > div[role="dialog"]`
-   );
-}
-function saveButtonClick() {
-   const buttons = [...document.querySelectorAll(`[data-testid="button"]`)];
-   const [btn] = buttons.filter((e) => e.innerText.trim() == "Save");
-   btn?.setAttribute("id", "__save_button__");
-   btn?.click();
-}
-
-function closeButtonClick() {
-   document
-      .querySelectorAll(`a ~ button[data-testid="button"]`)[0]
-      .parentNode.querySelector("a")
-      ?.click();
-}
-
 function waitingForSaved() {
    return new Promise((resolve) => {
       async function loop() {
@@ -88,14 +29,14 @@ function waitForUploadingImage() {
 }
 
 function setup_single_listing() {
-   let openBtn, copyBtn;
+   let openInputBtn, copyInputBtn;
    CE(
       { id: "__fwl__", class: "__fw__" },
-      (openBtn = CE({ class: "__btn__" }, "Fill Inputs")),
-      (copyBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
+      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
-   openBtn.addEventListener("click", async () => {
+   openInputBtn.addEventListener("click", async () => {
       const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
 
       // fill Images
@@ -277,7 +218,7 @@ function setup_single_listing() {
       saveButtonClick();
    });
 
-   copyBtn.addEventListener("click", async () => {
+   copyInputBtn.addEventListener("click", async () => {
       tempVal = {};
 
       const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
@@ -370,61 +311,80 @@ function setup_single_listing() {
    });
 }
 
-function setup_mapping() {
-   let openBtn, copyBtn;
+async function setup_mapping() {
+   let openInputBtn, copyInputBtn;
+   const url = I(".productTitle a")[0]?.href;
+   const { sellingMRP, MRP } = await getProductData(url);
+
+   console.log("sellingMRP: ", sellingMRP);
+   console.log("MRP: ", MRP);
+
    CE(
       { id: "__fwm__", class: "__fw__" },
-      (openBtn = CE({ class: "__btn__" }, "Fill Inputs")),
-      (copyBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
+      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
-   openBtn.addEventListener("click", async () => {
-      const val = await getMappingData();
-      await wait(100);
+   openInputBtn.addEventListener("click", async () => {
 
-      setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
-      setIfNotValue(I("#listing_status"), val?.listing_status || false);
-      setIfNotValue(I("#mrp"), val?.mrp || 499);
-      setIfNotValue(
-         I("#flipkart_selling_price"),
-         val?.your_selling_price || 499
-      );
-      setIfNotValue(
-         I("#minimum_order_quantity"),
-         val?.minimum_order_quantity || 1
-      );
-      setIfNotValue(I("#service_profile"), "NON_FBF");
-      setIfNotValue(I("#procurement_type"), val?.procurement_type || 1);
-      setIfNotValue(I("#shipping_days"), val?.shipping_days || 1);
-      setIfNotValue(I("#stock_size"), val?.stock_size || 1);
-      setIfNotValue(I("#shipping_provider"), "FLIPKART");
-      setIfNotValue(
-         I("#local_shipping_fee_from_buyer"),
-         val?.local_shipping_fee_from_buyer || 1
-      );
-      setIfNotValue(
-         I("#zonal_shipping_fee_from_buyer"),
-         val?.zonal_shipping_fee_from_buyer || 1
-      );
-      setIfNotValue(
-         I("#national_shipping_fee_from_buyer"),
-         val?.national_shipping_fee_from_buyer || 1
-      );
-      setIfNotValue(I("[name='length_p0']"), val?.length_p0 || 1);
-      setIfNotValue(I("[name='breadth_p0']"), val?.breadth_p0 || 1);
-      setIfNotValue(I("[name='height_p0']"), val?.height_p0 || 1);
-      setIfNotValue(I("[name='weight_p0']"), val?.weight_p0 || 1);
-      setIfNotValue(I("#hsn"), val?.hsn || 1);
-      setIfNotValue(I("#tax_code"), "GST_5");
-      setIfNotValue(I("#country_of_origin"), "IN");
-      setIfNotValue(I("#manufacturer_details"), val?.manufacturer_details || 1);
-      setIfNotValue(I("#packer_details"), val?.packer_details || 1);
-      setIfNotValue(I("#earliest_mfg_date"), val?.earliest_mfg_date || 1);
-      setIfNotValue(I("#shelf_life"), val?.shelf_life || 1);
-      setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
+      try {
+         const DATA = await getMappingData();
+
+         console.log("DATA", DATA);
+
+         const dt = Number(Date.now().toString().slice(0, -3));
+         const now = dt.toString(36).toUpperCase();
+         // const original = parseInt(now, 36) * 1000;
+         let [quantity, product] = I(".productInfo")[0].innerText.split(" ");
+         product = product.toUpperCase() == "PER" ? "PIECE" : product.toUpperCase();
+         const sku_id = `${DATA?.SKU_NAME}__${quantity}__${product}__${now}`;
+         setIfNotValue(I("#sku_id"), sku_id);
+
+         setIfNotValue(I("#listing_status"), DATA?.listing_status || false);
+         setIfNotValue(I("#mrp"), MRP);
+         setIfNotValue(
+            I("#flipkart_selling_price"),
+            DATA?.your_selling_price || 499
+         );
+         setIfNotValue(
+            I("#minimum_order_quantity"),
+            DATA?.minimum_order_quantity || 1
+         );
+         setIfNotValue(I("#service_profile"), "NON_FBF");
+         setIfNotValue(I("#procurement_type"), DATA?.procurement_type || 1);
+         setIfNotValue(I("#shipping_days"), DATA?.shipping_days || 1);
+         setIfNotValue(I("#stock_size"), DATA?.stock_size || 1);
+         setIfNotValue(I("#shipping_provider"), "FLIPKART");
+         setIfNotValue(
+            I("#local_shipping_fee_from_buyer"),
+            DATA?.local_shipping_fee_from_buyer || 1
+         );
+         setIfNotValue(
+            I("#zonal_shipping_fee_from_buyer"),
+            DATA?.zonal_shipping_fee_from_buyer || 1
+         );
+         setIfNotValue(
+            I("#national_shipping_fee_from_buyer"),
+            DATA?.national_shipping_fee_from_buyer || 17
+         );
+         setIfNotValue(I("[name='length_p0']"), DATA?.length_p0 || 1);
+         setIfNotValue(I("[name='breadth_p0']"), DATA?.breadth_p0 || 1);
+         setIfNotValue(I("[name='height_p0']"), DATA?.height_p0 || 1);
+         setIfNotValue(I("[name='weight_p0']"), DATA?.weight_p0 || 1);
+         setIfNotValue(I("#hsn"), DATA?.hsn || 1);
+         setIfNotValue(I("#tax_code"), "GST_5");
+         setIfNotValue(I("#country_of_origin"), "IN");
+         setIfNotValue(I("#manufacturer_details"), DATA?.manufacturer_details || 1);
+         setIfNotValue(I("#packer_details"), DATA?.packer_details || 1);
+         setIfNotValue(I("#earliest_mfg_date"), DATA?.earliest_mfg_date || 1);
+         setIfNotValue(I("#shelf_life"), DATA?.shelf_life || 1);
+         setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
+      } catch (error) {
+         alert(error);
+      }
    });
 
-   copyBtn.addEventListener("click", async () => {
+   copyInputBtn.addEventListener("click", async () => {
       tempVal = {};
 
       setInObject(I("#sku_id"), "seller_SKU_ID");
@@ -462,28 +422,28 @@ function setup_mapping() {
 }
 
 function setup_flipkart_product_url() {
-   let openBtn, closeBtn, main;
+   let openInputBtn, closeBtn, main;
    CE(
       { id: "__fws__", class: "__fw__" },
-      (openBtn = CE({ class: "__btn__" }, "OPEN URL")),
+      (openInputBtn = CE({ class: "__btn__" }, "OPEN URL")),
       (closeBtn = CE({ class: "__btn__ __1__" }, "CLOSE"))
    ).parent(document.body);
-   
+
    closeBtn.style.display = "none";
 
    main = document.createElement("div");
    main.setAttribute("id", "__flipkartFW__");
 
-   openBtn.addEventListener("click", () => {
+   openInputBtn.addEventListener("click", () => {
       closeBtn.style.display = "block";
-      openBtn.style.display = "none";
+      openInputBtn.style.display = "none";
 
       const set = new Set(
          [...document.querySelectorAll("a[target='_blank']")].map(
             (a) => a.parentNode
          )
       );
-   
+
       const itemWidth = 100 / 3 - (10 * 2) / 3;
 
       set.forEach((el) => {
@@ -514,7 +474,7 @@ function setup_flipkart_product_url() {
 
    closeBtn.addEventListener("click", () => {
       closeBtn.style.display = "none";
-      openBtn.style.display = "block";
+      openInputBtn.style.display = "block";
       main.style.display = "none";
       main.innerHTML = "";
    });
@@ -576,77 +536,3 @@ window.addEventListener("mousedown", async (_) => {
       fw.style.display = "none";
    }
 });
-
-function setIfNotValue(element, value) {
-   if (!element[0]) return;
-
-   const val = element[0]?.value?.trim();
-   if (!val || val == "Select One") {
-      element[0].value = value;
-      const event = new Event("change", { bubbles: true });
-      element[0].dispatchEvent(event);
-   }
-}
-function setupMultipleValues(idName, _string) {
-   const values = _string.split("_");
-
-   if (document.querySelectorAll(`#${idName}`).length === 1) {
-      values.forEach(async (str, i) => {
-         const elements = document.querySelectorAll(`#${idName}`);
-         if (elements.length > 0) {
-            const len = elements.length;
-
-            elements[len - 1].value = str;
-            const event = new Event("change", { bubbles: true });
-            elements[len - 1]?.dispatchEvent(event);
-
-            if (i < values.length - 1) {
-               const buttons = [...elements].map((e) =>
-                  e.parentNode.parentNode.parentNode.querySelector("button")
-               );
-
-               buttons[buttons.length - 1].click();
-            }
-         }
-         await wait(30);
-      });
-   }
-}
-function setupMultipleValuesBYIndex(idName, _string) {
-   const intValues = _string.split("_").map((e) => parseInt(e));
-
-   if (document.querySelectorAll(`#${idName}`).length === 1) {
-      const parent = I(`#${idName}`)[0].parentNode.parentNode.parentNode
-         .parentNode;
-
-      intValues.forEach(async (n, i) => {
-         const elements = I(`#${idName}`, parent);
-         const len = elements.length;
-
-         if (len > 0) {
-            elements[len - 1].selectedIndex = n;
-            const event = new Event("change", { bubbles: true });
-            elements[len - 1].dispatchEvent(event);
-
-            if (i < intValues.length - 1) {
-               const buttons = I("button", parent);
-               const [btn] = [...buttons].filter((e) => e.innerText === "+");
-               btn?.click();
-            }
-         }
-         await wait(30);
-      });
-   }
-}
-
-function setInObject(element, proName) {
-   tempVal[proName] = element[0]?.value;
-}
-function multipleValueSetInObj(idName, proName) {
-   const elements = document.querySelectorAll(`#${idName}`);
-   tempVal[proName] = [...elements].map((e) => e.value).join("_");
-}
-function multipleValueSetInObjByIndex(idName, proName) {
-   const elements = document.querySelectorAll(`#${idName}`);
-   tempVal[proName] = [...elements].map((e) => e.selectedIndex).join("_");
-}
