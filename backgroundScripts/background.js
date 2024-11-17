@@ -22,16 +22,18 @@ runtimeOnMessage("c_b_mapping_request", (__, _, sendResponse) => {
 function getProductData(url) {
    return new Promise(async (resolve) => {
       try {
-         console.log(url);
          const res = await fetch(url);
          const text = await res.text();
-         const price1 = text.match(/<div class="Nx9bqj CxhGGd">.*?₹(\d+)/s);
-         const price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?(\d+)/s);
+         const price1 = text.match(/<div class="Nx9bqj CxhGGd">.*?₹([\d,]+)/s);
+         const price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?([\d,]+)/s);
 
-         console.log(price1[1], price2[1]);
+         const sellingMRP = price1 ? price1[1].replace(/,/g, '') : null;
+         const MRP = price2 ? price2[1].replace(/,/g, '') : null;
+         
+         console.log(sellingMRP, MRP);
          resolve({
-            sellingMRP: price1 ? price1[1] : null,
-            MRP: price2 ? price2[1] : null
+            sellingMRP,
+            MRP
          });
 
       } catch (error) {
