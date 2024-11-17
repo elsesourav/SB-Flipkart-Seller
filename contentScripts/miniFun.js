@@ -72,14 +72,14 @@ function closeButtonClick() {
 
 
 // --------------- Set Value if Not Value ---------------
-function setIfNotValue(element, value) {
+function setIfNotValue(element, value, forcefully = false) {
    const el = element[0];
    if (!el) return;
 
    const currentValue = el.value?.trim();
    const isEmpty = !currentValue || currentValue === "Select One";
 
-   if (isEmpty) {
+   if (isEmpty || forcefully) {
       el.value = value;
       el.dispatchEvent(new Event("change", { bubbles: true }));
    }

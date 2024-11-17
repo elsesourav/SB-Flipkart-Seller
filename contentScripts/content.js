@@ -313,11 +313,6 @@ function setup_single_listing() {
 
 async function setup_mapping() {
    let openInputBtn, copyInputBtn;
-   const url = I(".productTitle a")[0]?.href;
-   const { sellingMRP, MRP } = await getProductData(url);
-
-   console.log("sellingMRP: ", sellingMRP);
-   console.log("MRP: ", MRP);
 
    CE(
       { id: "__fwm__", class: "__fw__" },
@@ -325,9 +320,11 @@ async function setup_mapping() {
       (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
-   openInputBtn.addEventListener("click", async () => {
-
+   async function openInputButtonAction() {
       try {
+         const url = document.querySelector(".productTitle a")?.href;
+         console.log(url);
+         const { sellingMRP, MRP } = await getProductData(url);
          const DATA = await getMappingData();
 
          console.log("DATA", DATA);
@@ -339,7 +336,7 @@ async function setup_mapping() {
          value = value.toUpperCase();
          const isPer = value == "PER";
          value = isPer ? "PIECE" : value;
-         const sku_id = `${DATA?.SKU_NAME}__${quantity}__${value}__${now}`;
+         const sku_id = `${DATA?.SKU_NAME?.toUpperCase()}__${quantity}__${value}__${now}`;
          setIfNotValue(I("#sku_id"), sku_id);
 
          setIfNotValue(I("#listing_status"), DATA?.listing_status || false);
@@ -361,21 +358,16 @@ async function setup_mapping() {
 
          let PRODUCT_COST;
          if (isPer) {
-            PRODUCT_COST = Number(DATA?.UNIT_OF_COST || 200) /
-               Number(DATA?.UNIT || 1);
+            PRODUCT_COST = Number(DATA?.UNIT_OF_COST || 200) / Number(DATA?.UNIT || 1);
          } else {
-            PRODUCT_COST = Number(DATA?.WEIGHT_OF_COST || 200) /
-               Number(DATA?.WEIGHT || 1) *
-               (value === "KG" ? 1000 : 100);
+            PRODUCT_COST = Number(DATA?.WEIGHT || 1) * (value === "G" ? 1000 : 1) / Number(DATA?.WEIGHT_OF_COST || 200);
          }
-
-
 
          // calculate selling price
          console.log(MP_FEES_MIN, OF_COST_MIN, PROFIT, PRODUCT_COST, quantity, PRODUCT_COST * Number(quantity));
-         const profit = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST * Number(quantity));
+         const mrp = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST * Number(quantity));
 
-         setIfNotValue(I("#flipkart_selling_price"), profit);
+         setIfNotValue(I("#flipkart_selling_price"), mrp, true);
          setIfNotValue(
             I("#minimum_order_quantity"),
             DATA?.minimum_order_quantity || 1
@@ -409,9 +401,9 @@ async function setup_mapping() {
       } catch (error) {
          alert(error);
       }
-   });
+   }
 
-   copyInputBtn.addEventListener("click", async () => {
+   async function copyInputButtonAction() {
       tempVal = {};
 
       setInObject(I("#sku_id"), "seller_SKU_ID");
@@ -445,6 +437,14 @@ async function setup_mapping() {
       setInObject(I("#shelf_life"), "shelf_life");
 
       updateMappingValues(tempVal);
+   }
+
+   openInputBtn.addEventListener("click", openInputButtonAction);
+   copyInputBtn.addEventListener("click", copyInputButtonAction);
+
+   document.querySelector(".hTTPSU")?.addEventListener("click", () => {
+      openInputBtn.removeEventListener("click", openInputButtonAction);
+      copyInputBtn.removeEventListener("click", copyInputButtonAction);
    });
 }
 
@@ -506,6 +506,7 @@ function setup_flipkart_product_url() {
       main.innerHTML = "";
    });
 }
+let startSelling;
 
 onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
@@ -517,16 +518,28 @@ onload = async () => {
       setStyle();
       setup_flipkart_product_url();
    }
+
 };
 
-console.clear();
+// document.body.addEventListener("click", async () => {
+//    if (!startSelling) {
+//       startSelling = document.querySelector(`.primaryActionBar .startSelling`);
+//       console.log(startSelling);
+//       startSelling?.addEventListener("click", async () => {
+//          console.log("startSelling");
+   
+         
+   
+//          _sellingMRP = sellingMRP;
+//          _MRP = MRP;
 
-console.log("content loaded");
+//       });
+//    }
+// });
+
 
 addEventListener("mousedown", async (_) => {
    await wait(500);
-   console.log("mousedown");
-
    // console.clear();
 
    if (ifMatchSingleListingLocation()) {
