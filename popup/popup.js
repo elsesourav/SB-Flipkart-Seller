@@ -58,18 +58,37 @@ init();
 
 // increase decrease button (only switch limit .input)
 function setupIncDecAction(inputElements, saveFunction) {
-   inputElements.each((ele, i) => {
-      I(".inc", ele.parentNode).click(() => {
-         if (inputElements[i].value === "") inputElements[i].value = 0;
-         inputElements[i].value = parseInt(inputElements[i].value) + 1;
-         saveFunction();
-      });
+   const getStepInfo = (stepStr) => {
+      const isFloat = stepStr.includes(".");
+      const step = isFloat ? parseFloat(stepStr) : parseInt(stepStr) || 1;
+      return { isFloat, step };
+   };
 
-      I(".dec", ele.parentNode).click(() => {
-         if (inputElements[i].value === "") inputElements[i].value = 0;
-         inputElements[i].value = parseInt(inputElements[i].value) - 1;
+   const handleFloatValue = (currentValue, step, v) => {
+      const value = Math.round((currentValue + step * v) * 1000) / 1000;
+      const decimalPlaces = (step.toString().split(".")[1] || "").length;
+      return value.toFixed(decimalPlaces).replace(/\.?0+$/, "");
+   };
+
+   const handleIntValue = (currentValue, step, v) => {
+      return parseInt(currentValue || 0) + v * step;
+   };
+
+   inputElements.each((ele) => {
+      const handleClick = (inInc) => {
+         const stepStr = ele.parentNode.getAttribute("step");
+         const { isFloat, step } = getStepInfo(stepStr);
+         const v = inInc ? 1 : -1;
+
+         ele.value = isFloat
+            ? handleFloatValue(parseFloat(ele.value || 0), step, v)
+            : handleIntValue(ele.value, step, v);
+
          saveFunction();
-      });
+      };
+
+      I(".inc", ele.parentNode).click(() => handleClick(true));
+      I(".dec", ele.parentNode).click(() => handleClick(false));
    });
 }
 
@@ -113,6 +132,7 @@ function __clear_data_mapping__() {
       });
    }, 1000);
 }
+
 function __clear_data_single_listing__() {
    holdTimer = setTimeout(() => {
       clearSingleListingButton.addClass("complete");

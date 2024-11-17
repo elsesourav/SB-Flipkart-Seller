@@ -1,1463 +1,1333 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <link
-         href="./../assets/icons/css/font.css"
-         rel="stylesheet"
-         type="text/css"
-      />
-      <link
-         href="./../assets/icons/css/icon.css"
-         rel="stylesheet"
-         type="text/css"
-      />
-      <link href="./../popup/css/base.css" rel="stylesheet" type="text/css" />
-      <link href="./../popup/css/header.css" rel="stylesheet" type="text/css" />
-      <link href="./../popup/css/checkboxs.css" rel="stylesheet" type="text/css" />
-      <link href="./../popup/css/main.css" rel="stylesheet" type="text/css" />
-      <link href="./../popup/css/grid.css" rel="stylesheet" type="text/css" />
 
-      <script defer src="./../querySelector.js"></script>
-      <script defer src="./../utils.js"></script>
-      <script defer src="./imageResize.js"></script>
-      <script defer src="./popup.js"></script>
-   </head>
-   <body>
-      <!----------------------------------------------------------------
+<head>
+   <link href="./../assets/icons/css/font.css" rel="stylesheet" type="text/css" />
+   <link href="./../assets/icons/css/icon.css" rel="stylesheet" type="text/css" />
+   <link href="./../popup/css/base.css" rel="stylesheet" type="text/css" />
+   <link href="./../popup/css/header.css" rel="stylesheet" type="text/css" />
+   <link href="./../popup/css/checkboxs.css" rel="stylesheet" type="text/css" />
+   <link href="./../popup/css/main.css" rel="stylesheet" type="text/css" />
+   <link href="./../popup/css/grid.css" rel="stylesheet" type="text/css" />
+
+   <script defer src="./../querySelector.js"></script>
+   <script defer src="./../utils.js"></script>
+   <script defer src="./imageResize.js"></script>
+   <script defer src="./popup.js"></script>
+</head>
+
+<body>
+   <!----------------------------------------------------------------
                                  Header
    ------------------------------------------------------------------>
-      <header>
-         <div class="logo">
-            <img src="./../assets/icons/icon.png" alt="extension icon" />
-         </div>
-         <section>
-            <p>Seller Automation ES</p>
-            <b>
-               &copy;
-               <span class="first">else</span>
-               <span class="second">sourav</span>
-               <span class="third">2024</span>
-            </b>
-         </section>
-      </header>
+   <header>
+      <div class="logo">
+         <img src="./../assets/icons/icon.png" alt="extension icon" />
+      </div>
+      <section>
+         <p>Seller Automation ES</p>
+         <b>
+            &copy;
+            <span class="first">else</span>
+            <span class="second">sourav</span>
+            <span class="third">2024</span>
+         </b>
+      </section>
+   </header>
 
-      <!----------------------------------------------------------------
+   <!----------------------------------------------------------------
                      Both (Auto and Manually)
    ------------------------------------------------------------------>
-      <!-- add different switch options -->
-      <p class="br-tag"></p>
+   <!-- add different switch options -->
+   <p class="br-tag"></p>
 
-      <nav>
-         <div class="options">
-            <div class="btn">
-               <input
-                  type="radio"
-                  name="btn"
-                  id="mapping"
-                  class="m option-btn"
-                  checked
-               />
-               <label for="btn">MAPPING</label>
+   <nav>
+      <div class="options">
+         <div class="btn">
+            <input type="radio" name="btn" id="mapping" class="m option-btn" checked />
+            <label for="btn">MAPPING</label>
+         </div>
+         <div class="btn">
+            <input type="radio" name="btn" id="single_listing" class="s option-btn" />
+            <label for="btn">SINGLE LISTING</label>
+         </div>
+      </div>
+   </nav>
+
+   <p class="gap"></p>
+   <main>
+      <div id="mappingContainer">
+         <div class="basic-grid no-flip">
+            <div class="take-inp">
+               <span>Name</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input type="text" name="SKU_NAME" class="input-a" />
+                     </div>
+                  </div>
+               </section>
             </div>
-            <div class="btn">
-               <input
-                  type="radio"
-                  name="btn"
-                  id="single_listing"
-                  class="s option-btn"
-               />
-               <label for="btn">SINGLE LISTING</label>
+
+            <div class="take-inp">
+               <span>Profit</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PROFIT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+
+            <div class="take-inp full-width tow-label-tow-input">
+               <span>Unit</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="UNIT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <span>Of Cost</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="UNIT_OF_COST" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp full-width tow-label-tow-input">
+               <span>Weight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <span>Of Cost</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="WEIGHT_OF_COST" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp full-width one-label-three-input">
+               <span>MP Fees</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Local</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="MP_FEES_LOCAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Zonal</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="MP_FEES_ZONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>National</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="MP_FEES_NATIONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp full-width one-label-three-input">
+               <span>Taxes</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Local</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="TAXES_LOCAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Zonal</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="TAXES_ZONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>National</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="TAXES_NATIONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>L. Status</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="listing_status" class="input-a">
+                           <option>SELECT</option>
+                           <option value="ACTIVE">Active</option>
+                           <option value="INACTIVE">Inactive</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Min Qnty</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="minimum_order_quantity" class="input-a">
+                           <option selected>SELECT</option>
+                           <option value="1">1</option>
+                           <option value="2">2</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Procur..t </span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="procurement_type" class="input-a">
+                           <option selected>SELECT</option>
+                           <option value="REGULAR">InStock</option>
+                           <option value="EXPRESS">Express</option>
+                           <option value="DOMESTIC">
+                              Domestic Procurement
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>SLA</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="shipping_days" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Stock</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="stock_size" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>LD.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="local_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>ZD.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="zonal_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>ND.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="national_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Length</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="length_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Breadth</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="breadth_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Height</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="height_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Weight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="weight_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>HSN</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="hsn" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>M.Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="manufacturer_details" id="ManufacturerDetails" class="input-a"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="packer_details" class="input-a"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>I.Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="importer_details" class="input-a inp-limit"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>M.date</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <input name="earliest_mfg_date" type="date" class="input-a inp-limit" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>E.Life</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="shelf_life" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
             </div>
          </div>
-      </nav>
 
-      <p class="gap"></p>
-      <main>
-         <div id="mappingContainer">
-            <div class="basic-grid no-flip">
-               <div class="take-inp">
-                  <span>SKU Name</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp text"> 
-                           <input
-                              type="text"
-                              name="SKU_NAME"
-                              class="input-a"
-                           />
-                        </div>
-                     </div>
-                  </section>
-               </div>
+         <div id="MyMappingClearBtn">
+            <div class="clear">CLEAR ALL</div>
+         </div>
+      </div>
 
-               <div class="take-inp">
-                  <span>L. Status</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="listing_status" class="input-a">
-                              <option>SELECT</option>
-                              <option value="ACTIVE">Active</option>
-                              <option value="INACTIVE">Inactive</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>MRP</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="mrp"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Your MRP</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="your_selling_price"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Min Qnty</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select
-                              name="minimum_order_quantity"
-                              class="input-a"
-                           >
-                              <option selected>SELECT</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Procur..t </span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="procurement_type" class="input-a">
-                              <option selected>SELECT</option>
-                              <option value="REGULAR">InStock</option>
-                              <option value="EXPRESS">Express</option>
-                              <option value="DOMESTIC">
-                                 Domestic Procurement
-                              </option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>SLA</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="shipping_days"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Stock</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="stock_size"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>LD.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="local_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>ZD.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="zonal_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>ND.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="national_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Length</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="length_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Breadth</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="breadth_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Height</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="height_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Weight</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="weight_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>HSN</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="hsn"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>M.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="manufacturer_details"
-                              id="ManufacturerDetails"
-                              class="input-a"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="packer_details"
-                              class="input-a"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>I.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="importer_details"
-                              class="input-a inp-limit"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>M.date</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <input
-                              name="earliest_mfg_date"
-                              type="date"
-                              class="input-a inp-limit"
-                           />
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>E.Life</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="shelf_life"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-a inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
+      <div id="myListing">
+         <!----------- images  ------------>
+         <div class="basic-grid">
+            <div class="open-close">
+               <p>
+                  <i class="sbi-chevron-circle-down"></i>
+                  <span>IMAGES</span>
+                  <i class="sbi-chevron-circle-down"></i>
+               </p>
+               <p>
+                  <i class="sbi-chevron-circle-up"></i>
+                  <span>IMAGES</span>
+                  <i class="sbi-chevron-circle-up"></i>
+               </p>
             </div>
-
-            <div id="MyMappingClearBtn">
-               <div class="clear">CLEAR ALL</div>
+            <div class="take-inp image">
+               <span>Image 1</span>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_0" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <span>Image 2</span>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_1" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <span>Image 3</span>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_2" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <span>Image 4</span>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_3" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
             </div>
          </div>
 
-         <div id="myListing">
-            <!----------- images  ------------>
-            <div class="basic-grid">
-               <div class="open-close">
-                  <p>
-                     <i class="sbi-chevron-circle-down"></i>
-                     <span>IMAGES</span>
-                     <i class="sbi-chevron-circle-down"></i>
-                  </p>
-                  <p>
-                     <i class="sbi-chevron-circle-up"></i>
-                     <span>IMAGES</span>
-                     <i class="sbi-chevron-circle-up"></i>
-                  </p>
-               </div>
-               <div class="take-inp image">
-                  <span>Image 1</span>
-                  <section>
-                     <div class="img-box"></div>
-                     <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        name="image_0"
-                        class="input-b inp-image"
-                     />
-                     <i class="sbi-upload4"></i>
-                     <i class="sbi-bin"></i>
-                  </section>
-               </div>
-               <div class="take-inp image">
-                  <span>Image 2</span>
-                  <section>
-                     <div class="img-box"></div>
-                     <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        name="image_1"
-                        class="input-b inp-image"
-                     />
-                     <i class="sbi-upload4"></i>
-                     <i class="sbi-bin"></i>
-                  </section>
-               </div>
-               <div class="take-inp image">
-                  <span>Image 3</span>
-                  <section>
-                     <div class="img-box"></div>
-                     <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        name="image_2"
-                        class="input-b inp-image"
-                     />
-                     <i class="sbi-upload4"></i>
-                     <i class="sbi-bin"></i>
-                  </section>
-               </div>
-               <div class="take-inp image">
-                  <span>Image 4</span>
-                  <section>
-                     <div class="img-box"></div>
-                     <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        name="image_3"
-                        class="input-b inp-image"
-                     />
-                     <i class="sbi-upload4"></i>
-                     <i class="sbi-bin"></i>
-                  </section>
-               </div>
+         <p class="br-tag"></p>
+
+         <!-------- Price, Stock and Shipping Information  --------->
+         <div class="basic-grid">
+            <div class="open-close">
+               <p>
+                  <i class="sbi-chevron-circle-down"></i>
+                  <span>Price, Stock and Shipping info</span>
+                  <i class="sbi-chevron-circle-down"></i>
+               </p>
+               <p>
+                  <i class="sbi-chevron-circle-up"></i>
+                  <span>Price, Stock and Shipping info</span>
+                  <i class="sbi-chevron-circle-up"></i>
+               </p>
             </div>
 
-            <p class="br-tag"></p>
-
-            <!-------- Price, Stock and Shipping Information  --------->
-            <div class="basic-grid">
-               <div class="open-close">
-                  <p>
-                     <i class="sbi-chevron-circle-down"></i>
-                     <span>Price, Stock and Shipping info</span>
-                     <i class="sbi-chevron-circle-down"></i>
-                  </p>
-                  <p>
-                     <i class="sbi-chevron-circle-up"></i>
-                     <span>Price, Stock and Shipping info</span>
-                     <i class="sbi-chevron-circle-up"></i>
-                  </p>
-               </div>
-
-               <div class="take-inp">
-                  <span>SKU ID</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="seller_SKU_ID"
-                              class="input-b"
-                           ></textarea>
-                        </div>
+            <div class="take-inp">
+               <span>SKU ID</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="seller_SKU_ID" class="input-b"></textarea>
                      </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>L. Status</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="listing_status" class="input-b">
-                              <option>SELECT</option>
-                              <option value="ACTIVE">Active</option>
-                              <option value="INACTIVE">Inactive</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>MRP</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="mrp"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Your MRP</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="your_selling_price"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Min Qnty</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select
-                              name="minimum_order_quantity"
-                              class="input-b"
-                           >
-                              <option selected>SELECT</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Procur..t </span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="procurement_type" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="REGULAR">InStock</option>
-                              <option value="EXPRESS">Express</option>
-                              <option value="DOMESTIC">
-                                 Domestic Procurement
-                              </option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>SLA</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="shipping_days"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Stock</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="stock_size"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>LD.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="local_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>ZD.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="zonal_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>ND.charge</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="national_shipping_fee_from_buyer"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Length</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="length_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Breadth</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="breadth_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Height</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="height_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Weight</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="weight_p0"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>HSN</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="hsn"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>M.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="manufacturer_details"
-                              id="ManufacturerDetails"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>P.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="packer_details"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>I.Details</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="importer_details"
-                              class="input-b inp-limit"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>M.date</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <input
-                              name="earliest_mfg_date"
-                              type="date"
-                              class="input-b inp-limit"
-                           />
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>E.Life</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp num">
-                           <button class="dec">
-                              <i class="sbi-minus-square"></i>
-                           </button>
-                           <input
-                              name="shelf_life"
-                              type="number"
-                              inputmode="numeric"
-                              class="input-b inp-limit"
-                           />
-                           <button class="inc">
-                              <i class="sbi-plus-square"></i>
-                           </button>
-                        </div>
-                     </div>
-                  </section>
-               </div>
+                  </div>
+               </section>
             </div>
 
-            <p class="br-tag"></p>
-
-            <!-------- Product Description --------->
-            <div class="basic-grid">
-               <div class="open-close">
-                  <p>
-                     <i class="sbi-chevron-circle-down"></i>
-                     <span>Product Description</span>
-                     <i class="sbi-chevron-circle-down"></i>
-                  </p>
-                  <p>
-                     <i class="sbi-chevron-circle-up"></i>
-                     <span>Product Description</span>
-                     <i class="sbi-chevron-circle-up"></i>
-                  </p>
-               </div>
-
-               <div class="take-inp">
-                  <span>Model ID</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea name="model_id" class="input-b"></textarea>
-                        </div>
+            <div class="take-inp">
+               <span>L. Status</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="listing_status" class="input-b">
+                           <option>SELECT</option>
+                           <option value="ACTIVE">Active</option>
+                           <option value="INACTIVE">Inactive</option>
+                        </select>
                      </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Cmn Nm</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="common_name"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Qnty</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea name="quantity" class="input-b"></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Qnty In</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="quantity_in" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="per packet">Per Packet</option>
-                              <option value="kg">Kg</option>
-                              <option value="g">g</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Suitable</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="suitable_for"
-                              placeholder="Use 1_2 for all"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Organic</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="organic" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Sales Pkg</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="sales_package"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Seed Type</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="seed_type"
-                              placeholder="Use 1_2"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
+                  </div>
+               </section>
             </div>
 
-            <p class="br-tag"></p>
-
-            <!-------- Additional Description (Optional) --------->
-            <div class="basic-grid active">
-               <div class="open-close">
-                  <p>
-                     <i class="sbi-chevron-circle-down"></i>
-                     <span>Additional Description (Optional)</span>
-                     <i class="sbi-chevron-circle-down"></i>
-                  </p>
-                  <p>
-                     <i class="sbi-chevron-circle-up"></i>
-                     <span>Additional Description (Optional)</span>
-                     <i class="sbi-chevron-circle-up"></i>
-                  </p>
-               </div>
-
-               <div class="take-inp">
-                  <span>Flowering</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="flowering_plant" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="Yes">Yes</option>
-                              <option value="No">No</option>
-                           </select>
-                        </div>
+            <div class="take-inp">
+               <span>MRP</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="mrp" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
                      </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Descrip..n</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="description"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Keywords</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="search_keywords"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Features</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="key_features"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>VideoURL</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="video_URL"
-                              placeholder="NA"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Family</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea name="family" class="input-b"></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Since Nm</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="scientific_name"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Uses</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="uses"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Soil Req</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="soil_nutrient_requirements"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Sow Metd</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="sowing_method"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Season</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="season"
-                              placeholder="Use 1_2_3_4 all"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Pack of</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea name="pack_of" class="input-b"></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Max Life</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="max_shelf_life"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>EAN/UPC</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea name="EAN_UPC" class="input-b"></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Soil Type</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="soil_type" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="Heavy Clay (80% Clay + 20% Sand)">
-                                 Heavy Clay (80% Clay + 20% Sand)
-                              </option>
-                              <option value="Mixed Soil (50% Clay + 50% Sand)">
-                                 Mixed Soil (50% Clay + 50% Sand)
-                              </option>
-                              <option value="Sandy (30% Clay + 70% Sand)">
-                                 Sandy (30% Clay + 70% Sand)
-                              </option>
-                              <option
-                                 value="Stony (30% Clay + 30% Sand + 40% Stone)"
-                              >
-                                 Stony (30% Clay + 30% Sand + 40% Stone)
-                              </option>
-                              <option
-                                 value="Swampy (Clay Mixed in a lot of Water)"
-                              >
-                                 Swampy (Clay Mixed in a lot of Water)
-                              </option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Sunlight</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="sunlight" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="3 - 5 hours a day">
-                                 3 - 5 hours a day
-                              </option>
-                              <option value="Less than 3 hours a day">
-                                 Less than 3 hours a day
-                              </option>
-                              <option value="More than 5 hours a day">
-                                 More than 5 hours a day
-                              </option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Watering</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp selection">
-                           <select name="watering" class="input-b">
-                              <option selected>SELECT</option>
-                              <option value="250 ml for 2 days">
-                                 250 ml for 2 days
-                              </option>
-                              <option value="250 ml for 3 days">
-                                 250 ml for 3 days
-                              </option>
-                              <option value="250 ml per day">
-                                 250 ml per day
-                              </option>
-                           </select>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Germin..n</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="germination_time"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Instru..ns</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="care_instructions"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
-
-               <div class="take-inp">
-                  <span>Otr Feat.s</span>
-                  <section>
-                     <div class="take-value">
-                        <div class="inp area">
-                           <textarea
-                              name="other_features"
-                              placeholder="Use _"
-                              class="input-b"
-                           ></textarea>
-                        </div>
-                     </div>
-                  </section>
-               </div>
+                  </div>
+               </section>
             </div>
 
-            <div id="MyListingClearBtn">
-               <div class="clear">CLEAR ALL</div>
+            <div class="take-inp">
+               <span>Your MRP</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="your_selling_price" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Min Qnty</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="minimum_order_quantity" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="1">1</option>
+                           <option value="2">2</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Procur..t </span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="procurement_type" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="REGULAR">InStock</option>
+                           <option value="EXPRESS">Express</option>
+                           <option value="DOMESTIC">
+                              Domestic Procurement
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>SLA</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="shipping_days" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Stock</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="stock_size" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>LD.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="local_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>ZD.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="zonal_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>ND.charge</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="national_shipping_fee_from_buyer" type="number" inputmode="numeric"
+                           class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Length</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="length_p0" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Breadth</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="breadth_p0" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Height</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="height_p0" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Weight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="weight_p0" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>HSN</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="hsn" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>M.Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="manufacturer_details" id="ManufacturerDetails" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="packer_details" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>I.Details</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="importer_details" class="input-b inp-limit"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>M.date</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <input name="earliest_mfg_date" type="date" class="input-b inp-limit" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>E.Life</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="shelf_life" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
             </div>
          </div>
-      </main>
-   </body>
+
+         <p class="br-tag"></p>
+
+         <!-------- Product Description --------->
+         <div class="basic-grid">
+            <div class="open-close">
+               <p>
+                  <i class="sbi-chevron-circle-down"></i>
+                  <span>Product Description</span>
+                  <i class="sbi-chevron-circle-down"></i>
+               </p>
+               <p>
+                  <i class="sbi-chevron-circle-up"></i>
+                  <span>Product Description</span>
+                  <i class="sbi-chevron-circle-up"></i>
+               </p>
+            </div>
+
+            <div class="take-inp">
+               <span>Model ID</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="model_id" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Cmn Nm</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="common_name" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Qnty</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="quantity" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Qnty In</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="quantity_in" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="per packet">Per Packet</option>
+                           <option value="kg">Kg</option>
+                           <option value="g">g</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Suitable</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="suitable_for" placeholder="Use 1_2 for all" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Organic</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="organic" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="Yes">Yes</option>
+                           <option value="No">No</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Sales Pkg</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="sales_package" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Seed Type</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="seed_type" placeholder="Use 1_2" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div>
+
+         <p class="br-tag"></p>
+
+         <!-------- Additional Description (Optional) --------->
+         <div class="basic-grid active">
+            <div class="open-close">
+               <p>
+                  <i class="sbi-chevron-circle-down"></i>
+                  <span>Additional Description (Optional)</span>
+                  <i class="sbi-chevron-circle-down"></i>
+               </p>
+               <p>
+                  <i class="sbi-chevron-circle-up"></i>
+                  <span>Additional Description (Optional)</span>
+                  <i class="sbi-chevron-circle-up"></i>
+               </p>
+            </div>
+
+            <div class="take-inp">
+               <span>Flowering</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="flowering_plant" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="Yes">Yes</option>
+                           <option value="No">No</option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Descrip..n</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="description" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Keywords</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="search_keywords" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Features</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="key_features" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>VideoURL</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="video_URL" placeholder="NA" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Family</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="family" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Since Nm</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="scientific_name" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Uses</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="uses" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Soil Req</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="soil_nutrient_requirements" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Sow Metd</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="sowing_method" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Season</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="season" placeholder="Use 1_2_3_4 all" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Pack of</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="pack_of" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Max Life</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="max_shelf_life" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>EAN/UPC</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="EAN_UPC" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Soil Type</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="soil_type" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="Heavy Clay (80% Clay + 20% Sand)">
+                              Heavy Clay (80% Clay + 20% Sand)
+                           </option>
+                           <option value="Mixed Soil (50% Clay + 50% Sand)">
+                              Mixed Soil (50% Clay + 50% Sand)
+                           </option>
+                           <option value="Sandy (30% Clay + 70% Sand)">
+                              Sandy (30% Clay + 70% Sand)
+                           </option>
+                           <option value="Stony (30% Clay + 30% Sand + 40% Stone)">
+                              Stony (30% Clay + 30% Sand + 40% Stone)
+                           </option>
+                           <option value="Swampy (Clay Mixed in a lot of Water)">
+                              Swampy (Clay Mixed in a lot of Water)
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Sunlight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="sunlight" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="3 - 5 hours a day">
+                              3 - 5 hours a day
+                           </option>
+                           <option value="Less than 3 hours a day">
+                              Less than 3 hours a day
+                           </option>
+                           <option value="More than 5 hours a day">
+                              More than 5 hours a day
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Watering</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp selection">
+                        <select name="watering" class="input-b">
+                           <option selected>SELECT</option>
+                           <option value="250 ml for 2 days">
+                              250 ml for 2 days
+                           </option>
+                           <option value="250 ml for 3 days">
+                              250 ml for 3 days
+                           </option>
+                           <option value="250 ml per day">
+                              250 ml per day
+                           </option>
+                        </select>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Germin..n</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="germination_time" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Instru..ns</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="care_instructions" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>Otr Feat.s</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="other_features" placeholder="Use _" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div>
+
+         <div id="MyListingClearBtn">
+            <div class="clear">CLEAR ALL</div>
+         </div>
+      </div>
+   </main>
+</body>
+
 </html>

@@ -22,16 +22,30 @@
       .take-inp.full-width {
          grid-column: span 2;
          width: 2fr;
-         grid-template-columns: 2fr 3fr 3fr 2fr;
+         background-color: light-dark(#0000000d, #ffffff0d);
+
+         &.one-label-three-input {
+            grid-template-columns: 2fr 3fr 3fr 3fr;
+         }
+
+         &.tow-label-tow-input {
+            grid-template-columns: 2fr 3fr 2fr 3fr;
+         }
+
+         label {
+            position: absolute;
+            top: calc(var(--s) / 2 * -1);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: calc(var(--s) * 0.8);
+            background-color: light-dark(#000000aa, #ffffffaa);
+            color: light-dark(#fff, #000);
+            border-radius: calc(var(--s) * 0.5);
+            padding: 1px calc(var(--s) * 0.5);
+            pointer-events: none;
+         }
       }
    }
-
-
-   /* @container (calc(100px * 4 + 3rem) < width < calc(100px * 6 + 5rem) ) {
-      .item:last-child:nth-child(odd) {
-        grid-column: 2 / span 2;
-      }
-   } */
 
    &.no-flip {
       height: auto;

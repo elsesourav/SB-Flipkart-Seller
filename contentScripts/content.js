@@ -335,17 +335,47 @@ async function setup_mapping() {
          const dt = Number(Date.now().toString().slice(0, -3));
          const now = dt.toString(36).toUpperCase();
          // const original = parseInt(now, 36) * 1000;
-         let [quantity, product] = I(".productInfo")[0].innerText.split(" ");
-         product = product.toUpperCase() == "PER" ? "PIECE" : product.toUpperCase();
-         const sku_id = `${DATA?.SKU_NAME}__${quantity}__${product}__${now}`;
+         let [quantity, value] = I(".productInfo")[0].innerText.split(" ");
+         value = value.toUpperCase();
+         const isPer = value == "PER";
+         value = isPer ? "PIECE" : value;
+         const sku_id = `${DATA?.SKU_NAME}__${quantity}__${value}__${now}`;
          setIfNotValue(I("#sku_id"), sku_id);
 
          setIfNotValue(I("#listing_status"), DATA?.listing_status || false);
          setIfNotValue(I("#mrp"), MRP);
-         setIfNotValue(
-            I("#flipkart_selling_price"),
-            DATA?.your_selling_price || 499
+
+         const MP_FEES_MIN = Math.min(
+            Number(DATA?.MP_FEES_LOCAL || 86),
+            Number(DATA?.MP_FEES_NATIONAL || 102),
+            Number(DATA?.MP_FEES_ZONAL || 86)
          );
+
+         const OF_COST_MIN = Math.min(
+            Number(DATA?.TAXES_LOCAL || 16),
+            Number(DATA?.TAXES_NATIONAL || 19),
+            Number(DATA?.TAXES_ZONAL || 16)
+         );
+
+         const PROFIT = Number(DATA?.PROFIT || 15);
+
+         let PRODUCT_COST;
+         if (isPer) {
+            PRODUCT_COST = Number(DATA?.UNIT_OF_COST || 200) /
+               Number(DATA?.UNIT || 1);
+         } else {
+            PRODUCT_COST = Number(DATA?.WEIGHT_OF_COST || 200) /
+               Number(DATA?.WEIGHT || 1) *
+               (value === "KG" ? 1000 : 100);
+         }
+
+
+
+         // calculate selling price
+         console.log(MP_FEES_MIN, OF_COST_MIN, PROFIT, PRODUCT_COST, quantity, PRODUCT_COST * Number(quantity));
+         const profit = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST * Number(quantity));
+
+         setIfNotValue(I("#flipkart_selling_price"), profit);
          setIfNotValue(
             I("#minimum_order_quantity"),
             DATA?.minimum_order_quantity || 1
@@ -355,29 +385,26 @@ async function setup_mapping() {
          setIfNotValue(I("#shipping_days"), DATA?.shipping_days || 1);
          setIfNotValue(I("#stock_size"), DATA?.stock_size || 1);
          setIfNotValue(I("#shipping_provider"), "FLIPKART");
-         setIfNotValue(
-            I("#local_shipping_fee_from_buyer"),
-            DATA?.local_shipping_fee_from_buyer || 1
-         );
-         setIfNotValue(
-            I("#zonal_shipping_fee_from_buyer"),
-            DATA?.zonal_shipping_fee_from_buyer || 1
-         );
-         setIfNotValue(
-            I("#national_shipping_fee_from_buyer"),
-            DATA?.national_shipping_fee_from_buyer || 17
-         );
-         setIfNotValue(I("[name='length_p0']"), DATA?.length_p0 || 1);
-         setIfNotValue(I("[name='breadth_p0']"), DATA?.breadth_p0 || 1);
-         setIfNotValue(I("[name='height_p0']"), DATA?.height_p0 || 1);
-         setIfNotValue(I("[name='weight_p0']"), DATA?.weight_p0 || 1);
-         setIfNotValue(I("#hsn"), DATA?.hsn || 1);
+
+         const totalMinFees = MP_FEES_MIN + OF_COST_MIN;
+         const LOCAL_FEES = Math.round((Number(DATA?.MP_FEES_LOCAL || 86) + Number(DATA?.TAXES_LOCAL || 16)) - totalMinFees);
+         const NATIONAL_FEES = Math.round((Number(DATA?.MP_FEES_NATIONAL || 102) + Number(DATA?.TAXES_NATIONAL || 19)) - totalMinFees);
+         const ZONAL_FEES = Math.round((Number(DATA?.MP_FEES_ZONAL || 86) + Number(DATA?.TAXES_ZONAL || 16)) - totalMinFees);
+
+         setIfNotValue(I("#local_shipping_fee_from_buyer"), LOCAL_FEES);
+         setIfNotValue(I("#zonal_shipping_fee_from_buyer"), ZONAL_FEES);
+         setIfNotValue(I("#national_shipping_fee_from_buyer"), NATIONAL_FEES);
+         setIfNotValue(I("[name='length_p0']"), DATA?.length_p0 || 20);
+         setIfNotValue(I("[name='breadth_p0']"), DATA?.breadth_p0 || 17);
+         setIfNotValue(I("[name='height_p0']"), DATA?.height_p0 || 3);
+         setIfNotValue(I("[name='weight_p0']"), DATA?.weight_p0 || 0.1);
+         setIfNotValue(I("#hsn"), DATA?.hsn || 1209);
          setIfNotValue(I("#tax_code"), "GST_5");
          setIfNotValue(I("#country_of_origin"), "IN");
-         setIfNotValue(I("#manufacturer_details"), DATA?.manufacturer_details || 1);
-         setIfNotValue(I("#packer_details"), DATA?.packer_details || 1);
-         setIfNotValue(I("#earliest_mfg_date"), DATA?.earliest_mfg_date || 1);
-         setIfNotValue(I("#shelf_life"), DATA?.shelf_life || 1);
+         setIfNotValue(I("#manufacturer_details"), DATA?.manufacturer_details || "Made by our House");
+         setIfNotValue(I("#packer_details"), DATA?.packer_details || "Packed by our House");
+         setIfNotValue(I("#earliest_mfg_date"), DATA?.earliest_mfg_date || "2024-10-30");
+         setIfNotValue(I("#shelf_life"), DATA?.shelf_life || 12);
          setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
       } catch (error) {
          alert(error);
@@ -480,7 +507,7 @@ function setup_flipkart_product_url() {
    });
 }
 
-window.onload = async () => {
+onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
       setStyle();
       setup_single_listing();
@@ -492,8 +519,14 @@ window.onload = async () => {
    }
 };
 
-window.addEventListener("mousedown", async (_) => {
-   await wait(1000);
+console.clear();
+
+console.log("content loaded");
+
+addEventListener("mousedown", async (_) => {
+   await wait(500);
+   console.log("mousedown");
+
    // console.clear();
 
    if (ifMatchSingleListingLocation()) {

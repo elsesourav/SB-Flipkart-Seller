@@ -77,7 +77,6 @@ function setIfNotValue(element, value) {
    if (!el) return;
 
    const currentValue = el.value?.trim();
-   console.log(currentValue);
    const isEmpty = !currentValue || currentValue === "Select One";
 
    if (isEmpty) {

@@ -248,6 +248,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
 
             textarea {
                font-size: calc(var(--s) * 1);
+               padding: calc(var(--s) / 2);
                resize: none;
                letter-spacing: 0;
                font-family: f3;
@@ -269,8 +270,13 @@ body:has(.btn:last-child input:checked) #mappingContainer {
             select {
                width: 100%;
                height: 100%;
-               color: light-dark(#000, #fff);
                transition: color 400ms;
+               color: light-dark(#000, #fff);
+               
+               option {
+                  background-color: light-dark(#fff, #000);
+                  color: light-dark(#000, #fff);
+               }
 
                &:has( option:first-child:checked) {
                   color: #f00;
