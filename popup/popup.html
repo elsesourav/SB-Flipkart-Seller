@@ -87,7 +87,7 @@
             </div>
 
 
-            <div class="take-inp full-width tow-label-tow-input">
+            <div class="take-inp full-width three-label-three-input small-label">
                <span>Unit</span>
                <section>
                   <div class="take-value">
@@ -110,6 +110,20 @@
                            <i class="sbi-minus-square"></i>
                         </button>
                         <input name="UNIT_OF_COST" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <span>Weight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -241,6 +255,69 @@
                </section>
             </div>
 
+            <div class="take-inp full-width one-label-three-input">
+               <span>Packaging</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Length</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PACKAGING_LENGTH" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Breadth</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <label>Height</label>
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span>PkgWeight</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="0.05">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
             <div class="take-inp">
                <span>L. Status</span>
                <section>
@@ -315,128 +392,6 @@
                            <i class="sbi-minus-square"></i>
                         </button>
                         <input name="stock_size" type="number" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>LD.charge</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="local_shipping_fee_from_buyer" type="number" inputmode="numeric"
-                           class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>ZD.charge</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="zonal_shipping_fee_from_buyer" type="number" inputmode="numeric"
-                           class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>ND.charge</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="national_shipping_fee_from_buyer" type="number" inputmode="numeric"
-                           class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>Length</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="length_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>Breadth</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="breadth_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>Height</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="height_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span>Weight</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="0.05">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="weight_p0" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>

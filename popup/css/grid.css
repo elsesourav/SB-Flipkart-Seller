@@ -11,12 +11,13 @@
    container-type: inline-size;
 
    /* --------- center parent when 2 columns --------- */
-   @container (width >= 500px) {
-      .take-inp:last-child:nth-child(odd) {
+   /* @container (width >= 500px) {
+      .take-inp:has(.full-width:nth-child(even)):nth-child(odd):last-child,
+      .take-inp:has(.full-width:nth-child(odd)):nth-child(even):last-child {
          grid-column: span 2;
          width: calc(var(--ww) - var(--s) * 2);
       }
-   }
+   } */
 
    &.no-flip {
       .take-inp.full-width {
@@ -30,6 +31,18 @@
 
          &.tow-label-tow-input {
             grid-template-columns: 2fr 3fr 2fr 3fr;
+         }
+
+         &.three-label-three-input {
+            grid-template-columns: 2fr 3fr 2fr 3fr 2fr 3fr;
+
+            &.small-label {
+               grid-template-columns: 2fr 5fr 2fr 5fr 2fr 5fr;
+
+               span {
+                  font-size: calc(var(--s) * 0.8);
+               }
+            }
          }
 
          label {

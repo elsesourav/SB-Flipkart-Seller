@@ -358,14 +358,13 @@ async function setup_mapping() {
 
          let PRODUCT_COST;
          if (isPer) {
-            PRODUCT_COST = Number(DATA?.UNIT_OF_COST || 200) / Number(DATA?.UNIT || 1);
+            PRODUCT_COST = (Number(DATA?.UNIT_OF_COST || 200) / Number(DATA?.UNIT || 1)) * Number(quantity);
          } else {
-            PRODUCT_COST = Number(DATA?.WEIGHT || 1) * (value === "G" ? 1000 : 1) / Number(DATA?.WEIGHT_OF_COST || 200);
+            PRODUCT_COST = (Number(DATA?.WEIGHT_OF_COST || 200) / (Number(DATA?.WEIGHT || 1) * 1000)) * (Number(quantity) / (value === "KG" ? 1000 : 1));
          }
 
          // calculate selling price
-         console.log(MP_FEES_MIN, OF_COST_MIN, PROFIT, PRODUCT_COST, quantity, PRODUCT_COST * Number(quantity));
-         const mrp = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST * Number(quantity));
+         const mrp = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST);
 
          setIfNotValue(I("#flipkart_selling_price"), mrp, true);
          setIfNotValue(
@@ -386,10 +385,18 @@ async function setup_mapping() {
          setIfNotValue(I("#local_shipping_fee_from_buyer"), LOCAL_FEES);
          setIfNotValue(I("#zonal_shipping_fee_from_buyer"), ZONAL_FEES);
          setIfNotValue(I("#national_shipping_fee_from_buyer"), NATIONAL_FEES);
-         setIfNotValue(I("[name='length_p0']"), DATA?.length_p0 || 20);
-         setIfNotValue(I("[name='breadth_p0']"), DATA?.breadth_p0 || 17);
-         setIfNotValue(I("[name='height_p0']"), DATA?.height_p0 || 3);
-         setIfNotValue(I("[name='weight_p0']"), DATA?.weight_p0 || 0.1);
+         setIfNotValue(I("[name='length_p0']"), DATA?.PACKAGING_LENGTH || 20);
+         setIfNotValue(I("[name='breadth_p0']"), DATA?.PACKAGING_BREADTH || 17);
+         setIfNotValue(I("[name='height_p0']"), DATA?.PACKAGING_HEIGHT || 3);
+
+         let productWeight = Number(DATA?.PACKET_WEIGHT || 1);
+         if (isPer) {
+            productWeight += (Number(DATA?.UNIT_WEIGHT || 1) / Number(DATA?.UNIT || 1)) * Number(quantity);
+         } else {
+            productWeight += (Number(quantity) / (value === "G" ? 1000 : 1));
+         }
+
+         setIfNotValue(I("[name='weight_p0']"), Number(productWeight.toFixed(2)));
          setIfNotValue(I("#hsn"), DATA?.hsn || 1209);
          setIfNotValue(I("#tax_code"), "GST_5");
          setIfNotValue(I("#country_of_origin"), "IN");

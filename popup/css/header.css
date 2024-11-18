@@ -81,7 +81,7 @@ nav {
          width: 100%;
          border-radius: 6px;
          padding: 10px;
-         background-color: light-dark(#00f, #000);
+         background-color: light-dark(#fff, #000);
          color: #fff;
          text-align: center;
          font-size: calc(var(--s) * 1.6);
@@ -105,7 +105,7 @@ nav {
 
          &:active,
          &:has(input[type="radio"]:checked) {
-            background-color: light-dark(#000, #00f);
+            background-color: #00f;
             border: solid 1px light-dark(#fff3, #0003);
          }
       }
