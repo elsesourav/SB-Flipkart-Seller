@@ -360,7 +360,7 @@ async function setup_mapping() {
          if (isPer) {
             PRODUCT_COST = (Number(DATA?.UNIT_OF_COST || 200) / Number(DATA?.UNIT || 1)) * Number(quantity);
          } else {
-            PRODUCT_COST = (Number(DATA?.WEIGHT_OF_COST || 200) / (Number(DATA?.WEIGHT || 1) * 1000)) * (Number(quantity) / (value === "KG" ? 1000 : 1));
+            PRODUCT_COST = (Number(DATA?.UNIT_OF_COST || 200) / (Number(DATA?.UNIT_WEIGHT || 1) * 1000)) * (Number(quantity) / (value === "KG" ? 1000 : 1));
          }
 
          // calculate selling price

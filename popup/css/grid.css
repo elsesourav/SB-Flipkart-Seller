@@ -11,13 +11,13 @@
    container-type: inline-size;
 
    /* --------- center parent when 2 columns --------- */
-   /* @container (width >= 500px) {
+   @container (width >= 500px) {
       .take-inp:has(.full-width:nth-child(even)):nth-child(odd):last-child,
       .take-inp:has(.full-width:nth-child(odd)):nth-child(even):last-child {
          grid-column: span 2;
          width: calc(var(--ww) - var(--s) * 2);
       }
-   } */
+   }
 
    &.no-flip {
       .take-inp.full-width {
