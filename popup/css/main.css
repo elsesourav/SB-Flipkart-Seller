@@ -217,7 +217,8 @@ body:has(.btn:last-child input:checked) #mappingContainer {
                font-size: calc(var(--s) * 1.4);
                text-align: center;
                letter-spacing: 2px;
-               background: #0000;
+               background: light-dark(#fff, #000);
+               color: light-dark(#000, #fff);
                -webkit-appearance: none;
                -moz-appearance: none;
                appearance: none;
