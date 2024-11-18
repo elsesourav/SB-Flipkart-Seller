@@ -82,7 +82,7 @@ nav {
          border-radius: 6px;
          padding: 10px;
          background-color: light-dark(#fff, #000);
-         color: #fff;
+         color: light-dark(#000, #fff);
          text-align: center;
          font-size: calc(var(--s) * 1.6);
          font-family: f1b;
