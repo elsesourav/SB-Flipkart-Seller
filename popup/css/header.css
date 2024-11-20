@@ -106,6 +106,7 @@ nav {
          &:active,
          &:has(input[type="radio"]:checked) {
             background-color: #00f;
+            color: #fff;
             border: solid 1px light-dark(#fff3, #0003);
          }
       }

@@ -139,6 +139,20 @@ body:has(.btn:last-child input:checked) #mappingContainer {
       }
    }
 
+   &.checkbox {
+      grid-template-columns: 3fr 1fr;
+
+      section {
+         border-radius: none;
+         background: transparent;
+         outline: none;
+      }
+
+      input[type="checkbox"] {
+         transform: translateY(-20%);
+      }
+   }
+
    span {
       position: relative;
       width: auto;
@@ -209,6 +223,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
             input[type="number"],
             input[type="text"],
             input[type="date"],
+            input[type="checkbox"],
             textarea,
             select {
                position: relative;

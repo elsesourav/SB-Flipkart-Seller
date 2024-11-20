@@ -34,7 +34,7 @@
          }
 
          &.three-label-three-input {
-            grid-template-columns: 2fr 3fr 2fr 3fr 2fr 3fr;
+            grid-template-columns: 3fr 5fr 3fr 5fr 3fr 5fr;
 
             &.small-label {
                grid-template-columns: 2fr 5fr 2fr 5fr 2fr 5fr;

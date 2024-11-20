@@ -342,19 +342,17 @@ async function setup_mapping() {
          setIfNotValue(I("#listing_status"), DATA?.listing_status || false);
          setIfNotValue(I("#mrp"), MRP);
 
-         const MP_FEES_MIN = Math.min(
-            Number(DATA?.MP_FEES_LOCAL || 86),
-            Number(DATA?.MP_FEES_NATIONAL || 102),
-            Number(DATA?.MP_FEES_ZONAL || 86)
-         );
-
-         const OF_COST_MIN = Math.min(
-            Number(DATA?.TAXES_LOCAL || 16),
-            Number(DATA?.TAXES_NATIONAL || 19),
-            Number(DATA?.TAXES_ZONAL || 16)
-         );
-
          const PROFIT = Number(DATA?.PROFIT || 15);
+
+         const DELIVERY_CHARGE_MIN = Math.min(
+            Number(DATA?.DELIVERY_LOCAL || 35),
+            Number(DATA?.DELIVERY_NATIONAL || 55),
+            Number(DATA?.DELIVERY_ZONAL || 35)
+         );
+
+         const FLIPKART_COST = Number(DATA?.FLIPKART_COST || 102);
+
+         const IS_DELIVERY_INCLUDED = DATA?.IS_INCLUDED || false;
 
          let PRODUCT_COST;
          if (isPer) {
@@ -364,7 +362,11 @@ async function setup_mapping() {
          }
 
          // calculate selling price
-         const mrp = Math.round(MP_FEES_MIN + OF_COST_MIN + PROFIT + PRODUCT_COST);
+         let mrp = Math.round(FLIPKART_COST + PROFIT + PRODUCT_COST);
+
+         if (IS_DELIVERY_INCLUDED) {
+            mrp -= DELIVERY_CHARGE_MIN;
+         }
 
          setIfNotValue(I("#flipkart_selling_price"), mrp, true);
          setIfNotValue(
@@ -377,14 +379,23 @@ async function setup_mapping() {
          setIfNotValue(I("#stock_size"), DATA?.stock_size || 1);
          setIfNotValue(I("#shipping_provider"), "FLIPKART");
 
-         const totalMinFees = MP_FEES_MIN + OF_COST_MIN;
-         const LOCAL_FEES = Math.round((Number(DATA?.MP_FEES_LOCAL || 86) + Number(DATA?.TAXES_LOCAL || 16)) - totalMinFees);
-         const NATIONAL_FEES = Math.round((Number(DATA?.MP_FEES_NATIONAL || 102) + Number(DATA?.TAXES_NATIONAL || 19)) - totalMinFees);
-         const ZONAL_FEES = Math.round((Number(DATA?.MP_FEES_ZONAL || 86) + Number(DATA?.TAXES_ZONAL || 16)) - totalMinFees);
+         let LOCAL_FEES = 0, NATIONAL_FEES = 0, ZONAL_FEES = 0;
 
-         setIfNotValue(I("#local_shipping_fee_from_buyer"), LOCAL_FEES);
-         setIfNotValue(I("#zonal_shipping_fee_from_buyer"), ZONAL_FEES);
-         setIfNotValue(I("#national_shipping_fee_from_buyer"), NATIONAL_FEES);
+         if (IS_DELIVERY_INCLUDED) {
+            LOCAL_FEES = Math.round(Number(DATA?.DELIVERY_LOCAL || 35));
+            NATIONAL_FEES = Math.round(Number(DATA?.DELIVERY_NATIONAL || 55));
+            ZONAL_FEES = Math.round(Number(DATA?.DELIVERY_ZONAL || 35));
+         } else {
+            LOCAL_FEES = Math.round(Number(DATA?.DELIVERY_LOCAL || 35) - DELIVERY_CHARGE_MIN);
+            NATIONAL_FEES = Math.round(Number(DATA?.DELIVERY_NATIONAL || 55) - DELIVERY_CHARGE_MIN);
+            ZONAL_FEES = Math.round(Number(DATA?.DELIVERY_ZONAL || 35) - DELIVERY_CHARGE_MIN);
+         }
+
+
+         setIfNotValue(I("#local_shipping_fee_from_buyer"), LOCAL_FEES, true);
+         setIfNotValue(I("#zonal_shipping_fee_from_buyer"), ZONAL_FEES, true);
+         setIfNotValue(I("#national_shipping_fee_from_buyer"), NATIONAL_FEES, true);
+
          setIfNotValue(I("[name='length_p0']"), DATA?.PACKAGING_LENGTH || 20);
          setIfNotValue(I("[name='breadth_p0']"), DATA?.PACKAGING_BREADTH || 17);
          setIfNotValue(I("[name='height_p0']"), DATA?.PACKAGING_HEIGHT || 3);
@@ -534,9 +545,9 @@ onload = async () => {
 //       console.log(startSelling);
 //       startSelling?.addEventListener("click", async () => {
 //          console.log("startSelling");
-   
-         
-   
+
+
+
 //          _sellingMRP = sellingMRP;
 //          _MRP = MRP;
 

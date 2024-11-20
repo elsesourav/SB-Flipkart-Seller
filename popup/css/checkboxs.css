@@ -1,6 +1,6 @@
 /* ----------- checkbox input ----------- */
 input[type="checkbox"] {
-   --S: calc(var(--s) * 1.3);
+   --S: calc(var(--s) * 1.8);
    height: calc(var(--S) + var(--S) / 5);
    width: auto;
    aspect-ratio: 2.25;

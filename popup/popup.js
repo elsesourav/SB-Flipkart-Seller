@@ -13,6 +13,7 @@ async function init() {
          // load input fields
          aInputs.forEach((inp) => {
             if (inp.type === "number") inp.value = val[inp.name] || 0;
+            else if (inp.type === "checkbox") inp.checked = val[inp.name] || false;
             else inp.value = val[inp.name] || "";
          });
       }
@@ -36,6 +37,7 @@ async function init() {
          bInputs.forEach((inp) => {
             if (inp.type !== "file") {
                if (inp.type === "number") inp.value = val[inp.name] || 0;
+               else if (inp.type === "checkbox") inp.checked = val[inp.name] || false;
                else inp.value = val[inp.name] || "";
             }
          });
@@ -223,6 +225,7 @@ function saveDataA() {
 
       aInputs.forEach((inp) => {
          if (inp.type === "number") val[inp.name] = inp.value || 0;
+         else if (inp.type === "checkbox") val[inp.name] = inp.checked;
          else val[inp.name] = inp.value || "";
       });
 
@@ -238,6 +241,7 @@ function saveDataB() {
       bInputs.forEach((inp) => {
          if (inp.type !== "file") {
             if (inp.type === "number") val[inp.name] = inp.value || 0;
+            else if (inp.type === "checkbox") val[inp.name] = inp.checked;
             else val[inp.name] = inp.value || "";
          }
       });
