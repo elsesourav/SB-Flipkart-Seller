@@ -19,14 +19,22 @@ function updateMappingValues(values) {
    });
 }
 function updateListingValues(values) {
-   runtimeSendMessage("c_b_update_single_listing", values, (r) => {
+   runtimeSendMessage("c_b_listing_data_update", values, (r) => {
       console.log("Copy Successfully");
    });
 }
 
-function getSingleListingData() {
+function getListingData() {
    return new Promise((resolve) => {
-      runtimeSendMessage("c_b_single_listing_request", (r) => {
+      runtimeSendMessage("c_b_listing_data_request", (r) => {
+         resolve(r);
+      });
+   });
+}
+
+function getOrderData() {
+   return new Promise((resolve) => {
+      runtimeSendMessage("c_b_order_data_request", (r) => {
          resolve(r);
       });
    });
@@ -34,11 +42,15 @@ function getSingleListingData() {
 
 function ifMatchSingleListingLocation() {
    const l = window.location.href;
-   return l.includes(URL.singleListing) || l.includes(URL.singleAddListing);
+   return l.includes(URLS.singleListing) || l.includes(URLS.singleAddListing);
+}
+
+function ifMatchSingleOrderLocation() {
+   return window.location.href.includes(URLS.singleOrder);
 }
 
 function ifFlipkartSearchLocation() {
-   return window.location.href.includes(URL.flipkartSearch);
+   return window.location.href.includes(URLS.flipkartSearch);
 }
 
 function ifHaveSaveButton() {
@@ -156,4 +168,16 @@ function multipleValueSetInObj(idName, proName) {
 function multipleValueSetInObjByIndex(idName, proName) {
    const elements = document.querySelectorAll(`#${idName}`);
    tempVal[proName] = [...elements].map((e) => e.selectedIndex).join("_");
+}
+
+function getBengaliQuantity(text, data, isBengaliNumber = false) {
+   const [a, b] = text.split(" ");
+   let num = parseInt(a);
+   if (isBengaliNumber) num = toBengaliNumber(num);
+
+   return [num, data.typeInBengali[b.toLowerCase()]];
+}
+
+function getBengaliUnit(num, data, isBengaliNumber = false) {
+   return [toBengaliNumber(num), data.typeInBengali.times];
 }

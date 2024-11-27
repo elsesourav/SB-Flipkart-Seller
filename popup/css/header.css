@@ -1,17 +1,21 @@
 header {
-   --h: calc(var(--s) * 6);
+   --S: calc(var(--s) * 5);
    position: relative;
    width: 100%;
-   height: var(--h);
+   height: 100%;
    display: flex;
    gap: calc(var(--s));
+   padding: calc(var(--s)) 0;
+   background-color: light-dark(#8383d7, #1b1b2d);
+   outline: solid 1px light-dark(#fff, #000);
+   border-radius: calc(var(--s) / 2);
    justify-content: center;
    align-items: center;
 
    .logo {
       position: relative;
-      width: calc(var(--h) - var(--s) / 4);
-      height: calc(var(--h) - var(--s) / 4);
+      width: calc(var(--S) - var(--s) / 4);
+      height: calc(var(--S) - var(--s) / 4);
 
       img {
          position: absolute;
@@ -55,7 +59,7 @@ header {
          .third {
             font-family: f6b;
             color: light-dark(#000, #fff);
-            font-size: calc(var(--s) * 1.2);
+            font-size: calc(var(--s) * 1.4);
          }
       }
    }
@@ -72,7 +76,7 @@ nav {
       position: relative;
       width: 100%;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       place-items: center;
       gap: 10px;
 

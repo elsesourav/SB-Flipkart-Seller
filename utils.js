@@ -1,25 +1,68 @@
 "use strict";
 
 const storageMappingKey = "SB_Seller_Mapping";
-const storageSingleListKey = "SB_Seller_Single_List";
+const storageListingKey = "SB_Seller_Listing";
+const storageOrdersKey = "SB_Seller_Orders";
 const storageSettingsKey = "SB_Seller_Settings";
 
-const URL = {
+const URLS = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
    singleAddListing: "https://seller.flipkart.com/index.html#dashboard/addListings",
+   singleOrder: "https://seller.flipkart.com/index.html#dashboard/my-orders",
    flipkartSearch: "https://www.flipkart.com/search",
 };
 
 let settings = {
-   singleListingOpen: [true, false, false, false],
-   open_option: 0,
+   listingOpen: [true, false, false, false],
+   currentMode: 0,
+}
+let mappingData = {};
+let listingData = {
+   images: {},
+};
+let ordersData = {
+   nameInBengali: {
+      "BEAN": "বরবটি",
+      "BITTER GOURD": "উচ্ছে", 
+      "BOTTLE GOURD": "লাউ",
+      "BRINJAL": "বেগুন",
+      "CABBAGE": "বাঁধাকপি",
+      "CAPSICUM": "ক্যাপসিকাম",
+      "CARPET GRASS": "ঘাস",
+      "CARROT": "গাজর",
+      "CAULIFLOWER": "ফুলকপি",
+      "CHILLI": "লঙ্কা",
+      "CUCUMBER": "শশা",
+      "DAHLIA": "ডালিয়া",
+      "LOTUS": "পদ্ম ফুল",
+      "MARIGOLD": "গাঁদা ফুল",
+      "MALABAR SPINACH": "পুই শাক",
+      "MORINGA": "সজনে",
+      "ONION": "পেঁয়াজ",
+      "PAPAYA": "পেঁপে",
+      "RED SPINACH": "লাল শাক",
+      "RIDGE GOURD": "ঝিঙ্গে",
+      "RUNNER BEANS": "সিম",
+      "SPINACH": "পালং শাক",
+      "TOMATO": "টমেটো",
+      "HALUD": "হলুদ",
+      "TURMERIC": "হলুদ"
+   },
+   typeInBengali: {
+      "p": "পিস",
+      "kg": "কেজি",
+      "g": "গ্রাম",
+      "times": "টা"
+   },
+   numberInBengali: ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
+};
+
+function toBengaliNumber(number) {
+   return number.toString().split("").map(char => {
+      return /\d/.test(char) ? ordersData.numberInBengali[char] : char;
+   }).join("");
 }
 
-let mappingValues = {
-};
-
-let singleListValues = {
-};
 
 /* ----  local storage set and get ---- */
 function setDataFromLocalStorage(key, object) {

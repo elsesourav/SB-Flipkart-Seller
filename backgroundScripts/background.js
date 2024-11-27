@@ -42,28 +42,55 @@ function getProductData(url) {
       }
    });
 }
-// getProductData("http://www.flipkart.com/product/p/itme?pid=PAEH5MFHZYMKTAJK");
-// getProductData("https://www.flipkart.com/search?q=lotus+seed&otracker=search&otracker2=&page=3");
-
 console.log("background loaded");
 
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));
 });
 
-runtimeOnMessage("c_b_update_single_listing", (values, _, sendResponse) => {
+runtimeOnMessage("c_b_listing_data_update", (values, _, sendResponse) => {
    sendResponse({ status: "ok" });
-   chromeStorageGetLocal(storageSingleListKey, (val) => {
+   chromeStorageGetLocal(storageListingKey, (val) => {
       for (const key in val) {
          if (values[key]) {
             val[key] = values[key];
          }
       }
-      chromeStorageSetLocal(storageSingleListKey, val);
+      chromeStorageSetLocal(storageListingKey, val);
    });
 });
-runtimeOnMessage("c_b_single_listing_request", (__, _, sendResponse) => {
-   chromeStorageGetLocal(storageSingleListKey, (val) => {
+
+runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
+   chromeStorageGetLocal(storageListingKey, (val) => {
       sendResponse(val);
+   });
+});
+
+runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
+   chromeStorageGetLocal(storageOrdersKey, async (val) => {
+      const productsJson = chrome.runtime.getURL("./../assets/unique/products.json");
+      try {
+         const response = await fetch(productsJson);
+         const products = await response.json();
+         sendResponse({
+            ...val,
+            products
+         });
+      } catch (error) {
+         console.log("Error loading products.json:", error);
+         sendResponse(val);
+      }
+   });
+});
+
+runtimeOnMessage("c_b_order_data_update", (values, _, sendResponse) => {
+   sendResponse({ status: "ok" });
+   chromeStorageGetLocal(storageOrdersKey, (val) => {
+      for (const key in val) {
+         if (values[key]) {
+            val[key] = values[key];
+         }
+      }
+      chromeStorageSetLocal(storageOrdersKey, val);
    });
 });

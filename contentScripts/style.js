@@ -95,8 +95,59 @@ const style = `
 }
 `;
 
-function setStyle() {
+const tableStyle = `
+   ._-table {
+      margin: 0;
+      position: fixed;
+      box-sizing: border-box;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      background: #fff;
+      flex-direction: column;
+      color: #000
+      padding: 10px;
+      z-index: 100;
+      pointer-events: none;
+      outline: 10000px solid #000b;
+   }
+   ._-row {
+      position: relative;
+      width: 100%;
+      padding: 5px;
+      display: grid;
+      place-items: center;
+      grid-template-columns: repeat(auto-fill, minmax(99px, 1fr));
+      border-bottom: 2px double #000;
+   }
+
+   ._-cell {
+      width: 100%;
+      position: relative;
+      padding: 8px;
+      border-right: 1px solid #ddd;
+      border-left: 1px solid #ddd;
+   }
+
+   ._-header {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px dashed #000;
+      font-weight: bold;
+   }
+
+   ._-seed-type {
+      font-weight: bold;
+      background-color: #f8f8f8;
+   }
+`;
+
+function setStyle(forTable = false) {
    const styleEl = document.createElement("style");
-   styleEl.textContent = style;
+   styleEl.textContent = forTable ? tableStyle : style;
    document.head.appendChild(styleEl);
 }

@@ -6,11 +6,12 @@
    --switch-color-on: #85ff7a;
 
    --ww: 300px;
+   --wh: 600px;
 
    --s: 12px;
    /* adjust this to control the size of switch input[type="checkbox"]*/
 
-   --grid-min: 45px;
+   --grid-min: 35px;
 
    user-select: none;
    -moz-user-select: none;
@@ -40,13 +41,12 @@ body {
    background-color: light-dark(var(--white), var(--black));
    font-family: f3;
    width: calc(var(--ww) * 2 - var(--s));
-   padding: calc(var(--s) * 2);
-   height: 600px;
-   display: flex;
+   padding: calc(var(--s) * 1.8);
+   height: var(--wh);
+   display: grid;
+   place-items: center;
+   grid-template-rows: 4fr 2fr 25fr;
    gap: calc(var(--s) / 2);
-   justify-content: flex-start;
-   align-items: center;
-   flex-direction: column;
    overflow: hidden;
 }
 

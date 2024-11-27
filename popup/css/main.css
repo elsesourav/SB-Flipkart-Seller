@@ -1,71 +1,154 @@
 main {
+   --bg: light-dark(#ccc, #333);
    position: relative;
    width: 100%;
-   height: auto;
+   height: 100%;
    display: grid;
-   background-color: light-dark(#ccc, #333);
+   background-color: var(--bg);
    align-items: center;
-   padding: var(--s);
+   padding: 0 var(--s);
    border-radius: calc(var(--s) / 2);
-   overflow-y: scroll;
    animation: opacity linear 400ms;
+   overflow: hidden;
+
+   &:before,
+   &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 20px;
+      background: linear-gradient(to bottom, var(--bg) 50%, transparent);
+      z-index: 2;
+   }
+
+   &:after {
+      top: auto;
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg) 50%, transparent);
+   }
 }
 
-main>div {
+main .container {
    position: relative;
+   width: 100%;
+   height: 100%;
    opacity: 1;
+   padding: calc(var(--s) * 1.5) 0;
    transition: ease-in opacity 300ms;
+   overflow-y: scroll;
+   overflow-x: hidden;
 
    @starting-style {
       opacity: 0;
    }
 }
 
-body:has(.btn:first-child input:checked) #myListing,
-body:has(.btn:last-child input:checked) #mappingContainer {
-   display: none;
-   opacity: 1;
-}
-
-
-.basic-grid .open-close {
-   position: absolute;
-   width: 100%;
-   height: var(--grid-min);
-   display: grid;
-   place-items: center;
-   top: 0;
-   right: 0;
-   margin-left: 0;
-   cursor: pointer;
-   z-index: 3;
-
-   p {
-      position: absolute;
-      font-size: calc(var(--s) * 1.5);
-      text-transform: uppercase;
+body:has(.btn:first-child input:checked) {
+   #myListing,
+   #ordersSettings {
+      display: none;
       opacity: 1;
-      transition: opacity 200ms ease-in-out;
-
-      span {
-         color: #00ffd9;
-      }
+   }
+}
+body:has(.btn:nth-child(2) input:checked) {
+   #mappingContainer,
+   #ordersSettings {
+      display: none;
+      opacity: 1;
+   }
+}
+body:has(.btn:nth-child(3) input:checked) {
+   #mappingContainer,
+   #myListing {
+      display: none;
+      opacity: 1;
    }
 }
 
-.basic-grid:has(.take-inp.image) {
-   .image {
-      grid-template-columns: 1fr;
-      grid-template-rows: 10fr 14fr;
-      place-items: center;
+.basic-grid.flip {
+   position: relative;
+   display: grid;
+   width: 100%;
+   grid-template-columns: 1fr 1fr;
+   place-items: center;
+   min-height: var(--grid-min);
+   height: auto;
+   grid-template-rows: auto;
+
+   .open-close {
+      position: relative;
+      width: 100%;
+      grid-column: span 2;
+      height: var(--grid-min);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      gap: calc(var(--s));
+      z-index: 3;
+      font-size: calc(var(--s) * 1.5);
+
+      input[type="checkbox"] {
+         position: absolute;
+         width: 100%;
+         height: 100%;
+         opacity: 0;
+         -webkit-appearance: none;
+         -moz-appearance: none;
+         appearance: none;
+      }
+
+      i {
+         font-size: calc(var(--s) * 1.8);
+         transition: transform 200ms ease-in-out;
+      }
+
+      &:has(input[type="checkbox"]:checked) i {
+         transform: scaleY(-1);
+      }
+   }
+
+   &:has(.open-close input[type="checkbox"]:checked) {
       height: auto;
-      grid-template-rows: auto;
+   }
+
+   &:has(.open-close input[type="checkbox"]:not(:checked)) {
+      height: var(--grid-min);
+   }
+
+   .take-inp.image {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1/1;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      &.show {
+         display: flex;
+      }
+
+      &>p {
+         position: relative;
+         width: 100%;
+         height: calc(var(--s) * 2);
+         display: grid;
+         place-items: center;
+         font-size: calc(var(--s) * 1.4);
+         font-weight: 900;
+         font-family: f6b;
+      }
 
       section {
-         --img-s: calc(var(--ww) - var(--s) * 2);
          position: relative;
-         width: var(--img-s);
-         height: var(--img-s);
+         width: 100%;
+         height: 90%;
+         aspect-ratio: 1/1;
+         overflow: hidden;
 
          input {
             display: none;
@@ -139,7 +222,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
       }
    }
 
-   &.checkbox {
+   &.check-box {
       grid-template-columns: 3fr 1fr;
 
       section {
@@ -165,7 +248,6 @@ body:has(.btn:last-child input:checked) #mappingContainer {
    section {
       --margin: var(--s) / 2;
       position: relative;
-      border-radius: inherit;
       width: calc(100% - var(--margin));
       height: calc(100% - var(--margin));
       background: light-dark(#fff, #000);
@@ -182,7 +264,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
          position: relative;
          display: grid;
          place-items: center;
-         
+
          p {
             position: relative;
             width: 100%;
@@ -192,7 +274,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
             font-size: calc(var(--s) * 1.2);
             font-family: f6;
             background: transparent;
-            
+
             &::before {
                content: "";
                position: absolute;
@@ -202,7 +284,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
                background-color: light-dark(#aaa, #444);
             }
          }
-         
+
          .inp {
             position: relative;
             width: 100%;
@@ -265,6 +347,7 @@ body:has(.btn:last-child input:checked) #mappingContainer {
             textarea {
                font-size: calc(var(--s) * 1);
                padding: calc(var(--s) / 2);
+               height: 80%;
                resize: none;
                letter-spacing: 0;
                font-family: f3;
@@ -288,13 +371,14 @@ body:has(.btn:last-child input:checked) #mappingContainer {
                height: 100%;
                transition: color 400ms;
                color: light-dark(#000, #fff);
-               
+               outline: solid 1px #00ff4066;
+
                option {
                   background-color: light-dark(#fff, #000);
                   color: light-dark(#000, #fff);
                }
 
-               &:has( option:first-child:checked) {
+               &:has(option:first-child:checked) {
                   color: #f00;
                }
             }

@@ -28,7 +28,7 @@ function waitForUploadingImage() {
    });
 }
 
-function setup_single_listing() {
+async function setup_listing() {
    let openInputBtn, copyInputBtn;
    CE(
       { id: "__fwl__", class: "__fw__" },
@@ -40,7 +40,9 @@ function setup_single_listing() {
       const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
 
       // fill Images
-      const val = await getSingleListingData();
+      const val = await getListingData();
+      console.log(val.images);
+
       const images = [
          val.image_0,
          val.image_1,
@@ -48,174 +50,174 @@ function setup_single_listing() {
          val.image_3,
       ].filter((e) => e?.url);
 
-      if (images.length > 0) {
-         editButtons[0].click();
-         await wait(500);
+      // if (images.length > 0) {
+      //    editButtons[0].click();
+      //    await wait(500);
 
-         for (let i = 0; i < images.length; i++) {
-            if (images[i]) {
-               await wait(200);
-               I(`#thumbnail_${i} > div`)[0].click();
-               const fileInput = I("#upload-image")[0];
-               if (fileInput) putImageIntoInputFile(fileInput, images[i].url);
-               await waitForUploadingImage();
-               await wait(200);
-            }
-         }
+      //    for (let i = 0; i < images.length; i++) {
+      //       if (images[i]) {
+      //          await wait(200);
+      //          I(`#thumbnail_${i} > div`)[0].click();
+      //          const fileInput = I("#upload-image")[0];
+      //          if (fileInput) putImageIntoInputFile(fileInput, images[i].url);
+      //          await waitForUploadingImage();
+      //          await wait(200);
+      //       }
+      //    }
 
-         await wait(300);
-         saveButtonClick();
-         await waitingForSaved();
-         await wait(500);
-      }
+      //    await wait(300);
+      //    saveButtonClick();
+      //    await waitingForSaved();
+      //    await wait(500);
+      // }
 
       // ------- Price, Stock and Shipping Information
 
-      editButtons[1].click();
-      await wait(500);
+      // editButtons[1].click();
+      // await wait(500);
 
-      setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
+      // setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
 
-      setIfNotValue(I("#listing_status"), val?.listing_status || false);
+      // setIfNotValue(I("#listing_status"), val?.listing_status || false);
 
-      setIfNotValue(I("#mrp"), val?.mrp || 499);
+      // setIfNotValue(I("#mrp"), val?.mrp || 499);
 
-      setIfNotValue(
-         I("#flipkart_selling_price"),
-         val?.your_selling_price || 499
-      );
+      // setIfNotValue(
+      //    I("#flipkart_selling_price"),
+      //    val?.your_selling_price || 499
+      // );
 
-      setIfNotValue(
-         I("#minimum_order_quantity"),
-         val?.minimum_order_quantity || 1
-      );
+      // setIfNotValue(
+      //    I("#minimum_order_quantity"),
+      //    val?.minimum_order_quantity || 1
+      // );
 
-      setIfNotValue(I("#service_profile"), "NON_FBF");
+      // setIfNotValue(I("#service_profile"), "NON_FBF");
 
-      setIfNotValue(I("#procurement_type"), val?.procurement_type || 1);
+      // setIfNotValue(I("#procurement_type"), val?.procurement_type || 1);
 
-      setIfNotValue(I("#shipping_days"), val?.shipping_days || 1);
+      // setIfNotValue(I("#shipping_days"), val?.shipping_days || 1);
 
-      setIfNotValue(I("#stock_size"), val?.stock_size || 1);
+      // setIfNotValue(I("#stock_size"), val?.stock_size || 1);
 
-      setIfNotValue(I("#shipping_provider"), "FLIPKART");
+      // setIfNotValue(I("#shipping_provider"), "FLIPKART");
 
-      setIfNotValue(
-         I("#local_shipping_fee_from_buyer"),
-         val?.local_shipping_fee_from_buyer || 1
-      );
+      // setIfNotValue(
+      //    I("#local_shipping_fee_from_buyer"),
+      //    val?.local_shipping_fee_from_buyer || 1
+      // );
 
-      setIfNotValue(
-         I("#zonal_shipping_fee_from_buyer"),
-         val?.zonal_shipping_fee_from_buyer || 1
-      );
+      // setIfNotValue(
+      //    I("#zonal_shipping_fee_from_buyer"),
+      //    val?.zonal_shipping_fee_from_buyer || 1
+      // );
 
-      setIfNotValue(
-         I("#national_shipping_fee_from_buyer"),
-         val?.national_shipping_fee_from_buyer || 1
-      );
+      // setIfNotValue(
+      //    I("#national_shipping_fee_from_buyer"),
+      //    val?.national_shipping_fee_from_buyer || 1
+      // );
 
-      setIfNotValue(I("#length"), val?.length_p0 || 1);
+      // setIfNotValue(I("#length"), val?.length_p0 || 1);
 
-      setIfNotValue(I("#breadth"), val?.breadth_p0 || 1);
+      // setIfNotValue(I("#breadth"), val?.breadth_p0 || 1);
 
-      setIfNotValue(I("#height"), val?.height_p0 || 1);
+      // setIfNotValue(I("#height"), val?.height_p0 || 1);
 
-      setIfNotValue(I("#weight"), val?.weight_p0 || 1);
+      // setIfNotValue(I("#weight"), val?.weight_p0 || 1);
 
-      setIfNotValue(I("#hsn"), val?.hsn || 1);
+      // setIfNotValue(I("#hsn"), val?.hsn || 1);
 
-      setIfNotValue(I("#tax_code"), "GST_5");
+      // setIfNotValue(I("#tax_code"), "GST_5");
 
-      setIfNotValue(I("#country_of_origin"), "IN");
+      // setIfNotValue(I("#country_of_origin"), "IN");
 
-      setIfNotValue(I("#manufacturer_details"), val?.manufacturer_details || 1);
+      // setIfNotValue(I("#manufacturer_details"), val?.manufacturer_details || 1);
 
-      setIfNotValue(I("#packer_details"), val?.packer_details || 1);
+      // setIfNotValue(I("#packer_details"), val?.packer_details || 1);
 
-      setIfNotValue(I("#earliest_mfg_date"), val?.earliest_mfg_date || 1);
+      // setIfNotValue(I("#earliest_mfg_date"), val?.earliest_mfg_date || 1);
 
-      setIfNotValue(I("#shelf_life"), val?.shelf_life || 1);
+      // setIfNotValue(I("#shelf_life"), val?.shelf_life || 1);
 
-      setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
+      // setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
 
-      await wait(500);
-      saveButtonClick();
-      await waitingForSaved();
-      await wait(500);
+      // await wait(500);
+      // saveButtonClick();
+      // await waitingForSaved();
+      // await wait(500);
 
-      // ------- Product Description
-      editButtons[2].click();
-      await wait(500);
+      // // ------- Product Description
+      // editButtons[2].click();
+      // await wait(500);
 
-      setIfNotValue(I("#model_name"), val?.model_id || 1);
+      // setIfNotValue(I("#model_name"), val?.model_id || 1);
 
-      setupMultipleValues("common_name", val?.common_name || "");
+      // setupMultipleValues("common_name", val?.common_name || "");
 
-      setIfNotValue(I("#quantity"), val?.quantity || 1);
+      // setIfNotValue(I("#quantity"), val?.quantity || 1);
 
-      setIfNotValue(I("[name='quantity_0_qualifier']"), val?.quantity_in || "");
+      // setIfNotValue(I("[name='quantity_0_qualifier']"), val?.quantity_in || "");
 
-      setupMultipleValuesBYIndex("suitable_for", val?.suitable_for || "");
+      // setupMultipleValuesBYIndex("suitable_for", val?.suitable_for || "");
 
-      setIfNotValue(I("#organic"), val?.organic || 1);
+      // setIfNotValue(I("#organic"), val?.organic || 1);
 
-      setupMultipleValues("sales_package", val?.sales_package || "");
+      // setupMultipleValues("sales_package", val?.sales_package || "");
 
-      setupMultipleValuesBYIndex("type_of_seed", val?.seed_type || "");
+      // setupMultipleValuesBYIndex("type_of_seed", val?.seed_type || "");
 
-      await wait(500);
-      saveButtonClick();
-      await waitingForSaved();
-      await wait(500);
+      // await wait(500);
+      // saveButtonClick();
+      // await waitingForSaved();
+      // await wait(500);
 
-      // ------- Additional Description (Optional)
-      editButtons[3].click();
-      await wait(500);
+      // // ------- Additional Description (Optional)
+      // editButtons[3].click();
+      // await wait(500);
 
-      setIfNotValue(I("#flowering_plant"), val?.flowering_plant || 1);
+      // setIfNotValue(I("#flowering_plant"), val?.flowering_plant || 1);
 
-      setIfNotValue(I("#description"), val?.description || 1);
+      // setIfNotValue(I("#description"), val?.description || 1);
 
-      setupMultipleValues("keywords", val?.search_keywords || "");
+      // setupMultipleValues("keywords", val?.search_keywords || "");
 
-      setupMultipleValues("key_features", val?.key_features || "");
+      // setupMultipleValues("key_features", val?.key_features || "");
 
-      setIfNotValue(I("#video_url"), val?.video_URL || 1);
+      // setIfNotValue(I("#video_url"), val?.video_URL || 1);
 
-      setIfNotValue(I("#family"), val?.family || 1);
+      // setIfNotValue(I("#family"), val?.family || 1);
 
-      setupMultipleValues("uses", val?.uses || "");
+      // setupMultipleValues("uses", val?.uses || "");
 
-      setupMultipleValues(
-         "soil_nutrient_requirements",
-         val?.soil_nutrient_requirements || ""
-      );
+      // setupMultipleValues(
+      //    "soil_nutrient_requirements",
+      //    val?.soil_nutrient_requirements || ""
+      // );
 
-      setIfNotValue(I("#sowing_method"), val?.sowing_method || 1);
+      // setIfNotValue(I("#sowing_method"), val?.sowing_method || 1);
 
-      setupMultipleValuesBYIndex("season", val?.season || "");
+      // setupMultipleValuesBYIndex("season", val?.season || "");
 
-      setIfNotValue(I("#pack_of"), val?.pack_of || 1);
+      // setIfNotValue(I("#pack_of"), val?.pack_of || 1);
 
-      setIfNotValue(I("#max_shelf_life"), val?.max_shelf_life || 1);
+      // setIfNotValue(I("#max_shelf_life"), val?.max_shelf_life || 1);
 
-      setupMultipleValues("ean", val?.EAN_UPC || "");
+      // setupMultipleValues("ean", val?.EAN_UPC || "");
 
-      setIfNotValue(I("#soil_type"), val?.soil_type || 1);
+      // setIfNotValue(I("#soil_type"), val?.soil_type || 1);
 
-      setIfNotValue(I("#sunlight"), val?.sunlight || 1);
+      // setIfNotValue(I("#sunlight"), val?.sunlight || 1);
 
-      setIfNotValue(I("#watering"), val?.watering || 1);
+      // setIfNotValue(I("#watering"), val?.watering || 1);
 
-      setIfNotValue(I("#germination_time"), val?.germination_time || 1);
+      // setIfNotValue(I("#germination_time"), val?.germination_time || 1);
 
-      setupMultipleValues("care_instructions", val?.care_instructions || "");
+      // setupMultipleValues("care_instructions", val?.care_instructions || "");
 
-      setupMultipleValues("other_features", val?.other_features || "");
+      // setupMultipleValues("other_features", val?.other_features || "");
 
-      await wait(500);
-      saveButtonClick();
+      // await wait(500);
+      // saveButtonClick();
    });
 
    copyInputBtn.addEventListener("click", async () => {
@@ -311,6 +313,161 @@ function setup_single_listing() {
    });
 }
 
+async function setup_single_order() {
+   let openInputBtn, closeBtn, printBtn;
+   const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
+   if (sku_ids.length <= 0) return;
+
+   const TABLE = document.createElement("div");
+   TABLE.setAttribute("class", "_-table");
+   document.body.appendChild(TABLE);
+   setStyle(true);
+
+   CE(
+      { id: "__fwo__", class: "__fw__" },
+      (openInputBtn = CE({ class: "__btn__" }, "Orders")),
+      (printBtn = CE({ class: "__btn__" }, "Print")),
+      (closeBtn = CE({ class: "__btn__ __1__" }, "Close"))
+   ).parent(document.body);
+
+   closeBtn.style.display = "none";
+   printBtn.style.display = "none";
+   TABLE.style.display = "none";
+
+   function printTable() {
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+         <html>
+            <head>
+               <title>Orders Table</title>
+               <style>
+                  * {
+                     margin: 0;
+                     padding: 0;
+                     box-sizing: border-box;
+                  }
+                  ._-table {
+                     position: relative;
+                     width: 400px;
+                     background: #fff;
+                     flex-direction: column;
+                     color: #000
+                  }
+                  ._-row {
+                     position: relative;
+                     width: 100%;
+                     padding: 5px;
+                     display: grid;
+                     place-items: center;
+                     grid-template-columns: repeat(auto-fill, minmax(99px, 1fr));
+                     border-bottom: 2px double #000;
+                  }
+
+                  ._-cell {
+                     width: 100%;
+                     position: relative;
+                     padding: 8px;
+                     border-right: 1px solid #ddd;
+                     border-left: 1px solid #ddd;
+                  }
+
+                  ._-header {
+                     width: 100%;
+                     border-radius: 10px;
+                     border: 1px dashed #000;
+                     font-weight: bold;
+                  }
+
+                  ._-seed-type {
+                     font-weight: bold;
+                     background-color: #f8f8f8;
+                  }
+                  @media print {
+                     @page { margin: 0.5cm; }
+                  }
+               </style>
+            </head>
+            <body>
+               ${TABLE.outerHTML}
+            </body>
+         </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+   }
+
+   async function showOrders() {
+      const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
+      const unit = document.querySelectorAll(".hCSXUa .hXpCNJ");
+      const DATA = await getOrderData();
+      const isBengaliWord = DATA.WordInBengali;
+      const isBengaliNumber = DATA.NumberInBengali;
+
+      if (isBengaliWord || isBengaliNumber) TABLE.style.fontSize = "14px";
+      else TABLE.style.fontSize = "12px";
+
+      const SKU = [...sku_ids].map(el => el.innerText);
+      const UNIT = [...unit].map(el => parseInt(el.innerText));
+      const sku_data = SKU.map(el => el.split("__"));
+
+      const products = {};
+      sku_data.forEach((sku__, i) => {
+         if (sku__.length >= 3) {
+            const [name, quantity, type] = sku__;
+            const nm = name.toUpperCase();
+            const NAME = isBengaliWord ? DATA.nameInBengali[nm] : nm;
+            const type_ = type == "PIECE" ? "p" : type.toLowerCase();
+            const [q, t] = getBengaliQuantity(quantity + " " + type_, DATA, isBengaliNumber);
+
+            if (!products[NAME]) products[NAME] = {};
+            products[NAME][`${q} ${t}`] = products[NAME][`${q} ${t}`] !== undefined ? products[NAME][`${q} ${t}`] + UNIT[i] : UNIT[i]
+         } else if (DATA.products[SKU[i]]) {
+            const temp = DATA.products[SKU[i]];
+            const { NAME, TYPE, QUANTITY } = temp;
+            const NM = isBengaliWord ? DATA.nameInBengali[NAME.toUpperCase()] : NAME.toUpperCase();
+            const type_ = TYPE == "per packet" ? "p" : TYPE.toLowerCase();
+            const [q, t] = getBengaliQuantity(QUANTITY + " " + type_, DATA, isBengaliNumber);
+
+            if (!products[NM]) products[NM] = {};
+            products[NM][`${q} ${t}`] = products[NM][`${q} ${t}`] !== undefined ? products[NM][`${q} ${t}`] + UNIT[i] : UNIT[i]
+         }
+      });
+
+      let html = "";
+      for (const name in products) {
+         html += `<div class="_-row"><div class="_-cell _-header">${name}</div>`;
+         for (const [quantity, type] of Object.entries(products[name])) {
+            if (isBengaliWord && isBengaliNumber) {
+               const [u, n] = getBengaliUnit(type, DATA, isBengaliNumber);
+               html += `<div class="_-cell">${quantity} => (${u} ${n})</div>`;
+            } else {
+               html += `<div class="_-cell">${quantity} => (${type})</div>`;
+            }
+         }
+         html += `</div>`;
+      }
+
+      TABLE.innerHTML = html;
+   }
+
+   openInputBtn.addEventListener("click", async () => {
+      closeBtn.style.display = "block";
+      printBtn.style.display = "block";
+      openInputBtn.style.display = "none";
+      TABLE.style.display = "flex";
+      showOrders();
+   });
+
+   closeBtn.addEventListener("click", () => {
+      closeBtn.style.display = "none";
+      printBtn.style.display = "none";
+      openInputBtn.style.display = "block";
+      TABLE.style.display = "none";
+   });
+
+   printBtn.addEventListener("click", printTable);
+}
+
 async function setup_mapping() {
    let openInputBtn, copyInputBtn;
 
@@ -339,7 +496,7 @@ async function setup_mapping() {
          const sku_id = `${DATA?.SKU_NAME?.toUpperCase()}__${quantity}__${value}__${now}`;
          setIfNotValue(I("#sku_id"), sku_id);
 
-         setIfNotValue(I("#listing_status"), DATA?.listing_status || false);
+         setIfNotValue(I("#listing_status"), DATA?.LISTING_STATUS || false);
          setIfNotValue(I("#mrp"), MRP);
 
          const PROFIT = Number(DATA?.PROFIT || 15);
@@ -371,12 +528,12 @@ async function setup_mapping() {
          setIfNotValue(I("#flipkart_selling_price"), mrp, true);
          setIfNotValue(
             I("#minimum_order_quantity"),
-            DATA?.minimum_order_quantity || 1
+            DATA?.MINIMUM_ORDER_QUANTITY || 1
          );
          setIfNotValue(I("#service_profile"), "NON_FBF");
-         setIfNotValue(I("#procurement_type"), DATA?.procurement_type || 1);
-         setIfNotValue(I("#shipping_days"), DATA?.shipping_days || 1);
-         setIfNotValue(I("#stock_size"), DATA?.stock_size || 1);
+         setIfNotValue(I("#procurement_type"), DATA?.PROCUREMENT_TYPE || 1);
+         setIfNotValue(I("#shipping_days"), DATA?.SHIPPING_DAYS || 1);
+         setIfNotValue(I("#stock_size"), DATA?.STOCK_SIZE || 1);
          setIfNotValue(I("#shipping_provider"), "FLIPKART");
 
          let LOCAL_FEES = 0, NATIONAL_FEES = 0, ZONAL_FEES = 0;
@@ -408,13 +565,13 @@ async function setup_mapping() {
          }
 
          setIfNotValue(I("[name='weight_p0']"), Number(productWeight.toFixed(2)));
-         setIfNotValue(I("#hsn"), DATA?.hsn || 1209);
+         setIfNotValue(I("#hsn"), DATA?.HSN || 1209);
          setIfNotValue(I("#tax_code"), "GST_5");
          setIfNotValue(I("#country_of_origin"), "IN");
-         setIfNotValue(I("#manufacturer_details"), DATA?.manufacturer_details || "Made by our House");
-         setIfNotValue(I("#packer_details"), DATA?.packer_details || "Packed by our House");
-         setIfNotValue(I("#earliest_mfg_date"), DATA?.earliest_mfg_date || "2024-10-30");
-         setIfNotValue(I("#shelf_life"), DATA?.shelf_life || 12);
+         setIfNotValue(I("#manufacturer_details"), DATA?.MANUFACTURER_DETAILS || "Made by our House");
+         setIfNotValue(I("#packer_details"), DATA?.PACKER_DETAILS || "Packed by our House");
+         setIfNotValue(I("#earliest_mfg_date"), DATA?.EARLIEST_MFG_DATE || "2024-10-30");
+         setIfNotValue(I("#shelf_life"), DATA?.SHELF_LIFE || 12);
          setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
       } catch (error) {
          alert(error);
@@ -470,7 +627,7 @@ function setup_flipkart_product_url() {
    let openInputBtn, closeBtn, main;
    CE(
       { id: "__fws__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "OPEN URL")),
+      (openInputBtn = CE({ class: "__btn__" }, "OPEN URLS")),
       (closeBtn = CE({ class: "__btn__ __1__" }, "CLOSE"))
    ).parent(document.body);
 
@@ -529,8 +686,14 @@ let startSelling;
 onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
       setStyle();
-      setup_single_listing();
+      setup_listing();
    }
+
+   if (ifMatchSingleOrderLocation()) {
+      setStyle();
+      setup_single_order();
+   }
+
 
    if (ifFlipkartSearchLocation()) {
       setStyle();
@@ -538,22 +701,6 @@ onload = async () => {
    }
 
 };
-
-// document.body.addEventListener("click", async () => {
-//    if (!startSelling) {
-//       startSelling = document.querySelector(`.primaryActionBar .startSelling`);
-//       console.log(startSelling);
-//       startSelling?.addEventListener("click", async () => {
-//          console.log("startSelling");
-
-
-
-//          _sellingMRP = sellingMRP;
-//          _MRP = MRP;
-
-//       });
-//    }
-// });
 
 
 addEventListener("mousedown", async (_) => {
@@ -566,7 +713,7 @@ addEventListener("mousedown", async (_) => {
 
       if (ifHaveSaveButton() && !isFWL) {
          setStyle();
-         setup_single_listing();
+         setup_listing();
       } else if (ifHaveSaveButton() && isFWL) {
          fwl.style.display = "flex";
       } else if (fwl) {
@@ -583,6 +730,18 @@ addEventListener("mousedown", async (_) => {
          fwm.style.display = "flex";
       } else if (fwm) {
          fwm.style.display = "none";
+      }
+   }
+
+   if (ifMatchSingleOrderLocation()) {
+      const fwo = I("#__fwo__")[0];
+      const isFWO = fwo instanceof Node;
+
+      if (!isFWO) {
+         setStyle();
+         setup_single_order();
+      } else if (isFWO) {
+         fwo.style.display = "flex";
       }
    }
 
