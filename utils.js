@@ -1,5 +1,6 @@
 "use strict";
 
+const storageInitKey = "SB_Seller_Init";
 const storageMappingKey = "SB_Seller_Mapping";
 const storageListingKey = "SB_Seller_Listing";
 const storageOrdersKey = "SB_Seller_Orders";
@@ -277,11 +278,9 @@ function chromeStorageGetLocal(key, callback) {
          if (chrome.runtime.lastError) {
             console.error("Error getting item:", chrome.runtime.lastError);
          } else {
-            const value = result[key] || {};
-            const object = JSON.parse(value);
-
-            callback && callback(object);
-            resolve(object);
+            const OBJ = typeof result[key] === "string" ? JSON.parse(result[key]) : null;
+            callback && callback(OBJ);
+            resolve(OBJ);
          }
       });
    });

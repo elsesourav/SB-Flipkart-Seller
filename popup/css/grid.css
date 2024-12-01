@@ -97,6 +97,8 @@
          section {
             width: 100%;
             height: 100%;
+            border-radius: inherit;
+            overflow: hidden;
          }
 
          textarea {
@@ -109,6 +111,13 @@
             position: absolute;
             height: 100% !important;
             width: 100% !important;
+         }
+
+         .CodeMirror-linenumber {
+            font-size: calc(var(--s) * 1.2);
+            margin: calc(var(--s) * 0.2) 0;
+            color: light-dark(#AAA, #555);
+            font-weight: 700;
          }
       }
 

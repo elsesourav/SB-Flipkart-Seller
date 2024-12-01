@@ -20,16 +20,7 @@ jsonEditor.setSize("100%", "100%");
 jsonEditor.refresh();
 
 function getJsonContent() {
-   try {
-      if (!jsonEditor) {
-         return {};
-      }
-      const value = jsonEditor.getValue();
-      return value ? JSON.parse(value) : {};
-   } catch (error) {
-      console.error('Error parsing JSON:', error);
-      return {};
-   }
+   return JSON.parse(jsonEditor.getValue());
 }
 
 function setJsonContent(json) {

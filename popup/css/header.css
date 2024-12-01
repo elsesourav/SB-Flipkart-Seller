@@ -14,8 +14,8 @@ header {
 
    .logo {
       position: relative;
-      width: calc(var(--S) - var(--s) / 4);
-      height: calc(var(--S) - var(--s) / 4);
+      width: calc(var(--S) * 1.2 - var(--s) / 4);
+      height: calc(var(--S) * 1.2 - var(--s) / 4);
 
       img {
          position: absolute;

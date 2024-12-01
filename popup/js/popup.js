@@ -11,12 +11,19 @@ bInputs.on("change", saveDataB);
 cInputs.on("change", saveDataC);
 // ---------------- initial setup -------------------
 async function init() {
-   chromeStorageGetLocal(storageMappingKey, (val = {}) => {
-      console.log(val);
-      
-      if (val) {
-         mappingData = val;
+   await chromeStorageGetLocal(storageInitKey, (val) => {
+      if (!val) {
+         chromeStorageSetLocal(storageMappingKey, mappingData);
+         chromeStorageSetLocal(storageListingKey, listingData);
+         chromeStorageSetLocal(storageOrdersKey, ordersData);
+         chromeStorageSetLocal(storageSettingsKey, settings);
+         chromeStorageSetLocal(storageInitKey, true);
       }
+   });
+
+   chromeStorageGetLocal(storageMappingKey, (val) => {
+      mappingData = val;
+
       // load input fields
       aInputs.forEach((inp) => {
          if (inp.type === "number") inp.value = mappingData[inp.name] || 0;
@@ -26,48 +33,36 @@ async function init() {
       });
    });
 
-   // chromeStorageGetLocal(storageListingKey, (val) => {
-   //    if (val) {
-   //       listingData = val;
-   //    } else {
-   //       listingData = {};
-   //    }
-   //    setupSavedImages();
+   chromeStorageGetLocal(storageListingKey, (val) => {
+      listingData = val;
+      setupSavedImages();
 
-   //    // load input fields
-   //    bInputs.forEach((inp) => {
-   //       if (inp.type !== "file") {
-   //          if (inp.type === "number") inp.value = listingData[inp.name] || 0;
-   //          else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
-   //          else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
-   //          else inp.value = listingData[inp.name] || "";
-   //       }
-   //    });
-   // });
+      // load input fields
+      bInputs.forEach((inp) => {
+         if (inp.type !== "file") {
+            if (inp.type === "number") inp.value = listingData[inp.name] || 0;
+            else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
+            else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
+            else inp.value = listingData[inp.name] || "";
+         }
+      });
+   });
 
-   // chromeStorageGetLocal(storageOrdersKey, (val) => {
-   //    if (val) {
-   //       ordersData = val;
-   //    }
-   //    cInputs.forEach((inp) => {
-   //       if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
-   //    });
-   //    jsonEditorTitle.removeClass("error");
-   //    setJsonContent(ordersData.nameInBengali || {});
-   // });
+   chromeStorageGetLocal(storageOrdersKey, (val) => {
+      ordersData = val;
+      cInputs.forEach((inp) => {
+         if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
+      });
+      jsonEditorTitle.removeClass("error");
+      setJsonContent(ordersData.nameInBengali);
+   });
 
-   // // load settings
-   // chromeStorageGetLocal(storageSettingsKey, (val = settings) => {
-   //    if (val) {
-   //       settings = val;
-
-   //       settings.listingOpen.forEach((is, i) => {
-   //          I(".grid-flip")[i].checked = is;
-   //       });
-
-   //       I("nav .options .btn input")[settings.currentMode].checked = true;
-   //    }
-   // });
+   // load settings
+   chromeStorageGetLocal(storageSettingsKey, (val) => {
+      settings = val;
+      settings.listingOpen.forEach((is, i) => (I(".grid-flip")[i].checked = is));
+      I("nav .options .btn input")[settings.currentMode].checked = true;
+   });
 }
 init();
 
@@ -149,6 +144,7 @@ I(".grid-flip").click((_, i) => {
 I("nav .options .btn").click((_, i) => {
    settings.currentMode = i;
    chromeStorageSetLocal(storageSettingsKey, settings);
+   jsonEditor.refresh();
 });
 
 let holdTimer;
@@ -172,6 +168,7 @@ function __clear_data_mapping__() {
       });
    }, 1000);
 }
+
 function __clear_data_listing__() {
    holdTimer = setTimeout(() => {
       clearSingleListingButton.addClass("complete");
@@ -191,6 +188,7 @@ function __clear_data_listing__() {
       });
    }, 1000);
 }
+
 function __clear_mapping__() {
    clearTimeout(holdTimer);
    clearSingleListingButton.removeClass("complete");
@@ -282,17 +280,17 @@ imageInputFields.on("change", (_, i, fileInput) => {
    }
 });
 
-// jsonEditor.on("change", () => {
-//    try {
-//       const nameInBengali = getJsonContent();
-//       ordersData.nameInBengali = nameInBengali;
-//       chromeStorageSetLocal(storageOrdersKey, ordersData);
-//       jsonEditorTitle.removeClass("error");
-//    } catch (e) {
-//       console.log("Invalid JSON");
-//       jsonEditorTitle.addClass("error");
-//    }
-// });
+jsonEditor.on("change", () => {
+   try {
+      const nameInBengali = getJsonContent();
+      ordersData.nameInBengali = nameInBengali;
+      chromeStorageSetLocal(storageOrdersKey, ordersData);
+      jsonEditorTitle.removeClass("error");
+   } catch (e) {
+      console.log("Invalid JSON");
+      jsonEditorTitle.addClass("error");
+   }
+});
 
 function saveListingData() {
    chromeStorageSetLocal(storageListingKey, listingData);
