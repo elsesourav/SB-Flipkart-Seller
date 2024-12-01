@@ -17,13 +17,11 @@ let settings = {
    currentMode: 0,
 }
 let mappingData = {};
-let listingData = {
-   images: {},
-};
+let listingData = {};
 let ordersData = {
    nameInBengali: {
       "BEAN": "বরবটি",
-      "BITTER GOURD": "উচ্ছে", 
+      "BITTER GOURD": "উচ্ছে",
       "BOTTLE GOURD": "লাউ",
       "BRINJAL": "বেগুন",
       "CABBAGE": "বাঁধাকপি",
@@ -232,7 +230,7 @@ function chromeStorageSet(key, value, callback) {
 //    console.log("Item set");
 // });
 
-function chromeStorageGet(key, callback = () => {}) {
+function chromeStorageGet(key, callback = () => { }) {
    return new Promise((resolve) => {
       chrome.storage.sync.get([key], function (result) {
          if (chrome.runtime.lastError) {
@@ -267,7 +265,9 @@ function chromeStorageSetLocal(key, value, callback) {
       if (chrome.runtime.lastError) {
          console.error("Error setting item:", chrome.runtime.lastError);
       } else if (callback) {
-         callback();
+         callback(true);
+      } else {
+         return true;
       }
    });
 }
@@ -276,13 +276,12 @@ function chromeStorageGetLocal(key, callback) {
       chrome.storage.local.get([key]).then((result) => {
          if (chrome.runtime.lastError) {
             console.error("Error getting item:", chrome.runtime.lastError);
-         } else if (callback) {
-            if (result[key]) {
-               callback(JSON.parse(result[key]));
-            } else {
-               callback(false);
-            }
-            resolve(true);
+         } else {
+            const value = result[key] || {};
+            const object = JSON.parse(value);
+
+            callback && callback(object);
+            resolve(object);
          }
       });
    });

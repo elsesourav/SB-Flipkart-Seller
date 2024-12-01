@@ -11,7 +11,9 @@ bInputs.on("change", saveDataB);
 cInputs.on("change", saveDataC);
 // ---------------- initial setup -------------------
 async function init() {
-   chromeStorageGetLocal(storageMappingKey, (val) => {
+   chromeStorageGetLocal(storageMappingKey, (val = {}) => {
+      console.log(val);
+      
       if (val) {
          mappingData = val;
       }
@@ -24,66 +26,76 @@ async function init() {
       });
    });
 
-   chromeStorageGetLocal(storageListingKey, (val) => {
-      if (val) {
-         listingData = val;
-         // load images
-         setupImageInput();
-      }
-      // load input fields
-      bInputs.forEach((inp) => {
-         if (inp.type !== "file") {
-            if (inp.type === "number") inp.value = listingData[inp.name] || 0;
-            else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
-            else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
-            else inp.value = listingData[inp.name] || "";
-         }
-      });
-   });
+   // chromeStorageGetLocal(storageListingKey, (val) => {
+   //    if (val) {
+   //       listingData = val;
+   //    } else {
+   //       listingData = {};
+   //    }
+   //    setupSavedImages();
 
-   chromeStorageGetLocal(storageOrdersKey, (val) => {
-      if (val) {
-         ordersData = val;
-      }
-      cInputs.forEach((inp) => {
-         if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
-      });
-      jsonEditorTitle.removeClass("error");
-      setJsonContent(ordersData.nameInBengali);
-   });
+   //    // load input fields
+   //    bInputs.forEach((inp) => {
+   //       if (inp.type !== "file") {
+   //          if (inp.type === "number") inp.value = listingData[inp.name] || 0;
+   //          else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
+   //          else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
+   //          else inp.value = listingData[inp.name] || "";
+   //       }
+   //    });
+   // });
 
-   // load settings
-   chromeStorageGetLocal(storageSettingsKey, (val = settings) => {
-      if (val) {
-         settings = val;
-         
-         settings.listingOpen.forEach((is, i) => {
-            I(".grid-flip")[i].checked = is;
-         });
+   // chromeStorageGetLocal(storageOrdersKey, (val) => {
+   //    if (val) {
+   //       ordersData = val;
+   //    }
+   //    cInputs.forEach((inp) => {
+   //       if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
+   //    });
+   //    jsonEditorTitle.removeClass("error");
+   //    setJsonContent(ordersData.nameInBengali || {});
+   // });
 
-         I("nav .options .btn input")[settings.currentMode].checked = true;
-      }
-   });
+   // // load settings
+   // chromeStorageGetLocal(storageSettingsKey, (val = settings) => {
+   //    if (val) {
+   //       settings = val;
+
+   //       settings.listingOpen.forEach((is, i) => {
+   //          I(".grid-flip")[i].checked = is;
+   //       });
+
+   //       I("nav .options .btn input")[settings.currentMode].checked = true;
+   //    }
+   // });
 }
 init();
 
-function setupImageInput() {
+async function setupSavedImages() {
+   // First hide all image sections
+   imageSection.forEach(section => {
+      section.classList.remove("show");
+   });
+
+   let count = 0;
+
+   // Show and setup existing images
    for (let i = 0; i < 8; i++) {
-      const image = listingData.images[i];
-      if (image) {
-         imageSection[i].classList.add("show");
-         const { url, width, height } = image;
-         setImageInInput(i, url, width, height);
-      } else {
-         imageSection[i].classList.remove("show");
-         setImageInInput(i, "", 0, 0);
-      }
+      await chromeStorageGetLocal(`storage-image-${i}`, async (image) => {
+
+         if (image && image.file) {
+            count++;
+            imageSection[i].classList.add("show");
+            setImageInInput(i, image.file);
+         } else {
+            setImageInInput(i, null);
+         }
+      });
    }
 
-   const size = Object.keys(listingData.images).length;
-
-   if (size < 8) {
-      imageSection[size].classList.add("show");
+   // Show next empty slot
+   if (count < 7) {
+      imageSection[count].classList.add("show");
    }
 }
 
@@ -171,6 +183,9 @@ function __clear_data_listing__() {
                val[key] = 0;
             }
          }
+         for (let i = 0; i < 8; i++) {
+            chromeStorageSetLocal(`storage-image-${i}`, null);
+         }
          chromeStorageSetLocal(storageListingKey, val);
          init();
       });
@@ -190,17 +205,29 @@ clearMappingButton.on("mousedown", __clear_data_mapping__);
 clearMappingButton.on("mouseup", __clear_mapping__);
 clearMappingButton.on("mouseleave", __clear_mapping__);
 
-function setImageInInput(i, url, width, height) {
-   if (width > height) {
-      imageView[i].style.height = `${(height / width) * 100}%`;
-      imageView[i].style.width = "100%";
-   } else {
-      imageView[i].style.height = "100%";
-      imageView[i].style.width = `${(width / height) * 100}%`;
+function setImageInInput(i, file) {
+   if (!file) {
+      imageView[i].style.height = "0";
+      imageView[i].style.width = "0";
+      imageView[i].style.backgroundImage = "none";
+      imageView[i].toggle("active", false);
+      return;
    }
-   imageView[i].style.backgroundImage = url ? `url(${url})` : "none";
 
-   imageView[i].toggle("active", width > 0);
+   const img = new Image();
+   img.src = file;
+   img.onload = () => {
+      if (img.width > img.height) {
+         imageView[i].style.height = `${(img.height / img.width) * 100}%`;
+         imageView[i].style.width = "100%";
+      } else {
+         imageView[i].style.height = "100%";
+         imageView[i].style.width = `${(img.width / img.height) * 100}%`;
+      }
+
+      imageView[i].style.backgroundImage = img ? `url(${img.src})` : "none";
+      imageView[i].toggle("active", img.width > 0);
+   };
 }
 
 let imageFiles = {};
@@ -209,25 +236,32 @@ I(".take-inp.image i.sbi-upload4").click((_, i) => {
    imageInputFields[i].click();
 });
 
-function reSortImages() {
+async function reSortImages() {
    const images = {};
 
    let j = 0;
    for (let i = 0; i < 8; i++) {
-      if (listingData.images[i]) {
-         images[j] = listingData.images[i];
-         j++;
-      }
+      await chromeStorageGetLocal(`storage-image-${i}`, (val) => {
+         if (val && val.file) {
+            images[j] = val;
+            j++;
+         }
+      });
    }
 
-   listingData.images = images;
-   setupImageInput();
+   for (let i = 0; i < j; i++) {
+      chromeStorageSetLocal(`storage-image-${i}`, images[i]);
+   }
+
+   for (let i = j; i < 8; i++) {
+      chromeStorageSetLocal(`storage-image-${i}`, null);
+   }
+   setupSavedImages();
 }
 
 I(".take-inp.image i.sbi-bin").click((_, i) => {
-   delete listingData.images[i];
+   chromeStorageSetLocal(`storage-image-${i}`, null);
    reSortImages();
-   saveListingData();
 });
 
 imageInputFields.on("change", (_, i, fileInput) => {
@@ -238,40 +272,27 @@ imageInputFields.on("change", (_, i, fileInput) => {
       reader.onload = async (event) => {
          if (i < 7) imageSection[i + 1].classList.add("show");
          const imageData = event.target.result;
-         const img = new Image();
-         img.src = imageData;
-         const { url, width, height } = await resizeImageData(imageData, 0.5);
-
-         listingData.images[i] = {
-
-            file: imageFiles[i],
-            width,
-            height,
-         };
-
-         setImageInInput(i, url, width, height);
-
-         saveListingData();
+         chromeStorageSetLocal(`storage-image-${i}`, { file: imageData });
+         setImageInInput(i, imageData);
       };
       reader.readAsDataURL(imageFiles[i]);
    } else {
-      setImageInInput(i, "", 0, 0);
-      listingData.images[i] = {};
-      saveListingData();
+      setImageInInput(i, null);
+      chromeStorageSetLocal(`storage-image-${i}`, null);
    }
 });
 
-jsonEditor.on("change", () => {
-   try {
-      const nameInBengali = getJsonContent();
-      ordersData.nameInBengali = nameInBengali;
-      chromeStorageSetLocal(storageOrdersKey, ordersData);
-      jsonEditorTitle.removeClass("error");
-   } catch (e) {
-      console.log("Invalid JSON");
-      jsonEditorTitle.addClass("error");
-   }
-});
+// jsonEditor.on("change", () => {
+//    try {
+//       const nameInBengali = getJsonContent();
+//       ordersData.nameInBengali = nameInBengali;
+//       chromeStorageSetLocal(storageOrdersKey, ordersData);
+//       jsonEditorTitle.removeClass("error");
+//    } catch (e) {
+//       console.log("Invalid JSON");
+//       jsonEditorTitle.addClass("error");
+//    }
+// });
 
 function saveListingData() {
    chromeStorageSetLocal(storageListingKey, listingData);
@@ -295,9 +316,7 @@ function saveDataA() {
 
 function saveDataB() {
    chromeStorageGetLocal(storageListingKey, (val) => {
-      if (!val) val = {
-         images: {},
-      };
+      if (!val) val = {};
 
       bInputs.forEach((inp) => {
          if (inp.type !== "file") {

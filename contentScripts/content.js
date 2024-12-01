@@ -28,6 +28,10 @@ function waitForUploadingImage() {
    });
 }
 
+setTimeout(() => {
+   console.clear()
+}, 3000);
+
 async function setup_listing() {
    let openInputBtn, copyInputBtn;
    CE(
@@ -38,38 +42,44 @@ async function setup_listing() {
 
    openInputBtn.addEventListener("click", async () => {
       const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
-
+ 
       // fill Images
       const val = await getListingData();
-      console.log(val.images);
+      let { images } = val;
+      
+      if (images.length > 4) {
+         images = images
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 4);
+      }
 
-      const images = [
-         val.image_0,
-         val.image_1,
-         val.image_2,
-         val.image_3,
-      ].filter((e) => e?.url);
+      if (images.length >= 0) {
+         editButtons[0].click();
+         await wait(500);
 
-      // if (images.length > 0) {
-      //    editButtons[0].click();
-      //    await wait(500);
+         for (let i = 0; i < 4; i++) {
+            await wait(200);
+            I(`#thumbnail_${i} > div`)[0].click();
 
-      //    for (let i = 0; i < images.length; i++) {
-      //       if (images[i]) {
-      //          await wait(200);
-      //          I(`#thumbnail_${i} > div`)[0].click();
-      //          const fileInput = I("#upload-image")[0];
-      //          if (fileInput) putImageIntoInputFile(fileInput, images[i].url);
-      //          await waitForUploadingImage();
-      //          await wait(200);
-      //       }
-      //    }
+            if (images[i]) {
+               const fileInput = I("#upload-image")[0];
+               if (fileInput) putImageIntoInputFile(fileInput, images[i].file);
+               await waitForUploadingImage();
+               await wait(200);
+            } else {
+               await wait(50);
+               I(".jDWxNA .iuIlzu i")[0]?.click();
+               await wait(100);
+               I(".jDWxNA .ewbxDW")[1]?.click();
+            }
+         }
 
-      //    await wait(300);
-      //    saveButtonClick();
-      //    await waitingForSaved();
-      //    await wait(500);
-      // }
+
+         await wait(300);
+         saveButtonClick();
+         await waitingForSaved();
+         await wait(500);
+      }
 
       // ------- Price, Stock and Shipping Information
 
@@ -313,7 +323,7 @@ async function setup_listing() {
    });
 }
 
-async function setup_single_order() {
+async function setup_orders_print() {
    let openInputBtn, closeBtn, printBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
    if (sku_ids.length <= 0) return;
@@ -691,7 +701,7 @@ onload = async () => {
 
    if (ifMatchSingleOrderLocation()) {
       setStyle();
-      setup_single_order();
+      setup_orders_print();
    }
 
 
@@ -739,7 +749,7 @@ addEventListener("mousedown", async (_) => {
 
       if (!isFWO) {
          setStyle();
-         setup_single_order();
+         setup_orders_print();
       } else if (isFWO) {
          fwo.style.display = "flex";
       }

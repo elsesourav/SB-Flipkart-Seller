@@ -1,4 +1,5 @@
 importScripts("./../utils.js", "./bgUtils.js");
+console.log("background loaded");
 
 runtimeOnMessage("c_b_update_mapping", (values, _, sendResponse) => {
    sendResponse({ status: "ok" });
@@ -29,7 +30,7 @@ function getProductData(url) {
 
          const sellingMRP = price1 ? price1[1].replace(/,/g, '') : null;
          const MRP = price2 ? price2[1].replace(/,/g, '') : null;
-         
+
          console.log(sellingMRP, MRP);
          resolve({
             sellingMRP,
@@ -42,7 +43,19 @@ function getProductData(url) {
       }
    });
 }
-console.log("background loaded");
+
+function getImagesFromLocalStorage() {
+   return new Promise(async (resolve) => {
+      const images = [];
+      for (let i = 0; i < 8; i++) {
+         const image = await chromeStorageGetLocal(`storage-image-${i}`);
+         if (image) {
+            images.push(image);
+         }
+      }
+      resolve(images);
+   });
+}
 
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));
@@ -62,7 +75,12 @@ runtimeOnMessage("c_b_listing_data_update", (values, _, sendResponse) => {
 
 runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
    chromeStorageGetLocal(storageListingKey, (val) => {
-      sendResponse(val);
+      getImagesFromLocalStorage().then((images) => {
+         sendResponse({
+            ...val,
+            images
+         });
+      });
    });
 });
 

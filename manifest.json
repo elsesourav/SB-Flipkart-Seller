@@ -1,6 +1,6 @@
 {
    "name": "Seller Automation ES",
-   "version": "1.1.0",
+   "version": "1.1.1",
    "description": "A tool for online sellers, automating listings and mapping to streamline e-commerce operations. (Copyright © SouravBarui2024).",
    "manifest_version": 3,
    "permissions": [
@@ -8,6 +8,7 @@
       "storage",
       "tabs",
       "activeTab",
+      "unlimitedStorage",
       "declarativeNetRequest",
       "declarativeNetRequestFeedback",
       "webRequest",

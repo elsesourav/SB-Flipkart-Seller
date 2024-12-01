@@ -1,5 +1,6 @@
 // Initialize JSON Editor
-const jsonEditor = CodeMirror.fromTextArea(document.getElementById("jsonEditor"), {
+const JSON_EDITOR_ELEMENT = document.getElementById("jsonEditor");
+const jsonEditor = CodeMirror.fromTextArea(JSON_EDITOR_ELEMENT, {
    mode: "application/json",
    theme: "monokai",
    lineNumbers: true,
@@ -19,7 +20,16 @@ jsonEditor.setSize("100%", "100%");
 jsonEditor.refresh();
 
 function getJsonContent() {
-   return JSON.parse(jsonEditor.getValue());
+   try {
+      if (!jsonEditor) {
+         return {};
+      }
+      const value = jsonEditor.getValue();
+      return value ? JSON.parse(value) : {};
+   } catch (error) {
+      console.error('Error parsing JSON:', error);
+      return {};
+   }
 }
 
 function setJsonContent(json) {
