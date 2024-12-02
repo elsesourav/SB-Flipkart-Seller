@@ -2,7 +2,7 @@
 const JSON_EDITOR_ELEMENT = document.getElementById("jsonEditor");
 const jsonEditor = CodeMirror.fromTextArea(JSON_EDITOR_ELEMENT, {
    mode: "application/json",
-   theme: "monokai",
+   theme: "dracula",
    lineNumbers: true,
    autoCloseBrackets: true,
    matchBrackets: true,
@@ -10,10 +10,10 @@ const jsonEditor = CodeMirror.fromTextArea(JSON_EDITOR_ELEMENT, {
    tabSize: 3,
    lineWrapping: true,
    foldGutter: true,
+   styleActiveLine: { nonEmpty: true },
+   highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-   extraKeys: {
-      "Ctrl-Space": "autocomplete"
-   }
+   extraKeys: { "Ctrl-Space": "autocomplete" }
 });
 
 jsonEditor.setSize("100%", "100%");

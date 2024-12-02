@@ -96,33 +96,41 @@ const style = `
 `;
 
 const tableStyle = `
-   ._-table {
+   #_orders_table {
       margin: 0;
       position: fixed;
       box-sizing: border-box;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 400px;
-      max-width: 800px;
+      width: 100svw;
+      height: 100svh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000b;
+      backdrop-filter: blur(2px);
+      overflow-y: scroll;
+      z-index: 100;
+   }
+
+   ._-table {
+      position: relative;
+      box-sizing: border-box;
+      width: 800px;
+      max-width: 1000px;
       border-radius: 10px;
       box-shadow: 0 0 10px #000;
       background: #fff;
       flex-direction: column;
       color: #000
       padding: 10px;
-      z-index: 100;
-      pointer-events: none;
-      outline: 10000px solid #000b;
    }
    ._-row {
       position: relative;
       width: 100%;
-      padding: 5px;
+      padding: 6px;
       display: grid;
       place-items: center;
-      grid-template-columns: repeat(auto-fill, minmax(99px, 1fr));
-      border-bottom: 2px double #000;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 3px double #000;
    }
 
    ._-cell {

@@ -3,6 +3,7 @@
 
 <head>
    <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link href="./../assets/icons/css/font.css" rel="stylesheet" type="text/css" />
    <link href="./../assets/icons/css/icon.css" rel="stylesheet" type="text/css" />
    <link href="./css/base.css" rel="stylesheet" type="text/css" />
@@ -13,6 +14,7 @@
 
    <link href="./css/codemirror.css" rel="stylesheet" type="text/css" />
    <link href="./css/monokai.css" rel="stylesheet" type="text/css" />
+   <link href="./css/dracula.css" rel="stylesheet" type="text/css" />
    <link href="./css/foldgutter.css" rel="stylesheet" type="text/css" />
 
    <script src="./js/codemirror.js"></script>
@@ -22,6 +24,9 @@
    <script src="./js/foldcode.js"></script>
    <script src="./js/foldgutter.js"></script>
    <script src="./js/braceFold.js"></script>
+   <script src="./js/activeLine.js"></script>
+   <script src="./js/searchcursor.js"></script>
+   <script src="./js/matchHighlighter.js"></script>
 
    <script defer src="./../querySelector.js"></script>
    <script defer src="./../utils.js"></script>
@@ -74,7 +79,7 @@
       <div class="container" id="mappingContainer">
          <div class="basic-grid no-flip">
             <div class="take-inp">
-               <span>Name</span>
+               <span class="inp-span">Name</span>
                <section>
                   <div class="take-value">
                      <div class="inp text">
@@ -85,7 +90,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Profit</span>
+               <span class="inp-span">Profit</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -147,7 +152,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Flipkart <i class="sbi-inr"></i></span>
+               <span class="inp-span">Flipkart <i class="sbi-inr"></i></span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="0.05">
@@ -164,14 +169,14 @@
             </div>
 
             <div class="take-inp check-box">
-               <span>Delivery <i class="sbi-inr"></i> Included</span>
+               <span class="inp-span">Delivery <i class="sbi-inr"></i> Included</span>
                <section>
                   <input type="checkbox" name="IS_INCLUDED" class="input-a" />
                </section>
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Delivery</span>
+               <span class="inp-span">Delivery</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -217,7 +222,7 @@
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Packaging</span>
+               <span class="inp-span">Packaging</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -263,7 +268,7 @@
             </div>
 
             <div class="take-inp">
-               <span>PkgWeight</span>
+               <span class="inp-span">PkgWeight</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="0.05">
@@ -280,7 +285,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Status</span>
+               <span class="inp-span">Status</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -295,7 +300,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Min Qnty</span>
+               <span class="inp-span">Min Qnty</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -310,7 +315,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Procur..t </span>
+               <span class="inp-span">Procur..t </span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -328,7 +333,7 @@
             </div>
 
             <div class="take-inp">
-               <span>SLA</span>
+               <span class="inp-span">SLA</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -345,7 +350,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Stock</span>
+               <span class="inp-span">Stock</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -362,7 +367,7 @@
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Details</span>
+               <span class="inp-span">Details</span>
 
                <section>
                   <div class="take-value">
@@ -394,7 +399,7 @@
             </div>
 
             <div class="take-inp">
-               <span>HSN</span>
+               <span class="inp-span">HSN</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -411,7 +416,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Life</span>
+               <span class="inp-span">Life</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -439,11 +444,11 @@
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip" />
                <i class="sbi-chevron-circle-down"></i>
-               <span>IMAGES</span>
+               <span class="inp-span">IMAGES</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
             <div class="take-inp image show">
-               <span>Image 1</span>
+               <span class="inp-span">Image 1</span>
                <section>
                   <div class="img-box"></div>
                   <input type="file" accept=".png,.jpg,.jpeg" name="image_0" class="input-b inp-image" />
@@ -523,12 +528,12 @@
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip" />
                <i class="sbi-chevron-circle-down"></i>
-               <span>Product Description</span>
+               <span class="inp-span">Product Description</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
 
             <div class="take-inp">
-               <span>Name</span>
+               <span class="inp-span">Name</span>
                <section>
                   <div class="take-value">
                      <div class="inp text">
@@ -539,7 +544,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Profit</span>
+               <span class="inp-span">Profit</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -601,7 +606,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Flipkart <i class="sbi-inr"></i></span>
+               <span class="inp-span">Flipkart <i class="sbi-inr"></i></span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="0.05">
@@ -618,14 +623,14 @@
             </div>
 
             <div class="take-inp check-box">
-               <span>Delivery <i class="sbi-inr"></i> Included</span>
+               <span class="inp-span">Delivery <i class="sbi-inr"></i> Included</span>
                <section>
                   <input type="checkbox" name="IS_INCLUDED" class="input-b" />
                </section>
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Delivery</span>
+               <span class="inp-span">Delivery</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -671,7 +676,7 @@
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Packaging</span>
+               <span class="inp-span">Packaging</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -717,7 +722,7 @@
             </div>
 
             <div class="take-inp">
-               <span>PkgWeight</span>
+               <span class="inp-span">PkgWeight</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="0.05">
@@ -734,7 +739,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Status</span>
+               <span class="inp-span">Status</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -749,7 +754,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Min Qnty</span>
+               <span class="inp-span">Min Qnty</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -764,7 +769,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Procur..t </span>
+               <span class="inp-span">Procur..t </span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -782,7 +787,7 @@
             </div>
 
             <div class="take-inp">
-               <span>SLA</span>
+               <span class="inp-span">SLA</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -799,7 +804,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Stock</span>
+               <span class="inp-span">Stock</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -816,7 +821,7 @@
             </div>
 
             <div class="take-inp full-width one-label-three-input">
-               <span>Details</span>
+               <span class="inp-span">Details</span>
 
                <section>
                   <div class="take-value">
@@ -848,7 +853,7 @@
             </div>
 
             <div class="take-inp">
-               <span>HSN</span>
+               <span class="inp-span">HSN</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -865,7 +870,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Life</span>
+               <span class="inp-span">Life</span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -889,12 +894,12 @@
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip" />
                <i class="sbi-chevron-circle-down"></i>
-               <span>Product Description</span>
+               <span class="inp-span">Product Description</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
 
             <div class="take-inp">
-               <span>Model ID</span>
+               <span class="inp-span">Model ID</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -905,7 +910,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Cmn Nm</span>
+               <span class="inp-span">Cmn Nm</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -916,7 +921,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Qnty</span>
+               <span class="inp-span">Qnty</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -927,7 +932,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Qnty In</span>
+               <span class="inp-span">Qnty In</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -943,7 +948,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Suitable</span>
+               <span class="inp-span">Suitable</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -955,7 +960,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Organic</span>
+               <span class="inp-span">Organic</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -970,7 +975,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Sales Pkg</span>
+               <span class="inp-span">Sales Pkg</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -982,7 +987,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Seed Type</span>
+               <span class="inp-span">Seed Type</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1000,12 +1005,12 @@
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip" />
                <i class="sbi-chevron-circle-down"></i>
-               <span>Additional Description (Optional)</span>
+               <span class="inp-span">Additional Description (Optional)</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
 
             <div class="take-inp">
-               <span>Flowering</span>
+               <span class="inp-span">Flowering</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -1020,7 +1025,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Descrip..n</span>
+               <span class="inp-span">Descrip..n</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1031,7 +1036,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Keywords</span>
+               <span class="inp-span">Keywords</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1043,7 +1048,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Features</span>
+               <span class="inp-span">Features</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1054,7 +1059,7 @@
             </div>
 
             <div class="take-inp">
-               <span>VideoURL</span>
+               <span class="inp-span">VideoURL</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1065,7 +1070,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Family</span>
+               <span class="inp-span">Family</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1076,7 +1081,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Since Nm</span>
+               <span class="inp-span">Since Nm</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1087,7 +1092,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Uses</span>
+               <span class="inp-span">Uses</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1098,7 +1103,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Soil Req</span>
+               <span class="inp-span">Soil Req</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1110,7 +1115,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Sow Metd</span>
+               <span class="inp-span">Sow Metd</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1121,7 +1126,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Season</span>
+               <span class="inp-span">Season</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1133,7 +1138,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Pack of</span>
+               <span class="inp-span">Pack of</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1144,7 +1149,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Max Life</span>
+               <span class="inp-span">Max Life</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1155,7 +1160,7 @@
             </div>
 
             <div class="take-inp">
-               <span>EAN/UPC</span>
+               <span class="inp-span">EAN/UPC</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1166,7 +1171,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Soil Type</span>
+               <span class="inp-span">Soil Type</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -1194,7 +1199,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Sunlight</span>
+               <span class="inp-span">Sunlight</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -1216,7 +1221,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Watering</span>
+               <span class="inp-span">Watering</span>
                <section>
                   <div class="take-value">
                      <div class="inp selection">
@@ -1238,7 +1243,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Germin..n</span>
+               <span class="inp-span">Germin..n</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1249,7 +1254,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Instru..ns</span>
+               <span class="inp-span">Instru..ns</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1261,7 +1266,7 @@
             </div>
 
             <div class="take-inp">
-               <span>Otr Feat.s</span>
+               <span class="inp-span">Otr Feat.s</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
@@ -1281,21 +1286,21 @@
       <div class="container" id="ordersSettings">
          <div class="basic-grid no-flip">
             <div class="take-inp check-box">
-               <span>Words in Bengali</span>
+               <span class="inp-span">Words in Bengali</span>
                <section>
-                  <input type="checkbox" name="WordInBengali" class="input-c" />
+                  <input type="checkbox" id="WordInBengali" name="WordInBengali" class="input-c" />
                </section>
             </div>
 
-            <div class="take-inp check-box">
-               <span>Numbers in Bengali</span>
+            <div class="take-inp check-box" id="NumberInBengaliDiv">
+               <span class="inp-span">Numbers in Bengali</span>
                <section>
-                  <input type="checkbox" name="NumberInBengali" class="input-c" />
+                  <input type="checkbox" id="NumberInBengali" name="NumberInBengali" class="input-c" />
                </section>
             </div>
 
             <div class="take-inp full-width big-textarea">
-               <span id="jsonEditorTitle" class="">Define Bengali Words (JSON)</span>
+               <span class="inp-span" id="jsonEditorTitle" class="">Define Weight & Words (JSON)</span>
                <section>
                   <textarea name="json_editor" class="input-c" id="jsonEditor"></textarea>
                </section>

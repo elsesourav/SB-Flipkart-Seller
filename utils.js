@@ -20,38 +20,44 @@ let settings = {
 let mappingData = {};
 let listingData = {};
 let ordersData = {
-   nameInBengali: {
-      "BEAN": "বরবটি",
-      "BITTER GOURD": "উচ্ছে",
-      "BOTTLE GOURD": "লাউ",
-      "BRINJAL": "বেগুন",
-      "CABBAGE": "বাঁধাকপি",
-      "CAPSICUM": "ক্যাপসিকাম",
-      "CARPET GRASS": "ঘাস",
-      "CARROT": "গাজর",
-      "CAULIFLOWER": "ফুলকপি",
-      "CHILLI": "লঙ্কা",
-      "CUCUMBER": "শশা",
-      "DAHLIA": "ডালিয়া",
-      "LOTUS": "পদ্ম ফুল",
-      "MARIGOLD": "গাঁদা ফুল",
-      "MALABAR SPINACH": "পুই শাক",
-      "MORINGA": "সজনে",
-      "ONION": "পেঁয়াজ",
-      "PAPAYA": "পেঁপে",
-      "RED SPINACH": "লাল শাক",
-      "RIDGE GOURD": "ঝিঙ্গে",
-      "RUNNER BEANS": "সিম",
-      "SPINACH": "পালং শাক",
-      "TOMATO": "টমেটো",
-      "HALUD": "হলুদ",
-      "TURMERIC": "হলুদ"
+   editor: {
+      calculateWeight: {
+         "LOTUS": ["100 P", "100 G"]
+      },
+      nameInBengali: {
+         "BEAN": "বরবটি",
+         "BITTER GOURD": "উচ্ছে",
+         "BOTTLE GOURD": "লাউ",
+         "BRINJAL": "বেগুন",
+         "CABBAGE": "বাঁধাকপি",
+         "CAPSICUM": "ক্যাপসিকাম",
+         "CARPET GRASS": "ঘাস",
+         "CARROT": "গাজর",
+         "CAULIFLOWER": "ফুলকপি",
+         "CHILLY": "লঙ্কা",
+         "CHILLI": "লঙ্কা",
+         "CUCUMBER": "শশা",
+         "DAHLIA": "ডালিয়া",
+         "LOTUS": "পদ্ম ফুল",
+         "MARIGOLD": "গাঁদা ফুল",
+         "MALABAR SPINACH": "পুই শাক",
+         "MORINGA": "সজনে",
+         "ONION": "পেঁয়াজ",
+         "PAPAYA": "পেঁপে",
+         "RED SPINACH": "লাল শাক",
+         "RIDGE GOURD": "ঝিঙ্গে",
+         "RUNNER BEANS": "সিম",
+         "SPINACH": "পালং শাক",
+         "TOMATO": "টমেটো",
+         "HALUD": "হলুদ",
+         "TURMERIC": "হলুদ"
+      }
    },
    typeInBengali: {
-      "p": "পিস",
-      "kg": "কেজি",
-      "g": "গ্রাম",
-      "times": "টা"
+      "P": "পিস",
+      "KG": "কেজি",
+      "G": "গ্রাম",
+      "TIMES": "টা"
    },
    numberInBengali: ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
 };

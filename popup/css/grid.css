@@ -111,6 +111,14 @@
             position: absolute;
             height: 100% !important;
             width: 100% !important;
+            font-size: calc(var(--s) * 1.2);
+            font-family: "Fira Code", monospace, system-ui, sans-serif;
+            line-height: 1.2;
+         }
+
+         .CodeMirror-activeline-background {
+            outline: 1px solid #5557;
+            background: rgba(255, 255, 255, 0.05);
          }
 
          .CodeMirror-linenumber {
@@ -119,6 +127,21 @@
             color: light-dark(#AAA, #555);
             font-weight: 700;
          }
+
+         .CodeMirror-focused .cm-matchhighlight {
+            background: rgba(255, 255, 255, 0.1);
+         }
+         
+         /* .cm-matchhighlight  {
+            background-color: lightgreen;
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFklEQVQI12NgYGBgkKzc8x9CMDAwAAAmhwSbidEoSQAAAABJRU5ErkJggg==);
+            background-position: bottom;
+            background-repeat: repeat-x;
+         } */
+
+         /* .CodeMirror-selection-highlight-scrollbar {
+            background-color: green;
+         } */
       }
 
       label {

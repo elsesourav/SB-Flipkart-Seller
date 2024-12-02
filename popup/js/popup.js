@@ -9,6 +9,17 @@ const imageView = I(".take-inp.image .img-box");
 aInputs.on("change", saveDataA);
 bInputs.on("change", saveDataB);
 cInputs.on("change", saveDataC);
+
+I("#WordInBengali").click((_, __, ele) => {
+   if (ele.checked) {
+      I("#NumberInBengaliDiv").removeClass("hide");
+   } else {
+      I("#NumberInBengali")[0].checked = false;
+      I("#NumberInBengaliDiv").addClass("hide");
+   }
+   saveDataC();
+});
+
 // ---------------- initial setup -------------------
 async function init() {
    await chromeStorageGetLocal(storageInitKey, (val) => {
@@ -54,7 +65,8 @@ async function init() {
          if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
       });
       jsonEditorTitle.removeClass("error");
-      setJsonContent(ordersData.nameInBengali);
+      setJsonContent(ordersData.editor);
+      I("#NumberInBengaliDiv")[0].classList.toggle("hide", !ordersData.WordInBengali);
    });
 
    // load settings
@@ -282,8 +294,8 @@ imageInputFields.on("change", (_, i, fileInput) => {
 
 jsonEditor.on("change", () => {
    try {
-      const nameInBengali = getJsonContent();
-      ordersData.nameInBengali = nameInBengali;
+      const editorValue = getJsonContent();
+      ordersData.editor = editorValue;
       chromeStorageSetLocal(storageOrdersKey, ordersData);
       jsonEditorTitle.removeClass("error");
    } catch (e) {

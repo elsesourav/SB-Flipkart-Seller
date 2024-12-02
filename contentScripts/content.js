@@ -29,7 +29,7 @@ function waitForUploadingImage() {
 }
 
 setTimeout(() => {
-   console.clear()
+   // console.clear()
 }, 3000);
 
 async function setup_listing() {
@@ -260,76 +260,35 @@ async function setup_listing() {
          "national_shipping_fee_from_buyer"
       );
 
-      setInObject(I("#length"), "length_p0");
-      setInObject(I("#breadth"), "breadth_p0");
-      setInObject(I("#height"), "height_p0");
-      setInObject(I("#weight"), "weight_p0");
+      setInObject(I("[name='length_p0']"), "length_p0");
+      setInObject(I("[name='breadth_p0']"), "breadth_p0");
+      setInObject(I("[name='height_p0']"), "height_p0");
+      setInObject(I("[name='weight_p0']"), "weight_p0");
       setInObject(I("#hsn"), "hsn");
       setInObject(I("#manufacturer_details"), "manufacturer_details");
       setInObject(I("#packer_details"), "packer_details");
       setInObject(I("#earliest_mfg_date"), "earliest_mfg_date");
       setInObject(I("#shelf_life"), "shelf_life");
 
-      closeButtonClick();
-      await wait(200);
+      updateMappingValues(tempVal);
+   });
 
-      // ------- Product Description
-      editButtons[2].click();
-      await wait(500);
+   openInputBtn.addEventListener("click", openInputButtonAction);
+   copyInputBtn.addEventListener("click", copyInputButtonAction);
 
-      setInObject(I("#model_name"), "model_id");
-      multipleValueSetInObj("common_name", "common_name");
-      setInObject(I("#quantity"), "quantity");
-      setInObject(I("[name='quantity_0_qualifier']"), "quantity_in");
-      multipleValueSetInObjByIndex("suitable_for", "suitable_for");
-      setInObject(I("#organic"), "organic");
-      multipleValueSetInObj("sales_package", "sales_package");
-      multipleValueSetInObjByIndex("type_of_seed", "seed_type");
-
-      closeButtonClick();
-      await wait(300);
-
-      // ------- Additional Description (Optional)
-      editButtons[3].click();
-      await wait(500);
-
-      setInObject(I("#flowering_plant"), "flowering_plant");
-      setInObject(I("#description"), "description");
-      multipleValueSetInObj("keywords", "search_keywords");
-      multipleValueSetInObj("key_features", "key_features");
-      setInObject(I("#video_url"), "video_URL");
-      setInObject(I("#family"), "family");
-      multipleValueSetInObj("uses", "uses");
-      multipleValueSetInObj(
-         "soil_nutrient_requirements",
-         "soil_nutrient_requirements"
-      );
-      setInObject(I("#sowing_method"), "sowing_method");
-      multipleValueSetInObjByIndex("season", "season");
-      setInObject(I("#pack_of"), "pack_of");
-      setInObject(I("#max_shelf_life"), "max_shelf_life");
-      multipleValueSetInObj("ean", "EAN_UPC");
-      setInObject(I("#soil_type"), "soil_type");
-      setInObject(I("#sunlight"), "sunlight");
-      setInObject(I("#watering"), "watering");
-      setInObject(I("#germination_time"), "germination_time");
-      multipleValueSetInObj("care_instructions", "care_instructions");
-      multipleValueSetInObj("other_features", "other_features");
-
-      await wait(200);
-      closeButtonClick();
-
-      updateListingValues(tempVal);
+   document.querySelector(".hTTPSU")?.addEventListener("click", () => {
+      openInputBtn.removeEventListener("click", openInputButtonAction);
+      copyInputBtn.removeEventListener("click", copyInputButtonAction);
    });
 }
 
-async function setup_orders_print() {
-   let openInputBtn, closeBtn, printBtn;
+function setup_orders_print() {
+   let openInputBtn, closeBtn, printBtn, downloadBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
    if (sku_ids.length <= 0) return;
 
    const TABLE = document.createElement("div");
-   TABLE.setAttribute("class", "_-table");
+   TABLE.setAttribute("id", "_orders_table");
    document.body.appendChild(TABLE);
    setStyle(true);
 
@@ -337,11 +296,13 @@ async function setup_orders_print() {
       { id: "__fwo__", class: "__fw__" },
       (openInputBtn = CE({ class: "__btn__" }, "Orders")),
       (printBtn = CE({ class: "__btn__" }, "Print")),
+      (downloadBtn = CE({ class: "__btn__" }, "Download")), 
       (closeBtn = CE({ class: "__btn__ __1__" }, "Close"))
    ).parent(document.body);
 
    closeBtn.style.display = "none";
    printBtn.style.display = "none";
+   downloadBtn.style.display = "none";
    TABLE.style.display = "none";
 
    function printTable() {
@@ -355,6 +316,8 @@ async function setup_orders_print() {
                      margin: 0;
                      padding: 0;
                      box-sizing: border-box;
+                     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+                     font-size: 12px;
                   }
                   ._-table {
                      position: relative;
@@ -366,11 +329,11 @@ async function setup_orders_print() {
                   ._-row {
                      position: relative;
                      width: 100%;
-                     padding: 5px;
+                     padding: 4px;
                      display: grid;
                      place-items: center;
-                     grid-template-columns: repeat(auto-fill, minmax(99px, 1fr));
-                     border-bottom: 2px double #000;
+                     grid-template-columns: repeat(3, 1fr);
+                     border-bottom: 1px double #000;
                   }
 
                   ._-cell {
@@ -406,63 +369,110 @@ async function setup_orders_print() {
       printWindow.print();
    }
 
+   async function downloadAsImage() {
+      const canvas = await html2canvas(TABLE.querySelector("._-table"));
+      const link = document.createElement("a");
+      const date = new Date().toLocaleDateString('en-US', {day: 'numeric', month: 'short', year: 'numeric'});
+      link.download = `Orders ${date}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+   }
+
    async function showOrders() {
       const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
       const unit = document.querySelectorAll(".hCSXUa .hXpCNJ");
       const DATA = await getOrderData();
-      const isBengaliWord = DATA.WordInBengali;
-      const isBengaliNumber = DATA.NumberInBengali;
+      const { WordInBengali, NumberInBengali, editor, typeInBengali } = DATA;
+      const { calculateWeight, nameInBengali } = editor;
 
-      if (isBengaliWord || isBengaliNumber) TABLE.style.fontSize = "14px";
-      else TABLE.style.fontSize = "12px";
+      let NAMES = {};
+      for (const [key, value] of Object.entries(nameInBengali)) {
+         NAMES[key.toUpperCase()] = WordInBengali ? value : key;
+      }
+
+      let TYPES = {};
+      for (const [key, value] of Object.entries(typeInBengali)) {
+         TYPES[key.toUpperCase()] = WordInBengali ? value : key;
+      }
+
+      // if (WordInBengali) TABLE.style.fontSize = "18px";
+      // else 
+      TABLE.style.fontSize = "15px";
 
       const SKU = [...sku_ids].map(el => el.innerText);
       const UNIT = [...unit].map(el => parseInt(el.innerText));
       const sku_data = SKU.map(el => el.split("__"));
 
-      const products = {};
-      sku_data.forEach((sku__, i) => {
-         if (sku__.length >= 3) {
-            const [name, quantity, type] = sku__;
-            const nm = name.toUpperCase();
-            const NAME = isBengaliWord ? DATA.nameInBengali[nm] : nm;
-            const type_ = type == "PIECE" ? "p" : type.toLowerCase();
-            const [q, t] = getBengaliQuantity(quantity + " " + type_, DATA, isBengaliNumber);
-
-            if (!products[NAME]) products[NAME] = {};
-            products[NAME][`${q} ${t}`] = products[NAME][`${q} ${t}`] !== undefined ? products[NAME][`${q} ${t}`] + UNIT[i] : UNIT[i]
-         } else if (DATA.products[SKU[i]]) {
+      const PRODUCTS = {};
+      sku_data.forEach((_sku_, i) => {
+         if (DATA.products[SKU[i]]) {
             const temp = DATA.products[SKU[i]];
             const { NAME, TYPE, QUANTITY } = temp;
-            const NM = isBengaliWord ? DATA.nameInBengali[NAME.toUpperCase()] : NAME.toUpperCase();
-            const type_ = TYPE == "per packet" ? "p" : TYPE.toLowerCase();
-            const [q, t] = getBengaliQuantity(QUANTITY + " " + type_, DATA, isBengaliNumber);
 
-            if (!products[NM]) products[NM] = {};
-            products[NM][`${q} ${t}`] = products[NM][`${q} ${t}`] !== undefined ? products[NM][`${q} ${t}`] + UNIT[i] : UNIT[i]
+            const weight = calculateWeight[NAME.toUpperCase()] || null;
+
+            const name = NAMES[NAME.toUpperCase()] || NAME.toUpperCase();
+            const type = TYPES[TYPE === "per packet" ? "P" : TYPE.toUpperCase()] || TYPE.toUpperCase();
+            const num = NumberInBengali ? toBengaliNumber(QUANTITY) : QUANTITY;
+
+            let gram = "";
+
+            if (type === "PIECE" && weight) {
+               const [_p_, _g_] = extractNumbers(weight);
+               const result = num * _g_ / _p_;
+               const formattedResult = Number.isInteger(result) ? result : result.toFixed(3);
+               gram = `, ${formattedResult} ${TYPES["G"]}`;
+            }
+
+            !PRODUCTS[name] && (PRODUCTS[name] = {});
+            const quantityKey = `${num} ${type}${gram}`;
+            PRODUCTS[name][quantityKey] = (PRODUCTS[name][quantityKey] || 0) + UNIT[i];
+         } else if (_sku_.length >= 3) {
+            const [name, quantity, type] = _sku_;
+            
+            const weight = calculateWeight[name.toUpperCase()] || null;
+            
+            const NAME = NAMES[name.toUpperCase()] || name.toUpperCase();
+            const TYPE = TYPES[type === "PIECE" ? "P" : type] || type;
+            const NUM = NumberInBengali ? toBengaliNumber(quantity) : quantity;
+
+            
+            let gram = "";
+            
+            if (type === "PIECE" && weight) {
+               const [_p_, _g_] = extractNumbers(weight);
+               const result = quantity * _g_ / _p_;
+               const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
+               gram = `, ${formattedResult} ${TYPES["G"]}`;
+            }
+
+            !PRODUCTS[NAME] && (PRODUCTS[NAME] = {});
+            const quantityKey = `${NUM} ${TYPE}${gram}`;
+            PRODUCTS[NAME][quantityKey] = (PRODUCTS[NAME][quantityKey] || 0) + UNIT[i];
+
+         } else {
+            console.log("SKU NOT FOUND", SKU[i]);
          }
       });
 
-      let html = "";
-      for (const name in products) {
-         html += `<div class="_-row"><div class="_-cell _-header">${name}</div>`;
-         for (const [quantity, type] of Object.entries(products[name])) {
-            if (isBengaliWord && isBengaliNumber) {
-               const [u, n] = getBengaliUnit(type, DATA, isBengaliNumber);
-               html += `<div class="_-cell">${quantity} => (${u} ${n})</div>`;
-            } else {
-               html += `<div class="_-cell">${quantity} => (${type})</div>`;
-            }
-         }
-         html += `</div>`;
-      }
+      const tableRows = Object.entries(PRODUCTS).map(([name, quantities]) => {
+         const header = `<div class="_-cell _-header">${name}</div>`;
+         
+         const cells = Object.entries(quantities).map(([quantity, type]) => {
+            const TYPE = WordInBengali ? `${type} ${TYPES["TIMES"]}` : `(${type})`;
+            return `<div class="_-cell">${quantity} => ${TYPE}</div>`;
+         }).join('');
 
-      TABLE.innerHTML = html;
+         return `<div class="_-row">${header}${cells}</div>`;
+      }).join('');
+
+      TABLE.innerHTML = `<div class="_-table">${tableRows}</div>`;
    }
 
    openInputBtn.addEventListener("click", async () => {
       closeBtn.style.display = "block";
       printBtn.style.display = "block";
+      downloadBtn.style.display = "block";
       openInputBtn.style.display = "none";
       TABLE.style.display = "flex";
       showOrders();
@@ -471,11 +481,13 @@ async function setup_orders_print() {
    closeBtn.addEventListener("click", () => {
       closeBtn.style.display = "none";
       printBtn.style.display = "none";
+      downloadBtn.style.display = "none";
       openInputBtn.style.display = "block";
       TABLE.style.display = "none";
    });
 
    printBtn.addEventListener("click", printTable);
+   downloadBtn.addEventListener("click", downloadAsImage);
 }
 
 async function setup_mapping() {

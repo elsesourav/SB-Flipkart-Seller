@@ -178,6 +178,31 @@ function getBengaliQuantity(text, data, isBengaliNumber = false) {
    return [num, data.typeInBengali[b.toLowerCase()]];
 }
 
-function getBengaliUnit(num, data, isBengaliNumber = false) {
+function getBengaliUnit(num, data) {
    return [toBengaliNumber(num), data.typeInBengali.times];
+}
+
+function extractNumbers(input) {
+   const regex = /(\d+(\.\d+)?)([a-zA-Z]+)/g;
+   const numbers = [];
+
+   let match;
+   while (match = regex.exec(input)) {
+      let value = parseFloat(match[1]);
+      const unit = match[3].toUpperCase();
+
+      if (unit === "KG") {
+         value *= 1000;
+      }
+
+      numbers.push({ value, unit });
+   }
+
+   numbers.sort((a, b) => {
+      if (a.unit === "P" && b.unit !== "P") return -1;
+      if (a.unit !== "P" && b.unit === "P") return 1;
+      return a.value - b.value;
+   });
+
+   return numbers.map(item => item.value);
 }

@@ -4870,5 +4870,508 @@
       "NAME": "Tuberose",
       "TYPE": "per packet",
       "QUANTITY": 10
+   },
+
+
+
+
+
+   "MALABAR SPINACH__50__PIECE__SNEWSV": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNEWSV",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__15__PIECE__SNEWRS": {
+      "SKU_ID": "MALABAR SPINACH__15__PIECE__SNEWRS", 
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 15
+   },
+   "MALABAR SPINACH__50__PIECE__SNEWNC": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNEWNC",
+      "NAME": "BITTER GOURD", 
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__21__PIECE__SNEX0D": {
+      "SKU_ID": "MALABAR SPINACH__21__PIECE__SNEX0D",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet", 
+      "QUANTITY": 21
+   },
+   "MALABAR SPINACH__15__PIECE__SNEX19": {
+      "SKU_ID": "MALABAR SPINACH__15__PIECE__SNEX19",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 15
+   },
+   "MALABAR SPINACH__26__PIECE__SNEWYU": {
+      "SKU_ID": "MALABAR SPINACH__26__PIECE__SNEWYU",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 26
+   },
+   "MALABAR SPINACH__61__PIECE__SNEWWA": {
+      "SKU_ID": "MALABAR SPINACH__61__PIECE__SNEWWA",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 61
+   },
+   "MALABAR SPINACH__109__PIECE__SNEWHE": {
+      "SKU_ID": "MALABAR SPINACH__109__PIECE__SNEWHE",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 109
+   },
+   "MALABAR SPINACH__20__PIECE__SNEWLO": {
+      "SKU_ID": "MALABAR SPINACH__20__PIECE__SNEWLO",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 20
+   },
+   "MALABAR SPINACH__100__PIECE__SNEWXL": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNEWXL",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__55__PIECE__SNEVZ0": {
+      "SKU_ID": "MALABAR SPINACH__55__PIECE__SNEVZ0",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 55
+   },
+   "MALABAR SPINACH__10__PIECE__SNEW5A": {
+      "SKU_ID": "MALABAR SPINACH__10__PIECE__SNEW5A",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 10
+   },
+   "MALABAR SPINACH__35__PIECE__SNEWDY": {
+      "SKU_ID": "MALABAR SPINACH__35__PIECE__SNEWDY",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 35
+   },
+   "MALABAR SPINACH__41__PIECE__SNEW6P": {
+      "SKU_ID": "MALABAR SPINACH__41__PIECE__SNEW6P",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 41
+   },
+   "MALABAR SPINACH__200__PIECE__SNEVXE": {
+      "SKU_ID": "MALABAR SPINACH__200__PIECE__SNEVXE",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 200
+   },
+   "MALABAR SPINACH__50__PIECE__SNEW5X": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNEW5X",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__147__PIECE__SNEW12": {
+      "SKU_ID": "MALABAR SPINACH__147__PIECE__SNEW12",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 147
+   },
+   "MALABAR SPINACH__50__PIECE__SNEW7Q": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNEW7Q",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__82__PIECE__SNEWDB": {
+      "SKU_ID": "MALABAR SPINACH__82__PIECE__SNEWDB",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 82
+   },
+   "MALABAR SPINACH__88__PIECE__SNEWAT": {
+      "SKU_ID": "MALABAR SPINACH__88__PIECE__SNEWAT",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 88
+   },
+   "MALABAR SPINACH__136__PIECE__SNEVVQ": {
+      "SKU_ID": "MALABAR SPINACH__136__PIECE__SNEVVQ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 136
+   },
+   "MALABAR SPINACH__15__PIECE__SNEVSE": {
+      "SKU_ID": "MALABAR SPINACH__15__PIECE__SNEVSE",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 15
+   },
+   "MALABAR SPINACH__400__PIECE__SNEVFS": {
+      "SKU_ID": "MALABAR SPINACH__400__PIECE__SNEVFS",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 400
+   },
+   "MALABAR SPINACH__35__PIECE__SNEV7D": {
+      "SKU_ID": "MALABAR SPINACH__35__PIECE__SNEV7D",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 35
+   },
+   "MALABAR SPINACH__34__PIECE__SNEVV9": {
+      "SKU_ID": "MALABAR SPINACH__34__PIECE__SNEVV9",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 34
+   },
+   "MALABAR SPINACH__40__PIECE__SNEVU9": {
+      "SKU_ID": "MALABAR SPINACH__40__PIECE__SNEVU9",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 40
+   },
+   "MALABAR SPINACH__25__PIECE__SNEVWL": {
+      "SKU_ID": "MALABAR SPINACH__25__PIECE__SNEVWL",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 25
+   },
+   "MALABAR SPINACH__80__PIECE__SNEVQO": {
+      "SKU_ID": "MALABAR SPINACH__80__PIECE__SNEVQO",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 80
+   },
+   "MALABAR SPINACH__70__PIECE__SNEVAI": {
+      "SKU_ID": "MALABAR SPINACH__70__PIECE__SNEVAI",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 70
+   },
+   "MALABAR SPINACH__72__PIECE__SNEVIJ": {
+      "SKU_ID": "MALABAR SPINACH__72__PIECE__SNEVIJ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 72
+   },
+   "MALABAR SPINACH__100__G__SNDZ0T": {
+      "SKU_ID": "MALABAR SPINACH__100__G__SNDZ0T",
+      "NAME": "BITTER GOURD",
+      "TYPE": "g",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__56__PIECE__SNDZ2T": {
+      "SKU_ID": "MALABAR SPINACH__56__PIECE__SNDZ2T",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 56
+   },
+   "MALABAR SPINACH__13__PIECE__SNDYSV": {
+      "SKU_ID": "MALABAR SPINACH__13__PIECE__SNDYSV",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 13
+   },
+   "MALABAR SPINACH__50__PIECE__SNDYTY": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNDYTY",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__106__PIECE__SNDYRY": {
+      "SKU_ID": "MALABAR SPINACH__106__PIECE__SNDYRY",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 106
+   },
+   "MALABAR SPINACH__28__PIECE__SNDYX6": {
+      "SKU_ID": "MALABAR SPINACH__28__PIECE__SNDYX6",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 28
+   },
+   "MALABAR SPINACH__11__PIECE__SNDYR9": {
+      "SKU_ID": "MALABAR SPINACH__11__PIECE__SNDYR9",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 11
+   },
+   "MALABAR SPINACH__108__PIECE__SNDZ3M": {
+      "SKU_ID": "MALABAR SPINACH__108__PIECE__SNDZ3M",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 108
+   },
+   "MALABAR SPINACH__70__PIECE__SNDZ4D": {
+      "SKU_ID": "MALABAR SPINACH__70__PIECE__SNDZ4D",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 70
+   },
+   "MALABAR SPINACH__16__PIECE__SNDYYU": {
+      "SKU_ID": "MALABAR SPINACH__16__PIECE__SNDYYU",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 16
+   },
+   "MALABAR SPINACH__25__PIECE__SNDYOS": {
+      "SKU_ID": "MALABAR SPINACH__25__PIECE__SNDYOS",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 25
+   },
+   "MALABAR SPINACH__35__PIECE__SNDYN1": {
+      "SKU_ID": "MALABAR SPINACH__35__PIECE__SNDYN1",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 35
+   },
+   "MALABAR SPINACH__58__PIECE__SNDYKQ": {
+      "SKU_ID": "MALABAR SPINACH__58__PIECE__SNDYKQ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 58
+   },
+   "MALABAR SPINACH__30__PIECE__SNDYGU": {
+      "SKU_ID": "MALABAR SPINACH__30__PIECE__SNDYGU",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 30
+   },
+   "MALABAR SPINACH__25__PIECE__SNDYPJ": {
+      "SKU_ID": "MALABAR SPINACH__25__PIECE__SNDYPJ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 25
+   },
+   "MALABAR SPINACH__44__PIECE__SNDYLP": {
+      "SKU_ID": "MALABAR SPINACH__44__PIECE__SNDYLP",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 44
+   },
+   "MALABAR SPINACH__50__PIECE__SNDYQL": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNDYQL",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__107__PIECE__SNDYQ2": {
+      "SKU_ID": "MALABAR SPINACH__107__PIECE__SNDYQ2",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 107
+   },
+   "MALABAR SPINACH__100__PIECE__SNDYJH": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDYJH",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__15__PIECE__SNDYIZ": {
+      "SKU_ID": "MALABAR SPINACH__15__PIECE__SNDYIZ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 15
+   },
+   "MALABAR SPINACH__100__PIECE__SNDYBY": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDYBY",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__35__PIECE__SNDY5L": {
+      "SKU_ID": "MALABAR SPINACH__35__PIECE__SNDY5L",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 35
+   },
+   "MALABAR SPINACH__40__PIECE__SNDY88": {
+      "SKU_ID": "MALABAR SPINACH__40__PIECE__SNDY88",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 40
+   },
+   "MALABAR SPINACH__20__PIECE__SNDYBB": {
+      "SKU_ID": "MALABAR SPINACH__20__PIECE__SNDYBB",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 20
+   },
+   "MALABAR SPINACH__28__PIECE__SNDY95": {
+      "SKU_ID": "MALABAR SPINACH__28__PIECE__SNDY95",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 28
+   },
+   "MALABAR SPINACH__58__PIECE__SNDY17": {
+      "SKU_ID": "MALABAR SPINACH__58__PIECE__SNDY17",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 58
+   },
+   "MALABAR SPINACH__100__PIECE__SNDY6Y": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDY6Y",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__100__PIECE__SNDY3N": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDY3N",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__14__PIECE__SNDXX9": {
+      "SKU_ID": "MALABAR SPINACH__14__PIECE__SNDXX9",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 14
+   },
+   "MALABAR SPINACH__100__PIECE__SNDYAK": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDYAK",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__25__PIECE__SNDTJV": {
+      "SKU_ID": "MALABAR SPINACH__25__PIECE__SNDTJV",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 25
+   },
+   "MALABAR SPINACH__40__PIECE__SNDTW3": {
+      "SKU_ID": "MALABAR SPINACH__40__PIECE__SNDTW3",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 40
+   },
+   "MALABAR SPINACH__29__PIECE__SNDTNT": {
+      "SKU_ID": "MALABAR SPINACH__29__PIECE__SNDTNT",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 29
+   },
+   "MALABAR SPINACH__12__PIECE__SNDTQH": {
+      "SKU_ID": "MALABAR SPINACH__12__PIECE__SNDTQH",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 12
+   },
+   "MALABAR SPINACH__20__PIECE__SNDTHS": {
+      "SKU_ID": "MALABAR SPINACH__20__PIECE__SNDTHS",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 20
+   },
+   "MALABAR SPINACH__54__PIECE__SNDTD4": {
+      "SKU_ID": "MALABAR SPINACH__54__PIECE__SNDTD4",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 54
+   },
+   "MALABAR SPINACH__20__PIECE__SNDTPM": {
+      "SKU_ID": "MALABAR SPINACH__20__PIECE__SNDTPM",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 20
+   },
+   "MALABAR SPINACH__40__PIECE__SNDTIY": {
+      "SKU_ID": "MALABAR SPINACH__40__PIECE__SNDTIY",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 40
+   },
+   "MALABAR SPINACH__13__PIECE__SNDTFP": {
+      "SKU_ID": "MALABAR SPINACH__13__PIECE__SNDTFP",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 13
+   },
+   "MALABAR SPINACH__51__PIECE__SNDU16": {
+      "SKU_ID": "MALABAR SPINACH__51__PIECE__SNDU16",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 51
+   },
+   "MALABAR SPINACH__5__G__SNDTBV": {
+      "SKU_ID": "MALABAR SPINACH__5__G__SNDTBV",
+      "NAME": "BITTER GOURD",
+      "TYPE": "g",
+      "QUANTITY": 5
+   },
+   "MALABAR SPINACH__30__PIECE__SNDS4K": {
+      "SKU_ID": "MALABAR SPINACH__30__PIECE__SNDS4K",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 30
+   },
+   "MALABAR SPINACH__55__PIECE__SNDT49": {
+      "SKU_ID": "MALABAR SPINACH__55__PIECE__SNDT49",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 55
+   },
+   "MALABAR SPINACH__50__PIECE__SNDT1V": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNDT1V",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__61__PIECE__SNDSOX": {
+      "SKU_ID": "MALABAR SPINACH__61__PIECE__SNDSOX",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 61
+   },
+   "MALABAR SPINACH__40__PIECE__SNDSUK": {
+      "SKU_ID": "MALABAR SPINACH__40__PIECE__SNDSUK",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 40
+   },
+   "MALABAR SPINACH__100__PIECE__SNDSQJ": {
+      "SKU_ID": "MALABAR SPINACH__100__PIECE__SNDSQJ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 100
+   },
+   "MALABAR SPINACH__30__PIECE__SNDSPN": {
+      "SKU_ID": "MALABAR SPINACH__30__PIECE__SNDSPN",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 30
+   },
+   "MALABAR SPINACH__55__PIECE__SNDSWB": {
+      "SKU_ID": "MALABAR SPINACH__55__PIECE__SNDSWB",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 55
+   },
+   "MALABAR SPINACH__30__PIECE__SNDS5Y": {
+      "SKU_ID": "MALABAR SPINACH__30__PIECE__SNDS5Y",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 30
+   },
+   "MALABAR SPINACH__50__PIECE__SNDRXP": {
+      "SKU_ID": "MALABAR SPINACH__50__PIECE__SNDRXP",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 50
+   },
+   "MALABAR SPINACH__10__PIECE__SNDRWJ": {
+      "SKU_ID": "MALABAR SPINACH__10__PIECE__SNDRWJ",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 10
+   },
+   "MALABAR SPINACH__108__PIECE__SNDRV6": {
+      "SKU_ID": "MALABAR SPINACH__108__PIECE__SNDRV6",
+      "NAME": "BITTER GOURD",
+      "TYPE": "per packet",
+      "QUANTITY": 108
    }
 }
