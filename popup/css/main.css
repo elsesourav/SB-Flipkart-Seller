@@ -346,6 +346,12 @@ body:has(.btn:nth-child(3) input:checked) {
                font-size: calc(var(--s) * 1.2);
             }
 
+            input[type="text"][inputmode="numeric"] {
+               font-size: calc(var(--s) * 1.4);
+               text-align: center;
+               padding: 0;
+            }
+
             input[type="date"] {
                display: grid;
                place-items: center;

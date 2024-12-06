@@ -28,10 +28,6 @@ function waitForUploadingImage() {
    });
 }
 
-setTimeout(() => {
-   // console.clear()
-}, 3000);
-
 async function setup_listing() {
    let openInputBtn, copyInputBtn;
    CE(
@@ -387,7 +383,7 @@ function setup_orders_print() {
 
       let NAMES = {};
       for (const [key, value] of Object.entries(nameInBengali)) {
-         NAMES[key.toUpperCase()] = WordInBengali ? value : key;
+         NAMES[key.toUpperCase()] = WordInBengali && value ? value : key;
       }
 
       let TYPES = {};
@@ -443,7 +439,8 @@ function setup_orders_print() {
                const [_p_, _g_] = extractNumbers(weight);
                const result = quantity * _g_ / _p_;
                const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
-               gram = `, ${formattedResult} ${TYPES["G"]}`;
+               const VALUE = NumberInBengali ? toBengaliNumber(formattedResult) : formattedResult;
+               gram = `, ${VALUE} ${TYPES["G"]}`;
             }
 
             !PRODUCTS[NAME] && (PRODUCTS[NAME] = {});
@@ -498,143 +495,6 @@ async function setup_mapping() {
       (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
       (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
-
-   async function openInputButtonAction() {
-      try {
-         const url = document.querySelector(".productTitle a")?.href;
-         console.log(url);
-         const { sellingMRP, MRP } = await getProductData(url);
-         const DATA = await getMappingData();
-
-         console.log("DATA", DATA);
-
-         const dt = Number(Date.now().toString().slice(0, -3));
-         const now = dt.toString(36).toUpperCase();
-         // const original = parseInt(now, 36) * 1000;
-         let [quantity, value] = I(".productInfo")[0].innerText.split(" ");
-         value = value.toUpperCase();
-         const isPer = value == "PER";
-         value = isPer ? "PIECE" : value;
-         const sku_id = `${DATA?.SKU_NAME?.toUpperCase()}__${quantity}__${value}__${now}`;
-         setIfNotValue(I("#sku_id"), sku_id);
-
-         setIfNotValue(I("#listing_status"), DATA?.LISTING_STATUS || false);
-         setIfNotValue(I("#mrp"), MRP);
-
-         const PROFIT = Number(DATA?.PROFIT || 15);
-
-         const DELIVERY_CHARGE_MIN = Math.min(
-            Number(DATA?.DELIVERY_LOCAL || 35),
-            Number(DATA?.DELIVERY_NATIONAL || 55),
-            Number(DATA?.DELIVERY_ZONAL || 35)
-         );
-
-         const FLIPKART_COST = Number(DATA?.FLIPKART_COST || 102);
-
-         const IS_DELIVERY_INCLUDED = DATA?.IS_INCLUDED || false;
-
-         let PRODUCT_COST;
-         if (isPer) {
-            PRODUCT_COST = (Number(DATA?.UNIT_OF_COST || 200) / Number(DATA?.UNIT || 1)) * Number(quantity);
-         } else {
-            PRODUCT_COST = (Number(DATA?.UNIT_OF_COST || 200) / (Number(DATA?.UNIT_WEIGHT || 1) * 1000)) * (Number(quantity) / (value === "KG" ? 1000 : 1));
-         }
-
-         // calculate selling price
-         let mrp = Math.round(FLIPKART_COST + PROFIT + PRODUCT_COST);
-
-         if (IS_DELIVERY_INCLUDED) {
-            mrp -= DELIVERY_CHARGE_MIN;
-         }
-
-         setIfNotValue(I("#flipkart_selling_price"), mrp, true);
-         setIfNotValue(
-            I("#minimum_order_quantity"),
-            DATA?.MINIMUM_ORDER_QUANTITY || 1
-         );
-         setIfNotValue(I("#service_profile"), "NON_FBF");
-         setIfNotValue(I("#procurement_type"), DATA?.PROCUREMENT_TYPE || 1);
-         setIfNotValue(I("#shipping_days"), DATA?.SHIPPING_DAYS || 1);
-         setIfNotValue(I("#stock_size"), DATA?.STOCK_SIZE || 1);
-         setIfNotValue(I("#shipping_provider"), "FLIPKART");
-
-         let LOCAL_FEES = 0, NATIONAL_FEES = 0, ZONAL_FEES = 0;
-
-         if (IS_DELIVERY_INCLUDED) {
-            LOCAL_FEES = Math.round(Number(DATA?.DELIVERY_LOCAL || 35));
-            NATIONAL_FEES = Math.round(Number(DATA?.DELIVERY_NATIONAL || 55));
-            ZONAL_FEES = Math.round(Number(DATA?.DELIVERY_ZONAL || 35));
-         } else {
-            LOCAL_FEES = Math.round(Number(DATA?.DELIVERY_LOCAL || 35) - DELIVERY_CHARGE_MIN);
-            NATIONAL_FEES = Math.round(Number(DATA?.DELIVERY_NATIONAL || 55) - DELIVERY_CHARGE_MIN);
-            ZONAL_FEES = Math.round(Number(DATA?.DELIVERY_ZONAL || 35) - DELIVERY_CHARGE_MIN);
-         }
-
-
-         setIfNotValue(I("#local_shipping_fee_from_buyer"), LOCAL_FEES, true);
-         setIfNotValue(I("#zonal_shipping_fee_from_buyer"), ZONAL_FEES, true);
-         setIfNotValue(I("#national_shipping_fee_from_buyer"), NATIONAL_FEES, true);
-
-         setIfNotValue(I("[name='length_p0']"), DATA?.PACKAGING_LENGTH || 20);
-         setIfNotValue(I("[name='breadth_p0']"), DATA?.PACKAGING_BREADTH || 17);
-         setIfNotValue(I("[name='height_p0']"), DATA?.PACKAGING_HEIGHT || 3);
-
-         let productWeight = Number(DATA?.PACKET_WEIGHT || 1);
-         if (isPer) {
-            productWeight += (Number(DATA?.UNIT_WEIGHT || 1) / Number(DATA?.UNIT || 1)) * Number(quantity);
-         } else {
-            productWeight += (Number(quantity) / (value === "G" ? 1000 : 1));
-         }
-
-         setIfNotValue(I("[name='weight_p0']"), Number(productWeight.toFixed(2)));
-         setIfNotValue(I("#hsn"), DATA?.HSN || 1209);
-         setIfNotValue(I("#tax_code"), "GST_5");
-         setIfNotValue(I("#country_of_origin"), "IN");
-         setIfNotValue(I("#manufacturer_details"), DATA?.MANUFACTURER_DETAILS || "Made by our House");
-         setIfNotValue(I("#packer_details"), DATA?.PACKER_DETAILS || "Packed by our House");
-         setIfNotValue(I("#earliest_mfg_date"), DATA?.EARLIEST_MFG_DATE || "2024-10-30");
-         setIfNotValue(I("#shelf_life"), DATA?.SHELF_LIFE || 12);
-         setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
-      } catch (error) {
-         alert(error);
-      }
-   }
-
-   async function copyInputButtonAction() {
-      tempVal = {};
-
-      setInObject(I("#sku_id"), "seller_SKU_ID");
-      setInObject(I("#listing_status"), "listing_status");
-      setInObject(I("#mrp"), "mrp");
-      setInObject(I("#flipkart_selling_price"), "your_selling_price");
-      setInObject(I("#minimum_order_quantity"), "minimum_order_quantity");
-      setInObject(I("#procurement_type"), "procurement_type");
-      setInObject(I("#shipping_days"), "shipping_days");
-      setInObject(I("#stock_size"), "stock_size");
-      setInObject(
-         I("#local_shipping_fee_from_buyer"),
-         "local_shipping_fee_from_buyer"
-      );
-      setInObject(
-         I("#zonal_shipping_fee_from_buyer"),
-         "zonal_shipping_fee_from_buyer"
-      );
-      setInObject(
-         I("#national_shipping_fee_from_buyer"),
-         "national_shipping_fee_from_buyer"
-      );
-      setInObject(I("[name='length_p0']"), "length_p0");
-      setInObject(I("[name='breadth_p0']"), "breadth_p0");
-      setInObject(I("[name='height_p0']"), "height_p0");
-      setInObject(I("[name='weight_p0']"), "weight_p0");
-      setInObject(I("#hsn"), "hsn");
-      setInObject(I("#manufacturer_details"), "manufacturer_details");
-      setInObject(I("#packer_details"), "packer_details");
-      setInObject(I("#earliest_mfg_date"), "earliest_mfg_date");
-      setInObject(I("#shelf_life"), "shelf_life");
-
-      updateMappingValues(tempVal);
-   }
 
    openInputBtn.addEventListener("click", openInputButtonAction);
    copyInputBtn.addEventListener("click", copyInputButtonAction);
@@ -703,7 +563,6 @@ function setup_flipkart_product_url() {
       main.innerHTML = "";
    });
 }
-let startSelling;
 
 onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
@@ -723,7 +582,6 @@ onload = async () => {
    }
 
 };
-
 
 addEventListener("mousedown", async (_) => {
    await wait(500);

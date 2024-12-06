@@ -120,6 +120,8 @@ function CE(first, ...children) {
    return element;
 }
 
+const N = (string) => Number(string);
+
 /* 
    ---Example 1: Create a simple <div> element and append it to the body
    const div = CE({});

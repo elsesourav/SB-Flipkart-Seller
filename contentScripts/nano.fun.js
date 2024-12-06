@@ -84,7 +84,7 @@ function closeButtonClick() {
 
 
 // --------------- Set Value if Not Value ---------------
-function setIfNotValue(element, value, forcefully = false) {
+function setInput(element, value, forcefully = true) {
    const el = element[0];
    if (!el) return;
 
@@ -205,4 +205,34 @@ function extractNumbers(input) {
    });
 
    return numbers.map(item => item.value);
+}
+
+function getDeliveryCharges(data) {
+   return [N(data?.DELIVERY_LOCAL || 39), N(data?.DELIVERY_NATIONAL || 59), N(data?.DELIVERY_ZONAL || 39)];
+}
+
+function getUniqueId() {
+   // const original = "1733" + parseInt(getUniqueId, 36) + "000";
+   return parseInt(Date.now().toString().slice(4, -3)).toString(36).toUpperCase();
+}
+
+function getProductCost(data, quantity, value) {
+   return value === "PIECE" ?
+      (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT || 1)) * N(quantity) :
+      (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT_WEIGHT || 1)) * (N(quantity) / (value === "KG" ? 1 : 1000));
+}
+
+function getTotalWeight(data, quantity, value) {
+   return (N(data?.PACKET_WEIGHT || 1) +
+      (value === "PIECE" ? (N(data?.UNIT_WEIGHT || 1) / N(data?.UNIT || 1)) * N(quantity) :
+         (N(quantity) / (value === "G" ? 1000 : 1)))).toFixed(3);
+}
+
+function getUnitToPiece(data, value, quantity) {
+   if (value == "PIECE") {
+      return quantity;
+   } else {
+      const W = N(data?.UNIT || 1) / (N(data?.UNIT_WEIGHT || 1) * 1000);
+      return W * quantity * (value === "KG" ? 1000 : 1);
+   }
 }

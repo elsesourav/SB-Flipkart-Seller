@@ -6,9 +6,25 @@ const imageSection = I(".take-inp.image");
 const imageInputFields = I(".take-inp.image .inp-image");
 const imageView = I(".take-inp.image .img-box");
 
-aInputs.on("change", saveDataA);
-bInputs.on("change", saveDataB);
-cInputs.on("change", saveDataC);
+aInputs.on("input", saveDataA);
+bInputs.on("input", saveDataB);
+cInputs.on("input", saveDataC);
+
+[aInputs, bInputs, cInputs].forEach((inp) => {
+   inp.on("input", (_, __, ele) => {
+      if (ele?.getAttribute("inputmode") === "numeric" && ele?.type === "text") {
+         const value = ele.value.replace(/,/g, "");
+         if (!isNaN(value) && value !== "") {
+            ele.value = N(value).toLocaleString("en-IN");
+         }
+      }
+   });
+   inp.click((_, __, ele) => {
+      if (ele?.type === "text" || ele?.getAttribute("inputmode") === "numeric") {
+         ele.select();
+      }
+   });
+});
 
 I("#WordInBengali").click((_, __, ele) => {
    if (ele.checked) {
@@ -40,6 +56,7 @@ async function init() {
          if (inp.type === "number") inp.value = mappingData[inp.name] || 0;
          else if (inp.type === "checkbox") inp.checked = mappingData[inp.name] || false;
          else if (inp.type === "select-one") (inp.value = mappingData[inp.name]) || (inp.selectedIndex = 0);
+         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(mappingData[inp.name] || 0).toLocaleString("en-IN");
          else inp.value = mappingData[inp.name] || "";
       });
    });
@@ -54,6 +71,7 @@ async function init() {
             if (inp.type === "number") inp.value = listingData[inp.name] || 0;
             else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
             else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
+            else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(listingData[inp.name] || 0).toLocaleString("en-IN");
             else inp.value = listingData[inp.name] || "";
          }
       });
@@ -63,6 +81,7 @@ async function init() {
       ordersData = val;
       cInputs.forEach((inp) => {
          if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
+         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(ordersData[inp.name] || 0).toLocaleString("en-IN");
       });
       jsonEditorTitle.removeClass("error");
       setJsonContent(ordersData.editor);
@@ -316,6 +335,7 @@ function saveDataA() {
          if (inp.type === "number") val[inp.name] = inp.value || 0;
          else if (inp.type === "checkbox") val[inp.name] = inp.checked;
          else if (inp.type === "select-one") val[inp.name] = inp.value;
+         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
          else val[inp.name] = inp.value || "";
       });
 
@@ -333,6 +353,7 @@ function saveDataB() {
             if (inp.type === "number") val[inp.name] = inp.value || 0;
             else if (inp.type === "checkbox") val[inp.name] = inp.checked;
             else if (inp.type === "select-one") val[inp.name] = inp.value;
+            else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
             else val[inp.name] = inp.value || "";
          }
       });
@@ -349,6 +370,7 @@ function saveDataC() {
       };
       cInputs.forEach((inp) => {
          if (inp.type === "checkbox") val[inp.name] = inp.checked;
+         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
       });
       chromeStorageSetLocal(storageOrdersKey, val);
    });

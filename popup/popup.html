@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -90,14 +89,48 @@
             </div>
 
             <div class="take-inp">
-               <span class="inp-span">Profit</span>
+               <span class="inp-span">Profit <i class="sbi-inr"></i></span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PROFIT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Flipkart <i class="sbi-inr"></i></span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="FLIPKART_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Packing <i class="sbi-inr"></i></span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="PACKING_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -114,7 +147,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -128,7 +161,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_OF_COST" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -152,14 +185,15 @@
             </div>
 
             <div class="take-inp">
-               <span class="inp-span">Flipkart <i class="sbi-inr"></i></span>
+               <span class="inp-span">1<i class="sbi-inr"></i> INC Per</span>
                <section>
                   <div class="take-value">
-                     <div class="inp num" step="0.05">
+                     <div class="inp num" step="1">
+                        <label>Piece</label>
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FLIPKART_COST" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="INCREMENT_UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -184,7 +218,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_LOCAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -198,7 +232,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_ZONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -212,7 +246,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_NATIONAL" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -230,7 +264,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_LENGTH" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -340,7 +374,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHIPPING_DAYS" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -357,7 +391,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="STOCK_SIZE" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="STOCK_SIZE" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -406,7 +440,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="HSN" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="HSN" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -416,6 +450,17 @@
             </div>
 
             <div class="take-inp">
+               <span class="inp-span">M.date</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <input name="EARLIEST_MFG_DATE" type="date" class="input-a inp-limit" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp center">
                <span class="inp-span">Life</span>
                <section>
                   <div class="take-value">
@@ -423,7 +468,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHELF_LIFE" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input name="SHELF_LIFE" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -433,13 +478,14 @@
             </div>
          </div>
 
+         <div class="gap x8"></div>
          <div id="MyMappingClearBtn">
             <div class="clear">CLEAR ALL</div>
          </div>
       </div>
 
       <div class="container" id="myListing">
-         <!----------- images  ------------>
+      <!----------- images  ------------>
          <div class="basic-grid flip image-grid">
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip" />
@@ -551,7 +597,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PROFIT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="PROFIT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -568,7 +614,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="UNIT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -582,7 +628,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_OF_COST" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -596,7 +642,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="UNIT_WEIGHT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -613,7 +659,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FLIPKART_COST" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="FLIPKART_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -638,7 +684,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_LOCAL" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -652,7 +698,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_ZONAL" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -666,7 +712,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_NATIONAL" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -684,7 +730,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_LENGTH" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -698,7 +744,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="PACKAGING_BREADTH" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -712,7 +758,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="PACKAGING_HEIGHT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -729,7 +775,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="PACKET_WEIGHT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -794,7 +840,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHIPPING_DAYS" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -811,7 +857,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="STOCK_SIZE" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="STOCK_SIZE" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -860,7 +906,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="HSN" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="HSN" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -877,7 +923,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHELF_LIFE" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input name="SHELF_LIFE" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1277,6 +1323,8 @@
                </section>
             </div>
          </div>
+
+         <div class="gap x8"></div>
 
          <div id="MyListingClearBtn">
             <div class="clear">CLEAR ALL</div>

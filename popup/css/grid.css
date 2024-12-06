@@ -12,13 +12,17 @@
    container-type: inline-size;
 
    /* --------- center parent when 2 columns --------- */
-   @container (width >=500px) {
-
+   /* @container (width >= 500px) {
       .take-inp:has(.full-width:nth-child(even)):nth-child(odd):last-child,
       .take-inp:has(.full-width:nth-child(odd)):nth-child(even):last-child {
          grid-column: span 2;
          width: calc(var(--ww) - var(--s) * 2);
       }
+   } */
+
+   .take-inp.center {
+      grid-column: span 2;
+      width: calc(var(--ww) - var(--s) * 2);
    }
 
    &.no-flip {
@@ -143,19 +147,19 @@
             background-color: green;
          } */
       }
+   }
 
-      label {
-         position: absolute;
-         top: calc(var(--s) / 2 * -1);
-         left: 50%;
-         transform: translateX(-50%);
-         font-size: calc(var(--s) * 0.8);
-         background-color: light-dark(#000000aa, #ffffffaa);
-         color: light-dark(#fff, #000);
-         border-radius: calc(var(--s) * 0.5);
-         padding: 1px calc(var(--s) * 0.5);
-         pointer-events: none;
-         z-index: 1;
-      }
+   label {
+      position: absolute;
+      top: calc(var(--s) / 2 * -1);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: calc(var(--s) * 0.8);
+      background-color: light-dark(#000000aa, #ffffffaa);
+      color: light-dark(#fff, #000);
+      border-radius: calc(var(--s) * 0.5);
+      padding: 1px calc(var(--s) * 0.5);
+      pointer-events: none;
+      z-index: 1;
    }
 }
