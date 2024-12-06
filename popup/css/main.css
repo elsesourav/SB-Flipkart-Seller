@@ -313,6 +313,7 @@ body:has(.btn:nth-child(3) input:checked) {
             input[type="number"],
             input[type="text"],
             input[type="date"],
+            input[type="file"],
             input[type="checkbox"],
             textarea,
             select {
@@ -356,6 +357,42 @@ body:has(.btn:nth-child(3) input:checked) {
                display: grid;
                place-items: center;
                font-size: calc(var(--s) * 1.2);
+            }
+
+            input[type="file"] {
+               display: none;
+            }
+
+            input[type="button"] {
+               position: relative;
+               width: 100%;
+               height: 100%;
+               display: grid;
+               place-items: center;
+               background: light-dark(#000, #fff);
+               color: light-dark(#fff, #000);
+               outline: none;
+               border: none;
+               font-family: f2b;
+               font-size: calc(var(--s) * 1.2);
+               border-radius: calc(var(--s) / 2);
+               cursor: pointer;
+               transition: linear 200ms background, linear 200ms color;
+
+               &[name="IMPORT_FILE"] {
+                  --m: 2px;
+                  width: calc(100% - var(--m) * 2);
+                  height: calc(100% - var(--m) * 2);
+                  margin: var(--m);
+                  background: light-dark(#555, #aaa);
+                  color: light-dark(#fff, #000);
+               }
+
+
+               &:active {
+                  background: light-dark(#fff, #000);
+                  color: light-dark(#000, #fff);
+               }
             }
 
             textarea {

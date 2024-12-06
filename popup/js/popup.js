@@ -375,3 +375,95 @@ function saveDataC() {
       chromeStorageSetLocal(storageOrdersKey, val);
    });
 }
+
+function downloadJSON(jsonData, filename = 'ES_Seller_Settings.json') {
+   const jsonString = JSON.stringify(jsonData);
+   const blob = new Blob([jsonString], { type: 'application/json' });
+   const url = URL.createObjectURL(blob);
+
+   // Create a temporary link element
+   const link = document.createElement('a');
+   link.href = url;
+   link.download = filename;
+
+   document.body.appendChild(link);
+   link.click();
+   document.body.removeChild(link);
+   URL.revokeObjectURL(url);
+}
+
+// Add click event listener to the export button
+document.querySelector(`input[name="EXPORT_FILE"]`).addEventListener("click", async () => {
+   try {
+      const mappingData = await chromeStorageGetLocal(storageMappingKey);
+      const listingData = await chromeStorageGetLocal(storageListingKey);
+      const ordersData = await chromeStorageGetLocal(storageOrdersKey);
+      const settings = await chromeStorageGetLocal(storageSettingsKey);
+      const init = await chromeStorageGetLocal(storageInitKey);
+
+      const jsonData = JSON.parse(JSON.stringify({ mappingData, listingData, ordersData, settings, init }));
+      downloadJSON(jsonData);
+   } catch (error) {
+      alert("Invalid JSON format");
+   }
+});
+
+
+// Function to read and parse JSON file
+function importJSON(file) {
+   return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+         try {
+            const jsonData = JSON.parse(event.target.result);
+            resolve(jsonData);
+         } catch (error) {
+            reject('Invalid JSON file format');
+         }
+      };
+
+      reader.onerror = () => reject('Error reading file');
+      reader.readAsText(file);
+   });
+}
+
+I(`input[name="IMPORT_FILE"]`).click(() => I("#takeFile")[0].click());
+
+// Handle file import
+I("#takeFile").on("change", async (event) => {
+   const file = event.target.files[0];
+   if (file) {
+      try {
+         const text = await file.text();
+         const jsonData = JSON.parse(text);
+         
+         // Validate the imported data structure
+         if (jsonData.mappingData || jsonData.listingData || jsonData.ordersData || jsonData.settings) {
+            // Store the imported data
+            if (jsonData.mappingData) {
+               await chromeStorageSetLocal(storageMappingKey, jsonData.mappingData);
+            }
+            if (jsonData.listingData) {
+               await chromeStorageSetLocal(storageListingKey, jsonData.listingData);
+            }
+            if (jsonData.ordersData) {
+               await chromeStorageSetLocal(storageOrdersKey, jsonData.ordersData);
+            }
+            if (jsonData.settings) {
+               await chromeStorageSetLocal(storageSettingsKey, jsonData.settings);
+            }
+
+            if (jsonData.init) {
+               await chromeStorageSetLocal(storageInitKey, jsonData.init);
+            }
+            
+            init();
+         } else {
+            alert('Invalid file format');
+         }
+      } catch (error) {
+         alert('Error reading file: ' + error.message);
+      }
+   }
+});
