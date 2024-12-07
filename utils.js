@@ -22,7 +22,7 @@ let listingData = {};
 let ordersData = {
    editor: {
       calculateWeight: {
-         "LOTUS": ["100 P", "100 G"]
+         "LOTUS": "100P 100G"
       },
       nameInBengali: {
          "BEAN": "বরবটি",
