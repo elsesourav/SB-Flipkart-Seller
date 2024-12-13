@@ -31,6 +31,13 @@ function getListingData() {
       });
    });
 }
+function updateListingData() {
+   return new Promise((resolve) => {
+      runtimeSendMessage("c_b_listing_data_update", (r) => {
+         resolve(r);
+      });
+   });
+}
 
 function getOrderData() {
    return new Promise((resolve) => {
@@ -86,7 +93,7 @@ function closeButtonClick() {
 // --------------- Set Value if Not Value ---------------
 function setInput(element, value, forcefully = true) {
    const el = element[0];
-   if (!el) return;
+   if (!el || value === "") return;
 
    const currentValue = el.value?.trim();
    const isEmpty = !currentValue || currentValue === "Select One";
@@ -101,6 +108,31 @@ function setInput(element, value, forcefully = true) {
 function setupMultipleValues(idName, _string) {
    const values = _string.split("_");
 
+   if (document.querySelectorAll(`#${idName}`).length === 1) {
+      values.forEach(async (str, i) => {
+         const elements = document.querySelectorAll(`#${idName}`);
+         if (elements.length > 0) {
+            const len = elements.length;
+
+            elements[len - 1].value = str;
+            const event = new Event("change", { bubbles: true });
+            elements[len - 1]?.dispatchEvent(event);
+
+            if (i < values.length - 1) {
+               const buttons = [...elements].map((e) =>
+                  e.parentNode.parentNode.parentNode.querySelector("button")
+               );
+
+               buttons[buttons.length - 1].click();
+            }
+         }
+         await wait(30);
+      });
+   }
+}
+
+function setupMultipleKeywords(idName, _string) {
+   const values = selectUniqueElements(_string.split("_"), 2);
    if (document.querySelectorAll(`#${idName}`).length === 1) {
       values.forEach(async (str, i) => {
          const elements = document.querySelectorAll(`#${idName}`);
@@ -223,6 +255,8 @@ function getProductCost(data, quantity, value) {
 }
 
 function getTotalWeight(data, quantity, value) {
+   console.log(data, quantity, value);
+   
    return (N(data?.PACKET_WEIGHT || 1) +
       (value === "PIECE" ? (N(data?.UNIT_WEIGHT || 1) / N(data?.UNIT || 1)) * N(quantity) :
          (N(quantity) / (value === "G" ? 1000 : 1)))).toFixed(3);
@@ -235,4 +269,57 @@ function getUnitToPiece(data, value, quantity) {
       const W = N(data?.UNIT || 1) / (N(data?.UNIT_WEIGHT || 1) * 1000);
       return W * quantity * (value === "KG" ? 1000 : 1);
    }
+}
+
+
+/* --------------- Copy Listing Inputs --------------- */
+
+function selectRandomImages(images, fixedCount = 3) {
+   if (images.length > 4) {
+      images = selectUniqueElements(images, fixedCount);
+   }
+   return images;
+}
+
+function putImagesIntoListing(images, editButtons) {
+   return new Promise(async (resolve) => {
+      if (images.length >= 0) {
+         editButtons[0].click();
+         await wait(500);
+
+         for (let i = 0; i < 4; i++) {
+            await wait(500);
+            I(`#thumbnail_${i} > div`)[0].click();
+
+            if (images[i]) {
+               const fileInput = I("#upload-image")[0];
+               if (fileInput) putImageIntoInputFile(fileInput, images[i].file);
+               await waitForUploadingImage();
+               await wait(500);
+            } else {
+               await wait(50);
+               I(".jDWxNA .iuIlzu i")[0]?.click();
+               await wait(100);
+               I(".jDWxNA .ewbxDW")[1]?.click();
+            }
+         }
+
+         await wait(300);
+         saveButtonClick();
+         await waitingForSaved();
+         await wait(500);
+         resolve(true);
+      }
+      resolve(false);
+   });
+}
+
+function selectUniqueElements(arr, fixedCount = 2) {
+   if (arr.length <= 4) return arr;
+
+   const fixedElements = arr.slice(0, fixedCount);
+   const remainingElements = arr.slice(fixedCount);
+   const shuffled = [...remainingElements].sort(() => Math.random() - 0.5);
+   const selected = shuffled.slice(0, 4 - fixedCount);
+   return [...fixedElements, ...selected];
 }

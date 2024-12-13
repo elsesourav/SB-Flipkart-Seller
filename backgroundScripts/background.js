@@ -73,9 +73,18 @@ runtimeOnMessage("c_b_listing_data_update", (values, _, sendResponse) => {
    });
 });
 
+runtimeOnMessage("c_b_listing_data_update", (__, _, sendResponse) => {
+   chromeStorageGetLocal(storageListingKey, (val) => {
+      val.QUANTITY = val?.START_COUNT || 0;
+      val.COUNT = 0;
+      chromeStorageSetLocal(storageListingKey, val);
+      sendResponse({ status: "ok" });
+   });
+});
 runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
    chromeStorageGetLocal(storageListingKey, (val) => {
       getImagesFromLocalStorage().then((images) => {
+
          sendResponse({
             ...val,
             images
@@ -111,4 +120,63 @@ runtimeOnMessage("c_b_order_data_update", (values, _, sendResponse) => {
       }
       chromeStorageSetLocal(storageOrdersKey, val);
    });
+});
+
+let PROCESS_QUEUE = [];
+let listing_run = false;
+let currentTabId = null;
+
+runtimeOnMessage("c_b_create_listing_complete", async (_, __, sendResponse) => {
+   chromeStorageGetLocal(storageListingKey, (val) => {
+      const { TIME_DELAY } = val;
+      setTimeout(() => {
+         if (PROCESS_QUEUE.length > 0) {
+            const action = PROCESS_QUEUE.pop();
+            action();
+         } 
+      }, N(TIME_DELAY));
+   });
+   sendResponse({ status: "ok" })
+});
+
+runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
+   chromeStorageGetLocal(storageListingKey, async (val) => {
+      listing_run = true;
+      currentTabId = (await getCurrentTab()).id;
+
+      if (PROCESS_QUEUE.length > 0) {
+         sendResponse({ status: "ok" });
+         const action = PROCESS_QUEUE.pop();
+         action();
+      } else {
+         const { START_COUNT, END_COUNT, COUNT, REPEAT_COUNT, STAPES_BY } = val;
+   
+         const TOTAL = Math.abs(N(END_COUNT) - N(START_COUNT)) / N(STAPES_BY);
+         const F = (N(END_COUNT) - N(START_COUNT)) > 0 ? 1 : -1; 
+   
+         for (let i = 0; i < TOTAL; i++) {
+            for (let j = 0; j < N(REPEAT_COUNT); j++) {
+               const COUNT = (i * N(REPEAT_COUNT)) + j;
+               const QUANTITY = N(START_COUNT) + (i * N(STAPES_BY)) * F;
+               PROCESS_QUEUE.unshift(() => __create_new_listing__(QUANTITY, COUNT));
+            }
+         }
+         sendResponse({ status: "ok" });
+
+         const action = PROCESS_QUEUE.pop();
+         action();
+      }
+   });
+   sendResponse({ status: "error" });
+});
+
+runtimeOnMessage("p_b_pause_listing", async (_, __, sendResponse) => {
+   listing_run = false;
+   sendResponse({ status: "ok" });
+});
+
+runtimeOnMessage("p_b_stop_listing", async (_, __, sendResponse) => {
+   PROCESS_QUEUE = [];
+   listing_run = false;
+   sendResponse({ status: "ok" });
 });

@@ -1,5 +1,5 @@
 /* ----------- checkbox input ----------- */
-input[type="checkbox"] {
+input[type="checkbox"]:not(.btn) {
    --S: calc(var(--s) * 1.8);
    height: calc(var(--S) + var(--S) / 5);
    width: auto;
@@ -18,7 +18,7 @@ input[type="checkbox"] {
    appearance: none;
 }
 
-input[type="checkbox"]:before {
+input[type="checkbox"]:not(.btn):before {
    content: "";
    padding: calc(var(--S) / 10);
    --_g: radial-gradient(circle closest-side at calc(100% - var(--S) / 2) 50%,
@@ -35,11 +35,11 @@ input[type="checkbox"]:before {
          calc(var(--_i, -1) * 200)) 250ms 100s;
 }
 
-input[type="checkbox"]:checked {
+input[type="checkbox"]:not(.btn):checked {
    background-color: var(--switch-color-on);
 }
 
-input[type="checkbox"]:checked:before {
+input[type="checkbox"]:not(.btn):checked:before {
    padding: calc(var(--S) / 10 + 0.05px) calc(var(--S) / 10);
    --_p: 100%;
    --_i: 1;

@@ -1,4 +1,5 @@
-let = tempVal = {};
+let tempVal = {};
+let TABLE;
 
 function waitingForSaved() {
    return new Promise((resolve) => {
@@ -28,6 +29,13 @@ function waitForUploadingImage() {
    });
 }
 
+
+async function fillAndSetListingInputs() {
+   await updateListingData();
+   await wait(100);
+   fillLintingInputs();
+}
+
 async function setup_listing() {
    let openInputBtn, copyInputBtn;
    CE(
@@ -36,246 +44,15 @@ async function setup_listing() {
       (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
-   openInputBtn.addEventListener("click", async () => {
-      const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
- 
-      // fill Images
-      const val = await getListingData();
-      let { images } = val;
-      
-      if (images.length > 4) {
-         images = images
-            .sort(() => Math.random() - 0.5)
-            .slice(0, 4);
-      }
-
-      if (images.length >= 0) {
-         editButtons[0].click();
-         await wait(500);
-
-         for (let i = 0; i < 4; i++) {
-            await wait(200);
-            I(`#thumbnail_${i} > div`)[0].click();
-
-            if (images[i]) {
-               const fileInput = I("#upload-image")[0];
-               if (fileInput) putImageIntoInputFile(fileInput, images[i].file);
-               await waitForUploadingImage();
-               await wait(200);
-            } else {
-               await wait(50);
-               I(".jDWxNA .iuIlzu i")[0]?.click();
-               await wait(100);
-               I(".jDWxNA .ewbxDW")[1]?.click();
-            }
-         }
-
-
-         await wait(300);
-         saveButtonClick();
-         await waitingForSaved();
-         await wait(500);
-      }
-
-      // ------- Price, Stock and Shipping Information
-
-      // editButtons[1].click();
-      // await wait(500);
-
-      // setIfNotValue(I("#sku_id"), val?.seller_SKU_ID || "n_a_m_e");
-
-      // setIfNotValue(I("#listing_status"), val?.listing_status || false);
-
-      // setIfNotValue(I("#mrp"), val?.mrp || 499);
-
-      // setIfNotValue(
-      //    I("#flipkart_selling_price"),
-      //    val?.your_selling_price || 499
-      // );
-
-      // setIfNotValue(
-      //    I("#minimum_order_quantity"),
-      //    val?.minimum_order_quantity || 1
-      // );
-
-      // setIfNotValue(I("#service_profile"), "NON_FBF");
-
-      // setIfNotValue(I("#procurement_type"), val?.procurement_type || 1);
-
-      // setIfNotValue(I("#shipping_days"), val?.shipping_days || 1);
-
-      // setIfNotValue(I("#stock_size"), val?.stock_size || 1);
-
-      // setIfNotValue(I("#shipping_provider"), "FLIPKART");
-
-      // setIfNotValue(
-      //    I("#local_shipping_fee_from_buyer"),
-      //    val?.local_shipping_fee_from_buyer || 1
-      // );
-
-      // setIfNotValue(
-      //    I("#zonal_shipping_fee_from_buyer"),
-      //    val?.zonal_shipping_fee_from_buyer || 1
-      // );
-
-      // setIfNotValue(
-      //    I("#national_shipping_fee_from_buyer"),
-      //    val?.national_shipping_fee_from_buyer || 1
-      // );
-
-      // setIfNotValue(I("#length"), val?.length_p0 || 1);
-
-      // setIfNotValue(I("#breadth"), val?.breadth_p0 || 1);
-
-      // setIfNotValue(I("#height"), val?.height_p0 || 1);
-
-      // setIfNotValue(I("#weight"), val?.weight_p0 || 1);
-
-      // setIfNotValue(I("#hsn"), val?.hsn || 1);
-
-      // setIfNotValue(I("#tax_code"), "GST_5");
-
-      // setIfNotValue(I("#country_of_origin"), "IN");
-
-      // setIfNotValue(I("#manufacturer_details"), val?.manufacturer_details || 1);
-
-      // setIfNotValue(I("#packer_details"), val?.packer_details || 1);
-
-      // setIfNotValue(I("#earliest_mfg_date"), val?.earliest_mfg_date || 1);
-
-      // setIfNotValue(I("#shelf_life"), val?.shelf_life || 1);
-
-      // setIfNotValue(I("[name='shelf_life_0_qualifier']"), "MONTHS");
-
-      // await wait(500);
-      // saveButtonClick();
-      // await waitingForSaved();
-      // await wait(500);
-
-      // // ------- Product Description
-      // editButtons[2].click();
-      // await wait(500);
-
-      // setIfNotValue(I("#model_name"), val?.model_id || 1);
-
-      // setupMultipleValues("common_name", val?.common_name || "");
-
-      // setIfNotValue(I("#quantity"), val?.quantity || 1);
-
-      // setIfNotValue(I("[name='quantity_0_qualifier']"), val?.quantity_in || "");
-
-      // setupMultipleValuesBYIndex("suitable_for", val?.suitable_for || "");
-
-      // setIfNotValue(I("#organic"), val?.organic || 1);
-
-      // setupMultipleValues("sales_package", val?.sales_package || "");
-
-      // setupMultipleValuesBYIndex("type_of_seed", val?.seed_type || "");
-
-      // await wait(500);
-      // saveButtonClick();
-      // await waitingForSaved();
-      // await wait(500);
-
-      // // ------- Additional Description (Optional)
-      // editButtons[3].click();
-      // await wait(500);
-
-      // setIfNotValue(I("#flowering_plant"), val?.flowering_plant || 1);
-
-      // setIfNotValue(I("#description"), val?.description || 1);
-
-      // setupMultipleValues("keywords", val?.search_keywords || "");
-
-      // setupMultipleValues("key_features", val?.key_features || "");
-
-      // setIfNotValue(I("#video_url"), val?.video_URL || 1);
-
-      // setIfNotValue(I("#family"), val?.family || 1);
-
-      // setupMultipleValues("uses", val?.uses || "");
-
-      // setupMultipleValues(
-      //    "soil_nutrient_requirements",
-      //    val?.soil_nutrient_requirements || ""
-      // );
-
-      // setIfNotValue(I("#sowing_method"), val?.sowing_method || 1);
-
-      // setupMultipleValuesBYIndex("season", val?.season || "");
-
-      // setIfNotValue(I("#pack_of"), val?.pack_of || 1);
-
-      // setIfNotValue(I("#max_shelf_life"), val?.max_shelf_life || 1);
-
-      // setupMultipleValues("ean", val?.EAN_UPC || "");
-
-      // setIfNotValue(I("#soil_type"), val?.soil_type || 1);
-
-      // setIfNotValue(I("#sunlight"), val?.sunlight || 1);
-
-      // setIfNotValue(I("#watering"), val?.watering || 1);
-
-      // setIfNotValue(I("#germination_time"), val?.germination_time || 1);
-
-      // setupMultipleValues("care_instructions", val?.care_instructions || "");
-
-      // setupMultipleValues("other_features", val?.other_features || "");
-
-      // await wait(500);
-      // saveButtonClick();
+   openInputBtn.addEventListener("click", fillAndSetListingInputs);
+   copyInputBtn.addEventListener("click", copyListingInputs);
+
+   window.addEventListener("popstate", (e) => {
+      openInputBtn.removeEventListener("click", fillAndSetListingInputs);
+      copyInputBtn.removeEventListener("click", copyListingInputs);
    });
-
-   copyInputBtn.addEventListener("click", async () => {
-      tempVal = {};
-
-      const editButtons = I('#sub-app-container .hTTPSU[data-testid="button"]');
-
-      editButtons[1].click();
-      await wait(500);
-
-      setInObject(I("#sku_id"), "seller_SKU_ID");
-      setInObject(I("#listing_status"), "listing_status");
-      setInObject(I("#mrp"), "mrp");
-      setInObject(I("#flipkart_selling_price"), "your_selling_price");
-      setInObject(I("#minimum_order_quantity"), "minimum_order_quantity");
-      setInObject(I("#procurement_type"), "procurement_type");
-      setInObject(I("#shipping_days"), "shipping_days");
-      setInObject(I("#stock_size"), "stock_size");
-
-      setInObject(
-         I("#local_shipping_fee_from_buyer"),
-         "local_shipping_fee_from_buyer"
-      );
-      setInObject(
-         I("#zonal_shipping_fee_from_buyer"),
-         "zonal_shipping_fee_from_buyer"
-      );
-      setInObject(
-         I("#national_shipping_fee_from_buyer"),
-         "national_shipping_fee_from_buyer"
-      );
-
-      setInObject(I("[name='length_p0']"), "length_p0");
-      setInObject(I("[name='breadth_p0']"), "breadth_p0");
-      setInObject(I("[name='height_p0']"), "height_p0");
-      setInObject(I("[name='weight_p0']"), "weight_p0");
-      setInObject(I("#hsn"), "hsn");
-      setInObject(I("#manufacturer_details"), "manufacturer_details");
-      setInObject(I("#packer_details"), "packer_details");
-      setInObject(I("#earliest_mfg_date"), "earliest_mfg_date");
-      setInObject(I("#shelf_life"), "shelf_life");
-
-      updateMappingValues(tempVal);
-   });
-
-   openInputBtn.addEventListener("click", openInputButtonAction);
-   copyInputBtn.addEventListener("click", copyInputButtonAction);
-
-   document.querySelector(".hTTPSU")?.addEventListener("click", () => {
-      openInputBtn.removeEventListener("click", openInputButtonAction);
-      copyInputBtn.removeEventListener("click", copyInputButtonAction);
-   });
+   // document.querySelector(".hTTPSU")?.addEventListener("click", () => {
+   // });
 }
 
 function setup_orders_print() {
@@ -283,7 +60,7 @@ function setup_orders_print() {
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
    if (sku_ids.length <= 0) return;
 
-   const TABLE = document.createElement("div");
+   TABLE = document.createElement("div");
    TABLE.setAttribute("id", "_orders_table");
    document.body.appendChild(TABLE);
    setStyle(true);
@@ -292,7 +69,7 @@ function setup_orders_print() {
       { id: "__fwo__", class: "__fw__" },
       (openInputBtn = CE({ class: "__btn__" }, "Orders")),
       (printBtn = CE({ class: "__btn__" }, "Print")),
-      (downloadBtn = CE({ class: "__btn__" }, "Download")), 
+      (downloadBtn = CE({ class: "__btn__" }, "Download")),
       (closeBtn = CE({ class: "__btn__ __1__" }, "Close"))
    ).parent(document.body);
 
@@ -300,171 +77,6 @@ function setup_orders_print() {
    printBtn.style.display = "none";
    downloadBtn.style.display = "none";
    TABLE.style.display = "none";
-
-   function printTable() {
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-         <html>
-            <head>
-               <title>Orders Table</title>
-               <style>
-                  * {
-                     margin: 0;
-                     padding: 0;
-                     box-sizing: border-box;
-                     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                     font-size: 12px;
-                  }
-                  ._-table {
-                     position: relative;
-                     width: 400px;
-                     background: #fff;
-                     flex-direction: column;
-                     color: #000
-                  }
-                  ._-row {
-                     position: relative;
-                     width: 100%;
-                     padding: 4px;
-                     display: grid;
-                     place-items: center;
-                     grid-template-columns: repeat(3, 1fr);
-                     border-bottom: 1px double #000;
-                  }
-
-                  ._-cell {
-                     width: 100%;
-                     position: relative;
-                     padding: 8px;
-                     border-right: 1px solid #ddd;
-                     border-left: 1px solid #ddd;
-                  }
-
-                  ._-header {
-                     width: 100%;
-                     border-radius: 10px;
-                     border: 1px dashed #000;
-                     font-weight: bold;
-                  }
-
-                  ._-seed-type {
-                     font-weight: bold;
-                     background-color: #f8f8f8;
-                  }
-                  @media print {
-                     @page { margin: 0.5cm; }
-                  }
-               </style>
-            </head>
-            <body>
-               ${TABLE.outerHTML}
-            </body>
-         </html>
-      `);
-      printWindow.document.close();
-      printWindow.print();
-   }
-
-   async function downloadAsImage() {
-      const canvas = await html2canvas(TABLE.querySelector("._-table"));
-      const link = document.createElement("a");
-      const date = new Date().toLocaleDateString('en-US', {day: 'numeric', month: 'short', year: 'numeric'});
-      link.download = `Orders ${date}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-   }
-
-   async function showOrders() {
-      const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
-      const unit = document.querySelectorAll(".hCSXUa .hXpCNJ");
-      const DATA = await getOrderData();
-      const { WordInBengali, NumberInBengali, editor, typeInBengali } = DATA;
-      const { calculateWeight, nameInBengali } = editor;
-
-      let NAMES = {};
-      for (const [key, value] of Object.entries(nameInBengali)) {
-         NAMES[key.toUpperCase()] = WordInBengali && value ? value : key;
-      }
-
-      let TYPES = {};
-      for (const [key, value] of Object.entries(typeInBengali)) {
-         TYPES[key.toUpperCase()] = WordInBengali ? value : key;
-      }
-
-      // if (WordInBengali) TABLE.style.fontSize = "18px";
-      // else 
-      TABLE.style.fontSize = "15px";
-
-      const SKU = [...sku_ids].map(el => el.innerText);
-      const UNIT = [...unit].map(el => parseInt(el.innerText));
-      const sku_data = SKU.map(el => el.split("__"));
-
-      const PRODUCTS = {};
-      sku_data.forEach((_sku_, i) => {
-         if (DATA.products[SKU[i]]) {
-            const temp = DATA.products[SKU[i]];
-            const { NAME, TYPE, QUANTITY } = temp;
-
-            const weight = calculateWeight[NAME.toUpperCase()] || null;
-
-            const name = NAMES[NAME.toUpperCase()] || NAME.toUpperCase();
-            const type = TYPES[TYPE === "per packet" ? "P" : TYPE.toUpperCase()] || TYPE.toUpperCase();
-            const num = NumberInBengali ? toBengaliNumber(QUANTITY) : QUANTITY;
-
-            let gram = "";
-
-            if (type === "PIECE" && weight) {
-               const [_p_, _g_] = extractNumbers(weight);
-               const result = num * _g_ / _p_;
-               const formattedResult = Number.isInteger(result) ? result : result.toFixed(3);
-               gram = `, ${formattedResult} ${TYPES["G"]}`;
-            }
-
-            !PRODUCTS[name] && (PRODUCTS[name] = {});
-            const quantityKey = `${num} ${type}${gram}`;
-            PRODUCTS[name][quantityKey] = (PRODUCTS[name][quantityKey] || 0) + UNIT[i];
-         } else if (_sku_.length >= 3) {
-            const [name, quantity, type] = _sku_;
-            
-            const weight = calculateWeight[name.toUpperCase()] || null;
-            
-            const NAME = NAMES[name.toUpperCase()] || name.toUpperCase();
-            const TYPE = TYPES[type === "PIECE" ? "P" : type] || type;
-            const NUM = NumberInBengali ? toBengaliNumber(quantity) : quantity;
-
-            
-            let gram = "";
-            
-            if (type === "PIECE" && weight) {
-               const [_p_, _g_] = extractNumbers(weight);
-               const result = quantity * _g_ / _p_;
-               const formattedResult = Number.isInteger(result) ? result : result.toFixed(2);
-               const VALUE = NumberInBengali ? toBengaliNumber(formattedResult) : formattedResult;
-               gram = `, ${VALUE} ${TYPES["G"]}`;
-            }
-
-            !PRODUCTS[NAME] && (PRODUCTS[NAME] = {});
-            const quantityKey = `${NUM} ${TYPE}${gram}`;
-            PRODUCTS[NAME][quantityKey] = (PRODUCTS[NAME][quantityKey] || 0) + UNIT[i];
-
-         } else {
-            console.log("SKU NOT FOUND", SKU[i]);
-         }
-      });
-
-      const tableRows = Object.entries(PRODUCTS).map(([name, quantities]) => {
-         const header = `<div class="_-cell _-header">${name}</div>`;
-         
-         const cells = Object.entries(quantities).map(([quantity, type]) => {
-            const TYPE = WordInBengali ? `${type} ${TYPES["TIMES"]}` : `(${type})`;
-            return `<div class="_-cell">${quantity} => ${TYPE}</div>`;
-         }).join('');
-
-         return `<div class="_-row">${header}${cells}</div>`;
-      }).join('');
-
-      TABLE.innerHTML = `<div class="_-table">${tableRows}</div>`;
-   }
 
    openInputBtn.addEventListener("click", async () => {
       closeBtn.style.display = "block";
@@ -496,12 +108,12 @@ async function setup_mapping() {
       (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
-   openInputBtn.addEventListener("click", openInputButtonAction);
-   copyInputBtn.addEventListener("click", copyInputButtonAction);
+   openInputBtn.addEventListener("click", () => fillMappingInputs());
+   copyInputBtn.addEventListener("click", () => copyMappingInputs());
 
    document.querySelector(".hTTPSU")?.addEventListener("click", () => {
-      openInputBtn.removeEventListener("click", openInputButtonAction);
-      copyInputBtn.removeEventListener("click", copyInputButtonAction);
+      openInputBtn.removeEventListener("click", () => fillMappingInputs());
+      copyInputBtn.removeEventListener("click", () => copyMappingInputs());
    });
 }
 
@@ -575,12 +187,10 @@ onload = async () => {
       setup_orders_print();
    }
 
-
    if (ifFlipkartSearchLocation()) {
       setStyle();
       setup_flipkart_product_url();
    }
-
 };
 
 addEventListener("mousedown", async (_) => {
@@ -637,5 +247,23 @@ addEventListener("mousedown", async (_) => {
       }
    } else if (is) {
       fw.style.display = "none";
+   }
+});
+
+/* --------------- auto mate single listing create ----------- */
+runtimeOnMessage("b_c_create_single_listing", async (__, _, sendResponse) => {
+   try {
+      sendResponse({ status: "ok" });
+      await wait(1000);
+      await setBrand();
+      await wait(1000);
+      await fillLintingInputs();
+      await wait(500);
+      await sendToQC();
+      runtimeSendMessage("c_b_create_listing_complete", (r) => {
+         console.log(r);
+      });
+   } catch (error) {
+      alert(error);
    }
 });

@@ -73,8 +73,17 @@ async function init() {
             else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
             else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(listingData[inp.name] || 0).toLocaleString("en-IN");
             else inp.value = listingData[inp.name] || "";
+
+            if (["START", "PAUSE", "STOP"].includes(inp.name)) {
+               inp.classList.toggle("active", listingData[inp.name]);
+            }
          }
       });
+
+      const COUNT = val?.COUNT || 0;
+      I("#COUNT")[0].textContent = COUNT;
+
+      setTotalCount();
    });
 
    chromeStorageGetLocal(storageOrdersKey, (val) => {
@@ -214,6 +223,7 @@ function __clear_data_listing__() {
          for (let i = 0; i < 8; i++) {
             chromeStorageSetLocal(`storage-image-${i}`, null);
          }
+         val.COUNT = 0;
          chromeStorageSetLocal(storageListingKey, val);
          init();
       });
@@ -358,6 +368,8 @@ function saveDataB() {
          }
       });
 
+      setTotalCount();
+
       listingData = val;
       chromeStorageSetLocal(storageListingKey, val);
    });
@@ -437,7 +449,7 @@ I("#takeFile").on("change", async (event) => {
       try {
          const text = await file.text();
          const jsonData = JSON.parse(text);
-         
+
          // Validate the imported data structure
          if (jsonData.mappingData || jsonData.listingData || jsonData.ordersData || jsonData.settings) {
             // Store the imported data
@@ -457,13 +469,86 @@ I("#takeFile").on("change", async (event) => {
             if (jsonData.init) {
                await chromeStorageSetLocal(storageInitKey, jsonData.init);
             }
-            
+
             init();
          } else {
             alert('Invalid file format');
          }
       } catch (error) {
          alert('Error reading file: ' + error.message);
+      }
+   }
+});
+
+const START_BTN = I("#IS_START");
+const PAUSE_BTN = I("#IS_PAUSE");
+const STOP_BTN = I("#IS_STOP");
+
+START_BTN.click(() => {
+   START_BTN[0].checked = false;
+   PAUSE_BTN[0].checked = true;
+   STOP_BTN[0].checked = true;
+   START_BTN.removeClass("active");
+   PAUSE_BTN.addClass("active");
+   STOP_BTN.addClass("active");
+   saveDataB();
+   runtimeSendMessage("p_b_start_listing", ({ status }) => {
+      console.log(status);
+   });
+})
+
+PAUSE_BTN.click(() => {
+   PAUSE_BTN[0].checked = false;
+   PAUSE_BTN.removeClass("active");
+   if (!START_BTN[0].checked) {
+      START_BTN[0].checked = true;
+      STOP_BTN[0].checked = true;
+      START_BTN.addClass("active");
+      STOP_BTN.addClass("active");
+   }
+   saveDataB();
+   runtimeSendMessage("p_b_pause_listing", ({ status }) => {
+      console.log(status);
+   });
+})
+
+STOP_BTN.click(async () => {
+   START_BTN[0].checked = true;
+   PAUSE_BTN[0].checked = false;
+   STOP_BTN[0].checked = false;
+   START_BTN.addClass("active");
+   STOP_BTN.removeClass("active");
+   PAUSE_BTN.removeClass("active");
+   await chromeStorageGetLocal(storageListingKey, (val) => {
+      if (!val) val = {};
+      val.COUNT = 0;
+      listingData = val;
+      I("#COUNT")[0].textContent = 0;
+      chromeStorageSetLocal(storageListingKey, val);
+   });
+   saveDataB();
+   runtimeSendMessage("p_b_stop_listing", ({ status }) => {
+      console.log(status);
+   });
+})
+
+function setTotalCount() {
+   const startCount = I("#START_COUNT")[0]?.value || 0;
+   const endCount = I("#END_COUNT")[0]?.value || 0;
+   const repeat = I("#REPEAT_COUNT")[0]?.value || 1;
+
+   const total = Math.abs((endCount - startCount) * repeat);
+   I("#TOTAL_COUNT")[0].innerText = total;
+}
+
+// Add this near the top of the file, after your initial constants
+chrome.storage.onChanged.addListener((changes, namespace) => {
+   if (namespace === "local") {
+      // Handle listing data changes
+      if (changes[storageListingKey]) {
+         listingData = changes[storageListingKey].newValue;
+         const COUNT = listingData?.COUNT || 0;
+         I("#COUNT")[0].textContent = COUNT;
       }
    }
 });

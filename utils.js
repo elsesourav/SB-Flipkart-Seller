@@ -11,6 +11,7 @@ const URLS = {
    singleAddListing: "https://seller.flipkart.com/index.html#dashboard/addListings",
    singleOrder: "https://seller.flipkart.com/index.html#dashboard/my-orders",
    flipkartSearch: "https://www.flipkart.com/search",
+   newListing: "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed"
 };
 
 let settings = {
@@ -18,7 +19,9 @@ let settings = {
    currentMode: 0,
 }
 let mappingData = {};
-let listingData = {};
+let listingData = {
+   COUNT: 0,
+};
 let ordersData = {
    editor: {
       calculateWeight: {
@@ -213,6 +216,16 @@ function runtimeOnMessage(type, callback) {
    });
 }
 
+const debounce = (func, delayFn) => {
+   let debounceTimer;
+   return function (...args) {
+      const context = this;
+      const delay = delayFn();
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => func.apply(context, args), delay);
+   };
+};
+
 /**
  * @param {number} ms
  **/
@@ -251,16 +264,6 @@ function chromeStorageGet(key, callback = () => { }) {
       });
    });
 }
-
-const debounce = (func, delayFn) => {
-   let debounceTimer;
-   return function (...args) {
-      const context = this;
-      const delay = delayFn();
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => func.apply(context, args), delay);
-   };
-};
 
 function setInputLikeHuman(element) {
    const event = new Event("change", { bubbles: true });

@@ -46,20 +46,25 @@ main .container {
 }
 
 body:has(.btn:first-child input:checked) {
+
    #myListing,
    #ordersSettings {
       display: none;
       opacity: 1;
    }
 }
+
 body:has(.btn:nth-child(2) input:checked) {
+
    #mappingContainer,
    #ordersSettings {
       display: none;
       opacity: 1;
    }
 }
+
 body:has(.btn:nth-child(3) input:checked) {
+
    #mappingContainer,
    #myListing {
       display: none;
@@ -90,7 +95,7 @@ body:has(.btn:nth-child(3) input:checked) {
       z-index: 3;
       font-size: calc(var(--s) * 1.5);
 
-      input[type="checkbox"] {
+      input[type="checkbox"].open-close {
          position: absolute;
          width: 100%;
          height: 100%;
@@ -105,16 +110,16 @@ body:has(.btn:nth-child(3) input:checked) {
          transition: transform 200ms ease-in-out;
       }
 
-      &:has(input[type="checkbox"]:checked) i {
+      &:has(input[type="checkbox"].open-close:checked) i {
          transform: scaleY(-1);
       }
    }
 
-   &:has(.open-close input[type="checkbox"]:checked) {
+   &:has(.open-close input[type="checkbox"].open-close:checked) {
       height: auto;
    }
 
-   &:has(.open-close input[type="checkbox"]:not(:checked)) {
+   &:has(.open-close input[type="checkbox"].open-close:not(:checked)) {
       height: var(--grid-min);
    }
 
@@ -199,7 +204,8 @@ body:has(.btn:nth-child(3) input:checked) {
    }
 }
 
-.take-inp {
+.take-inp,
+.show-output {
    position: relative;
    width: 100%;
    height: calc(var(--s) * 3.8);
@@ -212,6 +218,19 @@ body:has(.btn:nth-child(3) input:checked) {
    user-select: none;
    -ms-user-select: none;
    -webkit-user-select: none;
+
+   &.show-output {
+      grid-template-columns: 3fr 2fr;
+
+      .out-span {
+         position: relative;
+         width: 100%;
+         text-align: center;
+         font-size: calc(var(--s) * 1.4);
+         word-spacing: 3px;
+         font-family: f6b;
+      }
+   }
 
    &.only-switch {
       height: min-content;
@@ -234,7 +253,7 @@ body:has(.btn:nth-child(3) input:checked) {
          outline: none;
       }
 
-      input[type="checkbox"] {
+      input[type="checkbox"].toggle {
          transform: translateY(-20%);
       }
 
@@ -264,6 +283,25 @@ body:has(.btn:nth-child(3) input:checked) {
       border-radius: calc(var(--s) / 1.5);
       grid-template-columns: 7fr;
       place-items: center;
+
+      &.out {
+         background: transparent;
+         color: transparent;
+
+         p.out-p {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            display: grid;
+            place-items: center;
+            font-family: f1b;
+            font-size: calc(var(--s) * 1.5);
+            border: solid 2px light-dark(#fff, 000);
+            background-color: light-dark(#000, #fff);
+            color: light-dark(#fff, #000);
+         }
+      }
 
       .take-value {
          position: relative;
@@ -466,6 +504,104 @@ body:has(.btn:nth-child(3) input:checked) {
                }
             }
          }
+
+         &:has(input[type="checkbox"].btn) {
+            input[type="checkbox"].btn {
+               position: absolute;
+               width: 100%;
+               height: 100%;
+               opacity: 0;
+               -webkit-appearance: none;
+               -moz-appearance: none;
+               appearance: none;
+               cursor: pointer;
+            }
+
+            .inp.btn {
+               position: relative;
+               width: 100%;
+               height: 100%;
+               display: flex;
+               justify-content: center;
+               align-items: center;
+               border-radius: calc(var(--s) / 2);
+               color: light-dark(#fff, #000);
+               background: light-dark(#000, #fff);
+               gap: calc(var(--s) * 1);
+               opacity: 0.5;
+               cursor: pointer;
+               box-shadow: inset 0 0 0 transparent;
+               transition: linear 200ms background, linear 200ms color, opacity 200ms linear, box-shadow 200ms linear;
+
+               i {
+                  width: calc(var(--s) * 2);
+                  text-align: center;
+                  font-size: calc(var(--s) * 2);
+                  transition: linear 200ms color;
+               }
+
+               .btn-text {
+                  width: calc(var(--s) * 5);
+                  text-align: left;
+                  font-family: f1b;
+                  font-size: calc(var(--s) * 1.4);
+               }
+            }
+
+            &:hover .inp.btn {
+               box-shadow: inset 0 0 10px #0f53ff;
+            }
+
+            &:active .inp.btn {
+               background: light-dark(#fff, #000);
+               color: light-dark(#000, #fff);
+            }
+         }
+
+         &:has(input[type="checkbox"].btn#IS_START.active) .inp.btn {
+            opacity: 1;
+            i {
+               color: #ff0000;
+            }
+         }
+         &:has(input[type="checkbox"].btn#IS_PAUSE.active) .inp.btn{
+            opacity: 1;
+            i {
+               color: #ff8e16;
+            }
+         }
+         &:has(input[type="checkbox"].btn#IS_STOP.active) .inp.btn {
+            opacity: 1;
+            i {
+               color: #ff0000;
+            }
+         }
       }
    }
+
+   /* &:has( input[type="checkbox"].btn#IS_STOP:checked) {
+      section:nth-child(1) .take-value .inp.btn i {
+         color: #ff0000;
+      }
+   }
+
+   &:has( input[type="checkbox"].btn#IS_PAUSE:checked) {
+      section:nth-child(1) .take-value .inp.btn i {
+         color: #ff0000;
+      }
+      section:nth-child(3) .take-value .inp.btn i {
+         color: #ff0000;
+      }
+   }
+
+   &:has( input[type="checkbox"].btn#IS_START:checked) {
+      section:nth-child(2) .take-value .inp.btn i {
+         color: #ff6b0f;
+      }
+      section:nth-child(3) .take-value .inp.btn i {
+         color: #ff0000;
+      }
+   } */
+
+   
 }

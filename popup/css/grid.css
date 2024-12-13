@@ -20,7 +20,8 @@
       }
    } */
 
-   .take-inp.center {
+   .take-inp.center,
+   .show-output.center {
       grid-column: span 2;
       width: calc(var(--ww) - var(--s) * 2);
    }
@@ -56,6 +57,10 @@
 
       &.tow-label-tow-input {
          grid-template-columns: 2fr 3fr 2fr 3fr;
+      }
+
+      &.three-button {
+         grid-template-columns: repeat(3, 1fr);
       }
 
       &.three-input {
