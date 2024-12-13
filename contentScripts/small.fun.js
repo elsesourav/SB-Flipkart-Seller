@@ -461,7 +461,7 @@ function fillLintingInputs() {
 
          setInput(I("#description"), DATA?.DESCRIPTION || "");
 
-         setupMultipleKeywords("keywords", DATA?.SEARCH_KEYWORDS || "");
+         setupMultipleKeywords("keywords", DATA?.SEARCH_KEYWORDS || "", DATA?.FIXED_KEYWORD_FIRST || 2);
 
          setupMultipleValues("key_features", DATA?.KEY_FEATURES || "");
 

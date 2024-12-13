@@ -131,8 +131,8 @@ function setupMultipleValues(idName, _string) {
    }
 }
 
-function setupMultipleKeywords(idName, _string) {
-   const values = selectUniqueElements(_string.split("_"), 2);
+function setupMultipleKeywords(idName, _string, fixedCount = 2) {
+   const values = selectUniqueElements(_string.split("_"), fixedCount);
    if (document.querySelectorAll(`#${idName}`).length === 1) {
       values.forEach(async (str, i) => {
          const elements = document.querySelectorAll(`#${idName}`);
@@ -316,6 +316,7 @@ function putImagesIntoListing(images, editButtons) {
 
 function selectUniqueElements(arr, fixedCount = 2) {
    if (arr.length <= 4) return arr;
+   fixedCount = Math.min(fixedCount, 4);
 
    const fixedElements = arr.slice(0, fixedCount);
    const remainingElements = arr.slice(fixedCount);
