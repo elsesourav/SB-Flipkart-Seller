@@ -254,10 +254,11 @@ addEventListener("mousedown", async (_) => {
 runtimeOnMessage("b_c_create_single_listing", async (__, _, sendResponse) => {
    try {
       sendResponse({ status: "ok" });
+      const DATA = await getListingData();
       await wait(1000);
-      await setBrand();
+      await setBrand(DATA);
       await wait(1000);
-      await fillLintingInputs();
+      await fillLintingInputs(DATA);
       await wait(500);
       await sendToQC();
       runtimeSendMessage("c_b_create_listing_complete", (r) => {

@@ -37,7 +37,9 @@ function fillMappingInputs(data = null) {
          } else {
             quantity = DATA?.QUANTITY;
             value =
-               DATA?.QUANTITY_IN === "per packet" ? "PIECE" : DATA?.QUANTITY_IN.toUpperCase();
+               DATA?.QUANTITY_IN === "per packet"
+                  ? "PIECE"
+                  : DATA?.QUANTITY_IN.toUpperCase();
             sku_id = `${DATA?.SKU_NAME?.toUpperCase()}__${quantity}__${value}__${uniqueId}`;
          }
 
@@ -96,16 +98,18 @@ function fillMappingInputs(data = null) {
 
          // console.log("=================================================================");
          const TOTAL_WEIGHT = getTotalWeight(DATA, quantity, value);
-         console.log(TOTAL_WEIGHT);
-         
 
          if (data) {
-            M_R_P = sellingPrice * 10;
+            M_R_P = (sellingPrice * N(DATA?.MRP_MULTIPLY_PERCENT)) / 10;
+
+            if (DATA?.IS_ATTRACTIVE_MRP) {
+               M_R_P = reduceToNearestFifty(M_R_P);
+            }
          }
 
          setInput(I("#sku_id"), sku_id);
          setInput(I("#listing_status"), DATA?.LISTING_STATUS || false);
-         console.log("M_R_P: " + M_R_P);
+         // console.log("M_R_P: " + M_R_P);
 
          setInput(I("#mrp"), M_R_P);
 
@@ -286,7 +290,7 @@ async function showOrders() {
    const DATA = await getOrderData();
 
    // console.log(DATA);
-   
+
    const { WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor, typeInBengali } = DATA;
    const { calculateWeight, nameInBengali } = editor;
 
@@ -392,10 +396,10 @@ async function showOrders() {
    TABLE.innerHTML = `<div class="_-table">${tableRows}</div>`;
 }
 
-function fillLintingInputs() {
+function fillLintingInputs(DATA) {
    return new Promise(async (resolve) => {
       try {
-         const DATA = await getListingData();
+         DATA = DATA ? DATA : await getListingData();
          const sales_package =
             DATA?.QUANTITY_IN == "per packet"
                ? `${DATA?.QUANTITY} Piece`
@@ -435,7 +439,11 @@ function fillLintingInputs() {
             `${DATA?.MODEL_ID} ${uniqueId}` || uniqueId
          );
 
-         setupMultipleValues("common_name", DATA?.COMMON_NAME || "");
+         setupMultipleCommonName(
+            "common_name",
+            DATA?.COMMON_NAME || "",
+            DATA?.FIXED_COMMON_NAME_FIRST || 1
+         );
 
          setInput(I("#quantity"), DATA.QUANTITY || 1);
 
@@ -461,13 +469,19 @@ function fillLintingInputs() {
 
          setInput(I("#description"), DATA?.DESCRIPTION || "");
 
-         setupMultipleKeywords("keywords", DATA?.SEARCH_KEYWORDS || "", DATA?.FIXED_KEYWORD_FIRST || 2);
+         setupMultipleKeywords(
+            "keywords",
+            DATA?.SEARCH_KEYWORDS || "",
+            DATA?.FIXED_KEYWORD_FIRST || 2
+         );
 
          setupMultipleValues("key_features", DATA?.KEY_FEATURES || "");
 
          setInput(I("#video_url"), DATA?.VIDEO_URL || "");
 
          setInput(I("#family"), DATA?.FAMILY || "");
+
+         setInput(I("#scientific_name"), DATA?.SCIENTIFIC_NAME || "");
 
          setupMultipleValues("uses", DATA?.USES || "");
 
@@ -556,18 +570,24 @@ async function copyListingInputs() {
    updateMappingValues(tempVal);
 }
 
-function setBrand() {
+function setBrand(DATA) {
    return new Promise(async (resolve) => {
       await wait(500);
       const input = I(`[placeholder="Enter Brand Name"]`)[0];
-      input.value = "SILBA";
+      console.log(DATA?.BRAND_NAME);
+
+      input.value = DATA?.BRAND_NAME || "SILBA";
       setInputLikeHuman(input);
-      const ele1 = document.querySelector(`#sub-app-container [data-testid="button"]`);
+      const ele1 = document.querySelector(
+         `#sub-app-container [data-testid="button"]`
+      );
       ele1.click();
       setInputLikeHuman(ele1);
       await wait(600);
 
-      const ele2 = document.querySelectorAll(`#sub-app-container [data-testid="button"]`)[1];
+      const ele2 = document.querySelectorAll(
+         `#sub-app-container [data-testid="button"]`
+      )[1];
       ele2.click();
       setInputLikeHuman(ele2);
 
@@ -578,10 +598,24 @@ function setBrand() {
 
 function sendToQC() {
    return new Promise(async (resolve) => {
-      document.querySelectorAll(`#sub-app-container button[data-testid="button"]`)[1].click();
+      document
+         .querySelectorAll(`#sub-app-container button[data-testid="button"]`)[1]
+         .click();
       await wait(500);
       console.log("sent to qc");
 
       resolve(true);
    });
+}
+
+function reduceToNearestFifty(number) {
+   number = Number(number);
+   if (50 <= number && number <= 200) {
+      const remainder = number % 10;
+      return number - remainder - 1;
+   } else if (number > 200) {
+      const remainder = number % 50;
+      return number - remainder - 1;
+   }
+   return number;
 }

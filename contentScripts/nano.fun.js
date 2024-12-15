@@ -131,6 +131,34 @@ function setupMultipleValues(idName, _string) {
    }
 }
 
+function setupMultipleCommonName(idName, _string, fixedCount = 1) {
+   let values = _string.split("_");
+
+   values = selectUniqueElements(values, fixedCount, values.length);
+
+   if (document.querySelectorAll(`#${idName}`).length === 1) {
+      values.forEach(async (str, i) => {
+         const elements = document.querySelectorAll(`#${idName}`);
+         if (elements.length > 0) {
+            const len = elements.length;
+
+            elements[len - 1].value = str;
+            const event = new Event("change", { bubbles: true });
+            elements[len - 1]?.dispatchEvent(event);
+
+            if (i < values.length - 1) {
+               const buttons = [...elements].map((e) =>
+                  e.parentNode.parentNode.parentNode.querySelector("button")
+               );
+
+               buttons[buttons.length - 1].click();
+            }
+         }
+         await wait(30);
+      });
+   }
+}
+
 function setupMultipleKeywords(idName, _string, fixedCount = 2) {
    const values = selectUniqueElements(_string.split("_"), fixedCount);
    if (document.querySelectorAll(`#${idName}`).length === 1) {
@@ -314,13 +342,13 @@ function putImagesIntoListing(images, editButtons) {
    });
 }
 
-function selectUniqueElements(arr, fixedCount = 2) {
+function selectUniqueElements(arr, fixedCount = 2, total = 4) {
    if (arr.length <= 4) return arr;
-   fixedCount = Math.min(fixedCount, 4);
+   fixedCount = Math.min(fixedCount, total);
 
    const fixedElements = arr.slice(0, fixedCount);
    const remainingElements = arr.slice(fixedCount);
    const shuffled = [...remainingElements].sort(() => Math.random() - 0.5);
-   const selected = shuffled.slice(0, 4 - fixedCount);
+   const selected = shuffled.slice(0, total - fixedCount);
    return [...fixedElements, ...selected];
 }

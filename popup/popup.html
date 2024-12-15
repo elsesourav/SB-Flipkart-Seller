@@ -70,7 +70,7 @@
          </div>
          <div class="btn">
             <input type="radio" name="btn" id="download_orders" class="s option-btn" />
-            <label for="download_orders">ORDERS <i class="sbi-settings"></i></label>
+            <label for="download_orders">SETTINGS <i class="sbi-settings"></i></label>
          </div>
       </div>
    </nav>
@@ -487,6 +487,75 @@
 
       <div class="container" id="myListing">
          <div class="basic-grid no-flip">
+            <div class="show-output">
+               <span class="out-span">TOTAL LISTING</span>
+               <section class="out">
+                  <p name="TOTAL_COUNT" id="TOTAL_COUNT" class="out-p">0</p>
+               </section>
+            </div>
+
+            <div class="show-output">
+               <span class="out-span">COUNT</span>
+               <section class="out">
+                  <p name="COUNT" id="COUNT" class="out-p">0</p>
+               </section>
+            </div>
+
+            <div class="take-inp full-width three-button">
+               <section>
+                  <div class="take-value">
+                     <div class="inp btn">
+                        <i class="sbi-controller-record"></i>
+                        <div class="btn-text">START</div>  
+                     </div>
+                     <input type="checkbox" id="IS_START" name="START" class="input-b btn"/>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp btn" name="PAUSE">
+                        <i class="sbi-pause3" id="is_pause_icon" data-v="sbi-play-arrow"></i>
+                        <div class="btn-text">PAUSE</div>
+                     </div>
+                     <input type="checkbox" id="IS_PAUSE" name="PAUSE" class="input-b btn" />
+                  </div>
+               </section>
+               <section> 
+                  <div class="take-value">
+                     <div class="inp btn" name="STOP">
+                        <i class="sbi-controller-stop"></i>
+                        <div class="btn-text">STOP</div>
+                     </div>
+                     <input type="checkbox" id="IS_STOP" name="STOP" class="input-b btn" />
+                  </div>
+               </section>
+            </div>
+
+
+         </div>
+
+
+         <!---------------- Basic ------------------>
+         <p class="br-tag"></p>
+         <div class="basic-grid flip image-grid">
+            <div class="open-close">
+               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <i class="sbi-chevron-circle-down"></i>
+               <span class="inp-span">BASIC DETAIL</span>
+               <i class="sbi-chevron-circle-down"></i>
+            </div>
+
+   
+            <div class="take-inp center">
+               <span class="inp-span">Brand Name</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input type="text" name="BRAND_NAME" class="input-b" />
+                     </div>
+                  </div>
+               </section>
+            </div>
    
             <div class="take-inp">
                <span class="inp-span">Quantity In</span>
@@ -591,53 +660,9 @@
                </section>
             </div>
 
-            <div class="show-output">
-               <span class="out-span">TOTAL LISTING</span>
-               <section class="out">
-                  <p name="TOTAL_COUNT" id="TOTAL_COUNT" class="out-p">0</p>
-               </section>
-            </div>
-
-            <div class="show-output">
-               <span class="out-span">COUNT</span>
-               <section class="out">
-                  <p name="COUNT" id="COUNT" class="out-p">0</p>
-               </section>
-            </div>
-
-            <div class="take-inp full-width three-button">
-               <section>
-                  <div class="take-value">
-                     <div class="inp btn">
-                        <i class="sbi-controller-record"></i>
-                        <div class="btn-text">START</div>  
-                     </div>
-                     <input type="checkbox" id="IS_START" name="START" class="input-b btn"/>
-                  </div>
-               </section>
-               <section>
-                  <div class="take-value">
-                     <div class="inp btn" name="PAUSE">
-                        <i class="sbi-pause3" id="is_pause_icon" data-v="sbi-play-arrow"></i>
-                        <div class="btn-text">PAUSE</div>
-                     </div>
-                     <input type="checkbox" id="IS_PAUSE" name="PAUSE" class="input-b btn" />
-                  </div>
-               </section>
-               <section> 
-                  <div class="take-value">
-                     <div class="inp btn" name="STOP">
-                        <i class="sbi-controller-stop"></i>
-                        <div class="btn-text">STOP</div>
-                     </div>
-                     <input type="checkbox" id="IS_STOP" name="STOP" class="input-b btn" />
-                  </div>
-               </section>
-            </div>
-
-
          </div>
 
+         
          <p class="br-tag"></p>
 
          <!----------- images  ------------>
@@ -645,7 +670,7 @@
             <div class="open-close">
                <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
-               <span class="inp-span">IMAGES</span>
+               <span class="inp-span">UPLOAD IMAGES</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
             <div class="take-inp image show">
@@ -713,6 +738,42 @@
             </div>
             <div class="take-inp image">
                <p>Image 8</p>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <p>Image 9</p>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <p>Image 10</p>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <p>Image 11</p>
+               <section>
+                  <div class="img-box"></div>
+                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <i class="sbi-upload4"></i>
+                  <i class="sbi-bin"></i>
+               </section>
+            </div>
+            <div class="take-inp image">
+               <p>Image 12</p>
                <section>
                   <div class="img-box"></div>
                   <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
@@ -810,6 +871,31 @@
                         </button>
                      </div>
                   </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Show MRP</span>
+               <section>
+                  <div class="take-value">
+                     <label>Price × (n%)</label>
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="MRP_MULTIPLY_PERCENT" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp check-box">
+               <span class="inp-span">Attractive MRP <i class="sbi-inr"></i></span>
+               <section>
+                  <input type="checkbox" name="IS_ATTRACTIVE_MRP" class="input-b toggle" />
                </section>
             </div>
 
@@ -1173,7 +1259,19 @@
                   </div>
                </section>
             </div>
-
+            
+            <div class="take-inp">
+               <span class="inp-span">Suitable</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <textarea spellcheck="false" name="SUITABLE_FOR" placeholder="Use 1_2 for all"
+                        class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+            </div>
+            
             <div class="take-inp">
                <span class="inp-span">Cmn Nm</span>
                <section>
@@ -1186,17 +1284,23 @@
             </div>
 
             <div class="take-inp">
-               <span class="inp-span">Suitable</span>
+               <span class="inp-span">FIXED NM</span>
                <section>
                   <div class="take-value">
-                     <div class="inp area">
-                        <textarea spellcheck="false" name="SUITABLE_FOR" placeholder="Use 1_2 for all"
-                           class="input-b"></textarea>
+                     <label>FIRST</label>
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input name="FIXED_COMMON_NAME_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
                      </div>
                   </div>
                </section>
             </div>
-
+            
             <div class="take-inp">
                <span class="inp-span">Organic</span>
                <section>
@@ -1212,7 +1316,7 @@
                </section>
             </div>
 
-            <div class="take-inp center">
+            <div class="take-inp">
                <span class="inp-span">Seed Type</span>
                <section>
                   <div class="take-value">

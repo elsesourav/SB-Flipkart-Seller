@@ -1,6 +1,7 @@
 const aInputs = I(".take-inp .input-a");
 const bInputs = I(".take-inp .input-b");
 const cInputs = I(".take-inp .input-c");
+const MAX_IMAGE = 12;
 
 const imageSection = I(".take-inp.image");
 const imageInputFields = I(".take-inp.image .inp-image");
@@ -115,7 +116,7 @@ async function setupSavedImages() {
    let count = 0;
 
    // Show and setup existing images
-   for (let i = 0; i < 8; i++) {
+   for (let i = 0; i < MAX_IMAGE; i++) {
       await chromeStorageGetLocal(`storage-image-${i}`, async (image) => {
 
          if (image && image.file) {
@@ -129,7 +130,7 @@ async function setupSavedImages() {
    }
 
    // Show next empty slot
-   if (count < 7) {
+   if (count < MAX_IMAGE - 1) {
       imageSection[count].classList.add("show");
    }
 }
@@ -220,7 +221,7 @@ function __clear_data_listing__() {
                val[key] = 0;
             }
          }
-         for (let i = 0; i < 8; i++) {
+         for (let i = 0; i < MAX_IMAGE; i++) {
             chromeStorageSetLocal(`storage-image-${i}`, null);
          }
          val.COUNT = 0;
@@ -279,7 +280,7 @@ async function reSortImages() {
    const images = {};
 
    let j = 0;
-   for (let i = 0; i < 8; i++) {
+   for (let i = 0; i < MAX_IMAGE; i++) {
       await chromeStorageGetLocal(`storage-image-${i}`, (val) => {
          if (val && val.file) {
             images[j] = val;
@@ -292,7 +293,7 @@ async function reSortImages() {
       chromeStorageSetLocal(`storage-image-${i}`, images[i]);
    }
 
-   for (let i = j; i < 8; i++) {
+   for (let i = j; i < MAX_IMAGE; i++) {
       chromeStorageSetLocal(`storage-image-${i}`, null);
    }
    setupSavedImages();
@@ -309,7 +310,7 @@ imageInputFields.on("change", (_, i, fileInput) => {
    if (imageFiles[i]) {
       const reader = new FileReader();
       reader.onload = async (event) => {
-         if (i < 7) imageSection[i + 1].classList.add("show");
+         if (i < MAX_IMAGE - 1) imageSection[i + 1].classList.add("show");
          const imageData = event.target.result;
          chromeStorageSetLocal(`storage-image-${i}`, { file: imageData });
          setImageInInput(i, imageData);
