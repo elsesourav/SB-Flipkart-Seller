@@ -16,6 +16,8 @@ const closeTab = (tabId) => {
    });
 };
 
+
+
 const getCurrentTab = () => {
    return new Promise((resolve) => {
       chrome.tabs.query({ active: true }, (tabs) => {

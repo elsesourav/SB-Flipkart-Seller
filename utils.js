@@ -8,16 +8,19 @@ const storageSettingsKey = "SB_Seller_Settings";
 
 const URLS = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
-   singleAddListing: "https://seller.flipkart.com/index.html#dashboard/addListings",
+   singleAddListing:
+      "https://seller.flipkart.com/index.html#dashboard/addListings",
    singleOrder: "https://seller.flipkart.com/index.html#dashboard/my-orders",
    flipkartSearch: "https://www.flipkart.com/search",
-   newListing: "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed"
+   newListing:
+      "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed",
 };
 
+const MAX_IMAGE = 12;
 let settings = {
    listingOpen: [true, false, false, false],
    currentMode: 0,
-}
+};
 let mappingData = {};
 let listingData = {
    COUNT: 0,
@@ -25,52 +28,55 @@ let listingData = {
 let ordersData = {
    editor: {
       calculateWeight: {
-         "LOTUS": "100P 100G"
+         LOTUS: "100P 100G",
       },
       nameInBengali: {
-         "BEAN": "বরবটি",
+         BEAN: "বরবটি",
          "BITTER GOURD": "উচ্ছে",
          "BOTTLE GOURD": "লাউ",
-         "BRINJAL": "বেগুন",
-         "CABBAGE": "বাঁধাকপি",
-         "CAPSICUM": "ক্যাপসিকাম",
+         BRINJAL: "বেগুন",
+         CABBAGE: "বাঁধাকপি",
+         CAPSICUM: "ক্যাপসিকাম",
          "CARPET GRASS": "ঘাস",
-         "CARROT": "গাজর",
-         "CAULIFLOWER": "ফুলকপি",
-         "CHILLY": "লঙ্কা",
-         "CHILLI": "লঙ্কা",
-         "CUCUMBER": "শশা",
-         "DAHLIA": "ডালিয়া",
-         "LOTUS": "পদ্ম ফুল",
-         "MARIGOLD": "গাঁদা ফুল",
+         CARROT: "গাজর",
+         CAULIFLOWER: "ফুলকপি",
+         CHILLY: "লঙ্কা",
+         CHILLI: "লঙ্কা",
+         CUCUMBER: "শশা",
+         DAHLIA: "ডালিয়া",
+         LOTUS: "পদ্ম ফুল",
+         MARIGOLD: "গাঁদা ফুল",
          "MALABAR SPINACH": "পুই শাক",
-         "MORINGA": "সজনে",
-         "ONION": "পেঁয়াজ",
-         "PAPAYA": "পেঁপে",
+         MORINGA: "সজনে",
+         ONION: "পেঁয়াজ",
+         PAPAYA: "পেঁপে",
          "RED SPINACH": "লাল শাক",
          "RIDGE GOURD": "ঝিঙ্গে",
          "RUNNER BEANS": "সিম",
-         "SPINACH": "পালং শাক",
-         "TOMATO": "টমেটো",
-         "HALUD": "হলুদ",
-         "TURMERIC": "হলুদ"
-      }
+         SPINACH: "পালং শাক",
+         TOMATO: "টমেটো",
+         HALUD: "হলুদ",
+         TURMERIC: "হলুদ",
+      },
    },
    typeInBengali: {
-      "P": "পিস",
-      "KG": "কেজি",
-      "G": "গ্রাম",
-      "TIMES": "টা"
+      P: "পিস",
+      KG: "কেজি",
+      G: "গ্রাম",
+      TIMES: "টা",
    },
    numberInBengali: ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
 };
 
 function toBengaliNumber(number) {
-   return number.toString().split("").map(char => {
-      return /\d/.test(char) ? ordersData.numberInBengali[char] : char;
-   }).join("");
+   return number
+      .toString()
+      .split("")
+      .map((char) => {
+         return /\d/.test(char) ? ordersData.numberInBengali[char] : char;
+      })
+      .join("");
 }
-
 
 /* ----  local storage set and get ---- */
 function setDataFromLocalStorage(key, object) {
@@ -107,7 +113,7 @@ function CE(first, ...children) {
       element.innerText = first;
    }
 
-   children.forEach(child => {
+   children.forEach((child) => {
       if (typeof child === "string" || typeof child === "number") {
          element.innerText = child;
       } else if (child instanceof Node) {
@@ -119,7 +125,7 @@ function CE(first, ...children) {
       if (parent) {
          parent.appendChild(element);
       }
-   }
+   };
    return element;
 }
 
@@ -252,7 +258,7 @@ function chromeStorageSet(key, value, callback) {
 //    console.log("Item set");
 // });
 
-function chromeStorageGet(key, callback = () => { }) {
+function chromeStorageGet(key, callback = () => {}) {
    return new Promise((resolve) => {
       chrome.storage.sync.get([key], function (result) {
          if (chrome.runtime.lastError) {
@@ -289,7 +295,8 @@ function chromeStorageGetLocal(key, callback) {
          if (chrome.runtime.lastError) {
             console.error("Error getting item:", chrome.runtime.lastError);
          } else {
-            const OBJ = typeof result[key] === "string" ? JSON.parse(result[key]) : null;
+            const OBJ =
+               typeof result[key] === "string" ? JSON.parse(result[key]) : null;
             callback && callback(OBJ);
             resolve(OBJ);
          }
@@ -313,4 +320,15 @@ function putImageIntoInputFile(fileInputElement, imageURL, fileType = "jpeg") {
          const event = new Event("change", { bubbles: true });
          fileInputElement.dispatchEvent(event);
       });
+}
+
+function DATE() {
+   const date = new Date();
+   const yy = date.getFullYear();
+   const mm = date.getMonth() + 1;
+   const dd = date.getDate();
+   const hh = date.getHours();
+   const ss = date.getMinutes();
+   const ms = date.getSeconds();
+   return { yy, mm, dd, hh, ss, ms };
 }

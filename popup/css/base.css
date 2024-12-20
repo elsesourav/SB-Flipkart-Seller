@@ -36,6 +36,8 @@
 }
 
 body {
+   --color: light-dark(#000, #fff);
+   --bg: light-dark(#fff, #000);
    position: relative;
    color: light-dark(var(--black), var(--white));
    background-color: light-dark(var(--white), var(--black));

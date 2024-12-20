@@ -1,19 +1,30 @@
 const aInputs = I(".take-inp .input-a");
 const bInputs = I(".take-inp .input-b");
 const cInputs = I(".take-inp .input-c");
-const MAX_IMAGE = 12;
+const bgImagePath = "./../assets/img/";
 
 const imageSection = I(".take-inp.image");
 const imageInputFields = I(".take-inp.image .inp-image");
 const imageView = I(".take-inp.image .img-box");
 
-aInputs.on("input", saveDataA);
-bInputs.on("input", saveDataB);
-cInputs.on("input", saveDataC);
+const START_BTN = I("#IS_START");
+const PAUSE_BTN = I("#IS_PAUSE");
+const STOP_BTN = I("#IS_STOP");
+
+const numInpLimitA = I(".input-a.inp-limit");
+const numInpLimitB = I(".input-b.inp-limit");
+
+let holdTimer;
+let clearSingleListingButton = I("#MyListingClearBtn .clear");
+let clearMappingButton = I("#MyMappingClearBtn .clear");
+
 
 [aInputs, bInputs, cInputs].forEach((inp) => {
    inp.on("input", (_, __, ele) => {
-      if (ele?.getAttribute("inputmode") === "numeric" && ele?.type === "text") {
+      if (
+         ele?.getAttribute("inputmode") === "numeric" &&
+         ele?.type === "text"
+      ) {
          const value = ele.value.replace(/,/g, "");
          if (!isNaN(value) && value !== "") {
             ele.value = N(value).toLocaleString("en-IN");
@@ -21,24 +32,22 @@ cInputs.on("input", saveDataC);
       }
    });
    inp.click((_, __, ele) => {
-      if (ele?.type === "text" || ele?.getAttribute("inputmode") === "numeric") {
+      if (
+         ele?.type === "text" ||
+         ele?.getAttribute("inputmode") === "numeric"
+      ) {
          ele.select();
       }
    });
 });
 
-I("#WordInBengali").click((_, __, ele) => {
-   if (ele.checked) {
-      I("#NumberInBengaliDiv").removeClass("hide");
-   } else {
-      I("#NumberInBengali")[0].checked = false;
-      I("#NumberInBengaliDiv").addClass("hide");
-   }
-   saveDataC();
-});
-
 // ---------------- initial setup -------------------
 async function init() {
+   // set background image random
+   I("#bgImage")[0].src = `${bgImagePath}bg${Math.floor(
+      Math.random() * 7
+   )}.png`;
+
    await chromeStorageGetLocal(storageInitKey, (val) => {
       if (!val) {
          chromeStorageSetLocal(storageMappingKey, mappingData);
@@ -55,9 +64,15 @@ async function init() {
       // load input fields
       aInputs.forEach((inp) => {
          if (inp.type === "number") inp.value = mappingData[inp.name] || 0;
-         else if (inp.type === "checkbox") inp.checked = mappingData[inp.name] || false;
-         else if (inp.type === "select-one") (inp.value = mappingData[inp.name]) || (inp.selectedIndex = 0);
-         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(mappingData[inp.name] || 0).toLocaleString("en-IN");
+         else if (inp.type === "checkbox")
+            inp.checked = mappingData[inp.name] || false;
+         else if (inp.type === "select-one")
+            (inp.value = mappingData[inp.name]) || (inp.selectedIndex = 0);
+         else if (
+            inp.getAttribute("inputmode") === "numeric" &&
+            inp.type === "text"
+         )
+            inp.value = N(mappingData[inp.name] || 0).toLocaleString("en-IN");
          else inp.value = mappingData[inp.name] || "";
       });
    });
@@ -70,9 +85,17 @@ async function init() {
       bInputs.forEach((inp) => {
          if (inp.type !== "file") {
             if (inp.type === "number") inp.value = listingData[inp.name] || 0;
-            else if (inp.type === "checkbox") inp.checked = listingData[inp.name] || false;
-            else if (inp.type === "select-one") (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
-            else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(listingData[inp.name] || 0).toLocaleString("en-IN");
+            else if (inp.type === "checkbox")
+               inp.checked = listingData[inp.name] || false;
+            else if (inp.type === "select-one")
+               (inp.value = listingData[inp.name]) || (inp.selectedIndex = 0);
+            else if (
+               inp.getAttribute("inputmode") === "numeric" &&
+               inp.type === "text"
+            )
+               inp.value = N(listingData[inp.name] || 0).toLocaleString(
+                  "en-IN"
+               );
             else inp.value = listingData[inp.name] || "";
 
             if (["START", "PAUSE", "STOP"].includes(inp.name)) {
@@ -90,26 +113,35 @@ async function init() {
    chromeStorageGetLocal(storageOrdersKey, (val) => {
       ordersData = val;
       cInputs.forEach((inp) => {
-         if (inp.type === "checkbox") inp.checked = ordersData[inp.name] || false;
-         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") inp.value = N(ordersData[inp.name] || 0).toLocaleString("en-IN");
+         if (inp.type === "checkbox")
+            inp.checked = ordersData[inp.name] || false;
+         else if (
+            inp.getAttribute("inputmode") === "numeric" &&
+            inp.type === "text"
+         )
+            inp.value = N(ordersData[inp.name] || 0).toLocaleString("en-IN");
       });
       jsonEditorTitle.removeClass("error");
       setJsonContent(ordersData.editor);
-      I("#NumberInBengaliDiv")[0].classList.toggle("hide", !ordersData.WordInBengali);
+      I("#NumberInBengaliDiv")[0].classList.toggle(
+         "hide",
+         !ordersData.WordInBengali
+      );
    });
 
    // load settings
    chromeStorageGetLocal(storageSettingsKey, (val) => {
       settings = val;
-      settings.listingOpen.forEach((is, i) => (I(".grid-flip")[i].checked = is));
+      settings.listingOpen.forEach(
+         (is, i) => (I(".grid-flip")[i].checked = is)
+      );
       I("nav .options .btn input")[settings.currentMode].checked = true;
    });
 }
-init();
 
 async function setupSavedImages() {
    // First hide all image sections
-   imageSection.forEach(section => {
+   imageSection.forEach((section) => {
       section.classList.remove("show");
    });
 
@@ -118,7 +150,6 @@ async function setupSavedImages() {
    // Show and setup existing images
    for (let i = 0; i < MAX_IMAGE; i++) {
       await chromeStorageGetLocal(`storage-image-${i}`, async (image) => {
-
          if (image && image.file) {
             count++;
             imageSection[i].classList.add("show");
@@ -171,27 +202,6 @@ function setupIncDecAction(inputElements, saveFunction) {
    });
 }
 
-const numInpLimitA = I(".input-a.inp-limit");
-const numInpLimitB = I(".input-b.inp-limit");
-
-setupIncDecAction(numInpLimitA, saveDataA);
-setupIncDecAction(numInpLimitB, saveDataB);
-
-I(".grid-flip").click((_, i) => {
-   settings.listingOpen[i] = _.target.checked;
-   chromeStorageSetLocal(storageSettingsKey, settings);
-});
-
-I("nav .options .btn").click((_, i) => {
-   settings.currentMode = i;
-   chromeStorageSetLocal(storageSettingsKey, settings);
-   jsonEditor.refresh();
-});
-
-let holdTimer;
-let clearSingleListingButton = I("#MyListingClearBtn .clear");
-let clearMappingButton = I("#MyMappingClearBtn .clear");
-
 function __clear_data_mapping__() {
    holdTimer = setTimeout(() => {
       clearMappingButton.addClass("complete");
@@ -236,14 +246,6 @@ function __clear_mapping__() {
    clearSingleListingButton.removeClass("complete");
    clearMappingButton.removeClass("complete");
 }
-
-clearSingleListingButton.on("mousedown", __clear_data_listing__);
-clearSingleListingButton.on("mouseup", __clear_mapping__);
-clearSingleListingButton.on("mouseleave", __clear_mapping__);
-
-clearMappingButton.on("mousedown", __clear_data_mapping__);
-clearMappingButton.on("mouseup", __clear_mapping__);
-clearMappingButton.on("mouseleave", __clear_mapping__);
 
 function setImageInInput(i, file) {
    if (!file) {
@@ -299,41 +301,6 @@ async function reSortImages() {
    setupSavedImages();
 }
 
-I(".take-inp.image i.sbi-bin").click((_, i) => {
-   chromeStorageSetLocal(`storage-image-${i}`, null);
-   reSortImages();
-});
-
-imageInputFields.on("change", (_, i, fileInput) => {
-   imageFiles[i] = fileInput.files[0];
-
-   if (imageFiles[i]) {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-         if (i < MAX_IMAGE - 1) imageSection[i + 1].classList.add("show");
-         const imageData = event.target.result;
-         chromeStorageSetLocal(`storage-image-${i}`, { file: imageData });
-         setImageInInput(i, imageData);
-      };
-      reader.readAsDataURL(imageFiles[i]);
-   } else {
-      setImageInInput(i, null);
-      chromeStorageSetLocal(`storage-image-${i}`, null);
-   }
-});
-
-jsonEditor.on("change", () => {
-   try {
-      const editorValue = getJsonContent();
-      ordersData.editor = editorValue;
-      chromeStorageSetLocal(storageOrdersKey, ordersData);
-      jsonEditorTitle.removeClass("error");
-   } catch (e) {
-      console.log("Invalid JSON");
-      jsonEditorTitle.addClass("error");
-   }
-});
-
 function saveListingData() {
    chromeStorageSetLocal(storageListingKey, listingData);
 }
@@ -346,7 +313,11 @@ function saveDataA() {
          if (inp.type === "number") val[inp.name] = inp.value || 0;
          else if (inp.type === "checkbox") val[inp.name] = inp.checked;
          else if (inp.type === "select-one") val[inp.name] = inp.value;
-         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
+         else if (
+            inp.getAttribute("inputmode") === "numeric" &&
+            inp.type === "text"
+         )
+            val[inp.name] = inp.value.replace(/,/g, "") || 0;
          else val[inp.name] = inp.value || "";
       });
 
@@ -364,7 +335,11 @@ function saveDataB() {
             if (inp.type === "number") val[inp.name] = inp.value || 0;
             else if (inp.type === "checkbox") val[inp.name] = inp.checked;
             else if (inp.type === "select-one") val[inp.name] = inp.value;
-            else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
+            else if (
+               inp.getAttribute("inputmode") === "numeric" &&
+               inp.type === "text"
+            )
+               val[inp.name] = inp.value.replace(/,/g, "") || 0;
             else val[inp.name] = inp.value || "";
          }
       });
@@ -378,114 +353,114 @@ function saveDataB() {
 
 function saveDataC() {
    chromeStorageGetLocal(storageOrdersKey, (val) => {
-      if (!val) val = {
-         nameInBengali: {},
-      };
+      if (!val)
+         val = {
+            nameInBengali: {},
+         };
       cInputs.forEach((inp) => {
          if (inp.type === "checkbox") val[inp.name] = inp.checked;
-         else if (inp.getAttribute("inputmode") === "numeric" && inp.type === "text") val[inp.name] = inp.value.replace(/,/g, "") || 0;
+         else if (
+            inp.getAttribute("inputmode") === "numeric" &&
+            inp.type === "text"
+         )
+            val[inp.name] = inp.value.replace(/,/g, "") || 0;
       });
       chromeStorageSetLocal(storageOrdersKey, val);
    });
 }
 
-function downloadJSON(jsonData, filename = 'ES_Seller_Settings.json') {
-   const jsonString = JSON.stringify(jsonData);
-   const blob = new Blob([jsonString], { type: 'application/json' });
-   const url = URL.createObjectURL(blob);
+// function downloadJSON(jsonData, filename = 'ES_Seller_Settings.json') {
+//    const jsonString = JSON.stringify(jsonData);
+//    const blob = new Blob([jsonString], { type: 'application/json' });
+//    const url = URL.createObjectURL(blob);
 
-   // Create a temporary link element
-   const link = document.createElement('a');
-   link.href = url;
-   link.download = filename;
+//    // Create a temporary link element
+//    const link = document.createElement('a');
+//    link.href = url;
+//    link.download = filename;
 
-   document.body.appendChild(link);
-   link.click();
-   document.body.removeChild(link);
-   URL.revokeObjectURL(url);
-}
+//    document.body.appendChild(link);
+//    link.click();
+//    document.body.removeChild(link);
+//    URL.revokeObjectURL(url);
+// }
 
-// Add click event listener to the export button
-document.querySelector(`input[name="EXPORT_FILE"]`).addEventListener("click", async () => {
-   try {
-      const mappingData = await chromeStorageGetLocal(storageMappingKey);
-      const listingData = await chromeStorageGetLocal(storageListingKey);
-      const ordersData = await chromeStorageGetLocal(storageOrdersKey);
-      const settings = await chromeStorageGetLocal(storageSettingsKey);
-      const init = await chromeStorageGetLocal(storageInitKey);
+// // Add click event listener to the export button
+// document.querySelector(`input[name="EXPORT_FILE"]`).addEventListener("click", async () => {
+//    try {
+//       const mappingData = await chromeStorageGetLocal(storageMappingKey);
+//       const listingData = await chromeStorageGetLocal(storageListingKey);
+//       const ordersData = await chromeStorageGetLocal(storageOrdersKey);
+//       const settings = await chromeStorageGetLocal(storageSettingsKey);
+//       const init = await chromeStorageGetLocal(storageInitKey);
 
-      const jsonData = JSON.parse(JSON.stringify({ mappingData, listingData, ordersData, settings, init }));
-      downloadJSON(jsonData);
-   } catch (error) {
-      alert("Invalid JSON format");
-   }
-});
-
+//       const jsonData = JSON.parse(JSON.stringify({ mappingData, listingData, ordersData, settings, init }));
+//       downloadJSON(jsonData);
+//    } catch (error) {
+//       alert("Invalid JSON format");
+//    }
+// });
 
 // Function to read and parse JSON file
-function importJSON(file) {
-   return new Promise((resolve, reject) => {
-      const reader = new FileReader();
+// function importJSON(file) {
+//    return new Promise((resolve, reject) => {
+//       const reader = new FileReader();
 
-      reader.onload = (event) => {
-         try {
-            const jsonData = JSON.parse(event.target.result);
-            resolve(jsonData);
-         } catch (error) {
-            reject('Invalid JSON file format');
-         }
-      };
+//       reader.onload = (event) => {
+//          try {
+//             const jsonData = JSON.parse(event.target.result);
+//             resolve(jsonData);
+//          } catch (error) {
+//             reject('Invalid JSON file format');
+//          }
+//       };
 
-      reader.onerror = () => reject('Error reading file');
-      reader.readAsText(file);
-   });
-}
+//       reader.onerror = () => reject('Error reading file');
+//       reader.readAsText(file);
+//    });
+// }
 
-I(`input[name="IMPORT_FILE"]`).click(() => I("#takeFile")[0].click());
+// I(`input[name="IMPORT_FILE"]`).click(() => I("#takeFile")[0].click());
 
-// Handle file import
-I("#takeFile").on("change", async (event) => {
-   const file = event.target.files[0];
-   if (file) {
-      try {
-         const text = await file.text();
-         const jsonData = JSON.parse(text);
+// // Handle file import
+// I("#takeFile").on("change", async (event) => {
+//    const file = event.target.files[0];
+//    if (file) {
+//       try {
+//          const text = await file.text();
+//          const jsonData = JSON.parse(text);
 
-         // Validate the imported data structure
-         if (jsonData.mappingData || jsonData.listingData || jsonData.ordersData || jsonData.settings) {
-            // Store the imported data
-            if (jsonData.mappingData) {
-               await chromeStorageSetLocal(storageMappingKey, jsonData.mappingData);
-            }
-            if (jsonData.listingData) {
-               await chromeStorageSetLocal(storageListingKey, jsonData.listingData);
-            }
-            if (jsonData.ordersData) {
-               await chromeStorageSetLocal(storageOrdersKey, jsonData.ordersData);
-            }
-            if (jsonData.settings) {
-               await chromeStorageSetLocal(storageSettingsKey, jsonData.settings);
-            }
+//          // Validate the imported data structure
+//          if (jsonData.mappingData || jsonData.listingData || jsonData.ordersData || jsonData.settings) {
+//             // Store the imported data
+//             if (jsonData.mappingData) {
+//                await chromeStorageSetLocal(storageMappingKey, jsonData.mappingData);
+//             }
+//             if (jsonData.listingData) {
+//                await chromeStorageSetLocal(storageListingKey, jsonData.listingData);
+//             }
+//             if (jsonData.ordersData) {
+//                await chromeStorageSetLocal(storageOrdersKey, jsonData.ordersData);
+//             }
+//             if (jsonData.settings) {
+//                await chromeStorageSetLocal(storageSettingsKey, jsonData.settings);
+//             }
 
-            if (jsonData.init) {
-               await chromeStorageSetLocal(storageInitKey, jsonData.init);
-            }
+//             if (jsonData.init) {
+//                await chromeStorageSetLocal(storageInitKey, jsonData.init);
+//             }
 
-            init();
-         } else {
-            alert('Invalid file format');
-         }
-      } catch (error) {
-         alert('Error reading file: ' + error.message);
-      }
-   }
-});
+//             init();
+//          } else {
+//             alert('Invalid file format');
+//          }
+//       } catch (error) {
+//          alert('Error reading file: ' + error.message);
+//       }
+//    }
+// });
 
-const START_BTN = I("#IS_START");
-const PAUSE_BTN = I("#IS_PAUSE");
-const STOP_BTN = I("#IS_STOP");
-
-START_BTN.click(() => {
+async function startAutoMationAction() {
    START_BTN[0].checked = false;
    PAUSE_BTN[0].checked = true;
    STOP_BTN[0].checked = true;
@@ -496,24 +471,9 @@ START_BTN.click(() => {
    runtimeSendMessage("p_b_start_listing", ({ status }) => {
       console.log(status);
    });
-})
+}
 
-PAUSE_BTN.click(() => {
-   PAUSE_BTN[0].checked = false;
-   PAUSE_BTN.removeClass("active");
-   if (!START_BTN[0].checked) {
-      START_BTN[0].checked = true;
-      STOP_BTN[0].checked = true;
-      START_BTN.addClass("active");
-      STOP_BTN.addClass("active");
-   }
-   saveDataB();
-   runtimeSendMessage("p_b_pause_listing", ({ status }) => {
-      console.log(status);
-   });
-})
-
-STOP_BTN.click(async () => {
+async function stopAutoMationAction() {
    START_BTN[0].checked = true;
    PAUSE_BTN[0].checked = false;
    STOP_BTN[0].checked = false;
@@ -531,7 +491,22 @@ STOP_BTN.click(async () => {
    runtimeSendMessage("p_b_stop_listing", ({ status }) => {
       console.log(status);
    });
-})
+}
+
+async function pauseAutoMationAction() {
+   PAUSE_BTN[0].checked = false;
+   PAUSE_BTN.removeClass("active");
+   if (!START_BTN[0].checked) {
+      START_BTN[0].checked = true;
+      STOP_BTN[0].checked = true;
+      START_BTN.addClass("active");
+      STOP_BTN.addClass("active");
+   }
+   saveDataB();
+   runtimeSendMessage("p_b_pause_listing", ({ status }) => {
+      console.log(status);
+   });
+}
 
 function setTotalCount() {
    const startCount = I("#START_COUNT")[0]?.value || 0;
@@ -543,13 +518,83 @@ function setTotalCount() {
 }
 
 // Add this near the top of the file, after your initial constants
-chrome.storage.onChanged.addListener((changes, namespace) => {
-   if (namespace === "local") {
-      // Handle listing data changes
-      if (changes[storageListingKey]) {
-         listingData = changes[storageListingKey].newValue;
-         const COUNT = listingData?.COUNT || 0;
-         I("#COUNT")[0].textContent = COUNT;
-      }
+// chrome.storage.onChanged.addListener((changes, namespace) => {
+//    if (namespace === "local") {
+//       // Handle listing data changes
+//       if (changes[storageListingKey]) {
+//          listingData = changes[storageListingKey].newValue;
+//          const COUNT = listingData?.COUNT || 0;
+//          I("#COUNT")[0].textContent = COUNT;
+//       }
+//    }
+// });
+
+function getLocalMappingData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(storageMappingKey, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function getLocalListingData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(storageListingKey, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function getLocalOrdersData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(storageOrdersKey, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function setLocalMappingData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(storageMappingKey, val);
+      init();
+      resolve();
+   });
+}
+
+function setLocalListingData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(storageListingKey, val);
+      init();
+      resolve();
+   });
+}
+
+function setLocalOrdersData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(storageOrdersKey, val);
+      init();
+      resolve();
+   });
+}
+
+async function getLocalFile(fileType) {
+   switch (fileType) {
+      case "MAPPING":
+         return await getLocalMappingData();
+      case "LISTING":
+         return await getLocalListingData();
+      case "ORDERS":
+         return await getLocalOrdersData();
    }
-});
+}
+
+async function setLocalFile(fileType, val) {
+   switch (fileType) {
+      case "MAPPING":
+         return await setLocalMappingData(val);
+      case "LISTING":
+         return await setLocalListingData(val);
+      case "ORDERS":
+         return await setLocalOrdersData(val);
+   }
+}

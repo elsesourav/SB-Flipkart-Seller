@@ -17,22 +17,25 @@
    <link href="./css/dracula.css" rel="stylesheet" type="text/css" />
    <link href="./css/foldgutter.css" rel="stylesheet" type="text/css" />
 
-   <script src="./js/codemirror.js"></script>
-   <script src="./js/mode.js"></script>
-   <script src="./js/closebrackets.js"></script>
-   <script src="./js/matchbrackets.js"></script>
-   <script src="./js/foldcode.js"></script>
-   <script src="./js/foldgutter.js"></script>
-   <script src="./js/braceFold.js"></script>
-   <script src="./js/activeLine.js"></script>
-   <script src="./js/searchcursor.js"></script>
-   <script src="./js/matchHighlighter.js"></script>
+   <script src="./js/editor/codemirror.js"></script>
+   <script src="./js/editor/mode.js"></script>
+   <script src="./js/editor/closebrackets.js"></script>
+   <script src="./js/editor/matchbrackets.js"></script>
+   <script src="./js/editor/foldcode.js"></script>
+   <script src="./js/editor/foldgutter.js"></script>
+   <script src="./js/editor/braceFold.js"></script>
+   <script src="./js/editor/activeLine.js"></script>
+   <script src="./js/editor/searchcursor.js"></script>
+   <script src="./js/editor/matchHighlighter.js"></script>
 
    <script defer src="./../querySelector.js"></script>
    <script defer src="./../utils.js"></script>
    <script defer src="./js/lan.js"></script>
-   <script defer src="./js/imageResize.js"></script>
+   <script defer src="./js/alert.js"></script>
+   <script defer src="./js/form.js"></script>
    <script defer src="./js/popup.js"></script>
+   <script defer src="./js/event.js"></script>
+   <script defer src="./js/online.js"></script>
 </head>
 
 <body>
@@ -69,13 +72,19 @@
             <label for="single_listing">LISTING</label>
          </div>
          <div class="btn">
-            <input type="radio" name="btn" id="download_orders" class="s option-btn" />
-            <label for="download_orders">SETTINGS <i class="sbi-settings"></i></label>
+            <input type="radio" name="btn" id="manage_orders" class="s option-btn" />
+            <label for="manage_orders">ORDERS</label>
+         </div>
+         <div class="btn">
+            <input type="radio" name="btn" id="settings_control" class="s option-btn" />
+            <label for="settings_control">SETTINGS</label>
          </div>
       </div>
    </nav>
 
    <main>
+      <img src="./../assets/img/bg.png" id="bgImage">
+
       <div class="container" id="mappingContainer">
          <div class="basic-grid no-flip">
             <div class="take-inp">
@@ -83,7 +92,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp text">
-                        <input type="text" name="SKU_NAME" class="input-a" />
+                        <input autocomplete="off" type="text" name="SKU_NAME" class="input-a" />
                      </div>
                   </div>
                </section>
@@ -97,7 +106,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -114,7 +123,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FLIPKART_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="FLIPKART_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -131,7 +140,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKING_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PACKING_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -148,7 +157,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -162,7 +171,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -176,7 +185,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -194,7 +203,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="INCREMENT_UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="INCREMENT_UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -206,7 +215,7 @@
             <div class="take-inp check-box">
                <span class="inp-span">Delivery <i class="sbi-inr"></i> Included</span>
                <section>
-                  <input type="checkbox" name="IS_INCLUDED" class="input-a toggle" />
+                  <input autocomplete="off" type="checkbox" name="IS_INCLUDED" class="input-a toggle" />
                </section>
             </div>
 
@@ -219,7 +228,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -233,7 +242,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -247,7 +256,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -265,7 +274,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -279,7 +288,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -293,7 +302,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -310,7 +319,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -375,7 +384,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -392,7 +401,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="STOCK_SIZE" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="STOCK_SIZE" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -441,7 +450,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="HSN" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="HSN" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -455,7 +464,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp area">
-                        <input name="EARLIEST_MFG_DATE" type="date" class="input-a inp-limit" />
+                        <input autocomplete="off" name="EARLIEST_MFG_DATE" type="date" class="input-a inp-limit" />
                      </div>
                   </div>
                </section>
@@ -469,7 +478,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHELF_LIFE" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="SHELF_LIFE" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -508,7 +517,7 @@
                         <i class="sbi-controller-record"></i>
                         <div class="btn-text">START</div>  
                      </div>
-                     <input type="checkbox" id="IS_START" name="START" class="input-b btn"/>
+                     <input autocomplete="off" type="checkbox" id="IS_START" name="START" class="input-b btn"/>
                   </div>
                </section>
                <section>
@@ -517,7 +526,7 @@
                         <i class="sbi-pause3" id="is_pause_icon" data-v="sbi-play-arrow"></i>
                         <div class="btn-text">PAUSE</div>
                      </div>
-                     <input type="checkbox" id="IS_PAUSE" name="PAUSE" class="input-b btn" />
+                     <input autocomplete="off" type="checkbox" id="IS_PAUSE" name="PAUSE" class="input-b btn" />
                   </div>
                </section>
                <section> 
@@ -526,7 +535,7 @@
                         <i class="sbi-controller-stop"></i>
                         <div class="btn-text">STOP</div>
                      </div>
-                     <input type="checkbox" id="IS_STOP" name="STOP" class="input-b btn" />
+                     <input autocomplete="off" type="checkbox" id="IS_STOP" name="STOP" class="input-b btn" />
                   </div>
                </section>
             </div>
@@ -539,7 +548,7 @@
          <p class="br-tag"></p>
          <div class="basic-grid flip image-grid">
             <div class="open-close">
-               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
                <span class="inp-span">BASIC DETAIL</span>
                <i class="sbi-chevron-circle-down"></i>
@@ -551,7 +560,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp text">
-                        <input type="text" name="BRAND_NAME" class="input-b" />
+                        <input autocomplete="off" type="text" name="BRAND_NAME" class="input-b" />
                      </div>
                   </div>
                </section>
@@ -581,7 +590,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="START_COUNT" id="START_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
+                        <input autocomplete="off" name="START_COUNT" id="START_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -598,7 +607,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="END_COUNT" id="END_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
+                        <input autocomplete="off" name="END_COUNT" id="END_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -615,7 +624,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="REPEAT_COUNT" id="REPEAT_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
+                        <input autocomplete="off" name="REPEAT_COUNT" id="REPEAT_COUNT" type="text" inputmode="numeric" class="input-b inp-limit count" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -633,7 +642,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="STAPES_BY" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="STAPES_BY" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -651,7 +660,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="TIME_DELAY" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="TIME_DELAY" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -668,7 +677,7 @@
          <!----------- images  ------------>
          <div class="basic-grid flip image-grid">
             <div class="open-close">
-               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
                <span class="inp-span">UPLOAD IMAGES</span>
                <i class="sbi-chevron-circle-down"></i>
@@ -677,7 +686,7 @@
                <span class="inp-span">Image 1</span>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_0" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_0" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -686,7 +695,7 @@
                <p>Image 2</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_1" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_1" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -695,7 +704,7 @@
                <p>Image 3</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_2" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_2" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -704,7 +713,7 @@
                <p>Image 4</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_3" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_3" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -713,7 +722,7 @@
                <p>Image 5</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_4" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_4" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -722,7 +731,7 @@
                <p>Image 6</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_5" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_5" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -731,7 +740,7 @@
                <p>Image 7</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_6" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_6" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -740,7 +749,7 @@
                <p>Image 8</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -749,7 +758,7 @@
                <p>Image 9</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -758,7 +767,7 @@
                <p>Image 10</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -767,7 +776,7 @@
                <p>Image 11</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -776,7 +785,7 @@
                <p>Image 12</p>
                <section>
                   <div class="img-box"></div>
-                  <input type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
+                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
                   <i class="sbi-upload4"></i>
                   <i class="sbi-bin"></i>
                </section>
@@ -791,7 +800,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FIXED_IMG_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="FIXED_IMG_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -806,7 +815,7 @@
          <!-------- Price, Stock and Shipping Information  --------->
          <div class="basic-grid flip">
             <div class="open-close">
-               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
                <span class="inp-span">Price Stock and Shipping Information</span>
                <i class="sbi-chevron-circle-down"></i>
@@ -817,7 +826,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp text">
-                        <input type="text" name="SKU_NAME" class="input-b" />
+                        <input autocomplete="off" type="text" name="SKU_NAME" class="input-b" />
                      </div>
                   </div>
                </section>
@@ -831,7 +840,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PROFIT" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PROFIT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -848,7 +857,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FLIPKART_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="FLIPKART_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -865,7 +874,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKING_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PACKING_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -883,7 +892,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="MRP_MULTIPLY_PERCENT" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="MRP_MULTIPLY_PERCENT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -895,7 +904,7 @@
             <div class="take-inp check-box">
                <span class="inp-span">Attractive MRP <i class="sbi-inr"></i></span>
                <section>
-                  <input type="checkbox" name="IS_ATTRACTIVE_MRP" class="input-b toggle" />
+                  <input autocomplete="off" type="checkbox" name="IS_ATTRACTIVE_MRP" class="input-b toggle" />
                </section>
             </div>
 
@@ -907,7 +916,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="UNIT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -921,7 +930,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="UNIT_OF_COST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -935,7 +944,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -953,7 +962,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="INCREMENT_UNIT" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="INCREMENT_UNIT" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -965,7 +974,7 @@
             <div class="take-inp check-box">
                <span class="inp-span">Delivery <i class="sbi-inr"></i> Included</span>
                <section>
-                  <input type="checkbox" name="IS_INCLUDED" class="input-b toggle" />
+                  <input autocomplete="off" type="checkbox" name="IS_INCLUDED" class="input-b toggle" />
                </section>
             </div>
 
@@ -978,7 +987,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -992,7 +1001,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1006,7 +1015,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1024,7 +1033,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_LENGTH" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1038,7 +1047,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_BREADTH" type="number" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1052,7 +1061,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PACKAGING_HEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1069,7 +1078,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="PACKET_WEIGHT" type="number" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1134,7 +1143,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="SHIPPING_DAYS" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1151,7 +1160,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="STOCK_SIZE" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="STOCK_SIZE" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1200,7 +1209,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="HSN" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="HSN" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1214,7 +1223,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp area">
-                        <input name="EARLIEST_MFG_DATE" type="date" class="input-b inp-limit" />
+                        <input autocomplete="off" name="EARLIEST_MFG_DATE" type="date" class="input-b inp-limit" />
                      </div>
                   </div>
                </section>
@@ -1228,7 +1237,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="SHELF_LIFE" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="SHELF_LIFE" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1243,7 +1252,7 @@
          <!-------- Product Description --------->
          <div class="basic-grid flip">
             <div class="open-close">
-               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
                <span class="inp-span">Product Description</span>
                <i class="sbi-chevron-circle-down"></i>
@@ -1271,31 +1280,31 @@
                   </div>
                </section>
             </div>
-            
-            <div class="take-inp">
-               <span class="inp-span">Cmn Nm</span>
+
+
+            <div class="take-inp full-width one-label-three-input">
+               <span class="inp-span">NAME</span>
                <section>
                   <div class="take-value">
                      <div class="inp area">
-                        <textarea spellcheck="false" name="COMMON_NAME" placeholder="Use _" class="input-b"></textarea>
+                        <label>Adjectives</label>
+                        <textarea spellcheck="false" name="NAME_ADJECTIVES" class="input-b"></textarea>
                      </div>
                   </div>
                </section>
-            </div>
-
-            <div class="take-inp">
-               <span class="inp-span">FIXED NM</span>
                <section>
                   <div class="take-value">
-                     <label>FIRST</label>
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input name="FIXED_COMMON_NAME_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
+                     <div class="inp area">
+                        <label>Types</label>
+                        <textarea spellcheck="false" name="NAME_TYPES" class="input-b"></textarea>
+                     </div>
+                  </div>
+               </section>
+               <section>
+                  <div class="take-value">
+                     <div class="inp area">
+                        <label>Features</label>
+                        <textarea spellcheck="false" name="NAME_FEATURES" class="input-b"></textarea>
                      </div>
                   </div>
                </section>
@@ -1333,7 +1342,7 @@
          <!-------- Additional Description (Optional) --------->
          <div class="basic-grid flip active">
             <div class="open-close">
-               <input type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
                <i class="sbi-chevron-circle-down"></i>
                <span class="inp-span">Additional Description (Optional)</span>
                <i class="sbi-chevron-circle-down"></i>
@@ -1386,7 +1395,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input name="FIXED_KEYWORD_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="FIXED_KEYWORD_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -1622,51 +1631,242 @@
          </div>
       </div>
 
-      <div class="container" id="ordersSettings">
+      <div class="container" id="orders">
          <div class="basic-grid no-flip">
             <div class="take-inp check-box">
                <span class="inp-span">Words in Bengali</span>
                <section>
-                  <input type="checkbox" id="WordInBengali" name="WORD_IN_BENGALI" class="input-c toggle" />
+                  <input autocomplete="off" type="checkbox" id="WordInBengali" name="WORD_IN_BENGALI" class="input-c toggle" />
                </section>
             </div>
-
+   
             <div class="take-inp check-box" id="NumberInBengaliDiv">
                <span class="inp-span">Numbers in Bengali</span>
                <section>
-                  <input type="checkbox" id="NumberInBengali" name="NUMBER_IN_BENGALI" class="input-c toggle" />
+                  <input autocomplete="off" type="checkbox" id="NumberInBengali" name="NUMBER_IN_BENGALI" class="input-c toggle" />
                </section>
             </div>
-
+   
             <div class="take-inp full-width big-textarea">
                <span class="inp-span" id="jsonEditorTitle" class="">Define Weight & Words (JSON)</span>
                <section>
                   <textarea name="JSON_EDITOR" class="input-c" id="jsonEditor"></textarea>
                </section>
             </div>
+         </div>
+      </div>
 
+      <div class="container" id="settings">
+         <div class="basic-grid flip">
+            <div class="open-close">
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <i class="sbi-chevron-circle-down"></i>
+               <span class="inp-span">IMPORT SETTINGS</span>
+               <i class="sbi-chevron-circle-down"></i>
+            </div>
+
+            <div class="import-grid imp-exp full-width">
+               <div class="part">
+                  <div class="take-inp">
+                     <span class="inp-span">File Type</span>
+                     <section>
+                        <div class="take-value">
+                           <div class="inp selection">
+                              <select name="IMPORT_TYPE" id="importTypeSelector">
+                                 <option selected>SELECT</option>
+                                 <option value="MAPPING">MAPPING</option>
+                                 <option value="LISTING">LISTING</option>
+                                 <option value="ORDERS">ORDERS</option>
+                              </select>
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+                  <div class="take-inp">
+                     <span class="inp-span">UserName</span>
+                     <section>
+                        <div class="take-value">
+                           <div class="inp text">
+                              <input autocomplete="off" class="big-style" type="text" id="importUsername" name="IMPORT_USERNAME" />
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+
+                  <div class="take-inp full">
+                     <section>
+                        <div class="take-value">
+                           <div class="inp button">
+                              <input type="button" id="importButton" name="IMPORT_FILE" value="IMPORT" />
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+
+               </div>
+               <div class="part row-1fr-2fr">
+                  <div class="take-inp">
+                     <span class="inp-span">File Name</span>
+                     <section>
+                        <div class="take-value">
+                           <div class="inp text">
+                              <input autocomplete="off" class="big-style" id="importSearch" type="text" name="IMPORT_SEARCH" placeholder="Search"/>
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+
+                  <div class="show-output tow-rows">
+                     <section class="scroll" id="importSearchResult">
+                        <!-- <div class="file">
+                           <div class="name">Name Hello</div>
+                           <div class="date">17-12-24 | 12:48</div>
+                           <i class="sbi-bin"></i>
+                        </div> -->
+                     </section>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+
+         <p class="br-tag"></p>
+
+         <div class="basic-grid flip">
+            <div class="open-close">
+               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
+               <i class="sbi-chevron-circle-down"></i>
+               <span class="inp-span">EXPORT SETTINGS</span>
+               <i class="sbi-chevron-circle-down"></i>
+            </div>
+            
             <div class="take-inp">
-               <span class="inp-span">Import File</span>
+               <span class="inp-span">File Type</span>
                <section>
                   <div class="take-value">
-                     <div class="inp text">
-                        <input type="button" name="IMPORT_FILE" class="input-c" value="Choose File" />
-                        <input type="file" id="takeFile" class="input-c" />
+                     <div class="inp selection">
+                        <select name="EXPORT_TYPE" id="exportTypeSelector">
+                           <option selected>SELECT</option>
+                           <option value="MAPPING">MAPPING</option>
+                           <option value="LISTING">LISTING</option>
+                           <option value="ORDERS">ORDERS</option>
+                        </select>
                      </div>
                   </div>
                </section>
             </div>
 
             <div class="take-inp">
-               <span class="inp-span">Export File</span>
+               <span class="inp-span">File Name</span>
                <section>
                   <div class="take-value">
                      <div class="inp text">
-                        <input type="button" name="EXPORT_FILE" class="input-c" value="EXPORT" />
+                        <input type="text" class="big-style" name="EXPORT_FILE_NAME" id="exportFileName" />
                      </div>
                   </div>
                </section>
             </div>
+
+            <div class="take-inp">
+               <span class="inp-span">UserName</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input type="text" class="big-style" name="EXPORT_USERNAME" id="exportUsername" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Password</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input type="password" name="EXPORT_PASSWORD" id="exportPassword" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp center full">
+               <section>
+                  <div class="take-value">
+                     <div class="inp button">
+                        <input type="button" id="exportButton" name="EXPORT_FILE" value="EXPORT" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+         </div>
+
+         <div class="br-tag"></div>
+         <p class="gap x8"></p>
+
+         <footer class="create-user">
+            <div class="create-user-button" id="createUserButton">
+               <i class="sbi-user-plus"></i> 
+            </div>
+         </footer>
+
+         <p class="gap x8"></p>
+      </div>
+
+      <div class="container float hide" id="createUserForm">
+         <div class="basic-grid no-flip form">
+
+            <div class="close absolute" id="closeCreateUserForm">
+               <i class="sbi-close"></i>
+            </div>
+
+            <div class="user-icon">
+               <i class="sbi-user-circle-o"></i>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">UserName</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input autocomplete="off" type="text" id="username"/>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Password</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input autocomplete="off" type="text" id="password"/>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Co Password</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input autocomplete="off" type="password" id="coPassword"/>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <!-- submit -->
+            <div class="take-inp full">
+               <section>
+                  <div class="take-value">
+                     <div class="inp button">
+                        <input autocomplete="off" type="button" id="createUser" value="CREATE" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
          </div>
       </div>
 

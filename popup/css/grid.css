@@ -46,6 +46,11 @@
       }
    }
 
+   .imp-exp.full-width {
+      grid-column: span 2;
+      width: 2fr;
+   }
+
    .take-inp.full-width {
       grid-column: span 2;
       width: 2fr;
@@ -166,5 +171,165 @@
       padding: 1px calc(var(--s) * 0.5);
       pointer-events: none;
       z-index: 1;
+   }
+
+
+   &.flip {
+      position: relative;
+      display: grid;
+      width: 100%;
+      grid-template-columns: 1fr 1fr;
+      place-items: center;
+      min-height: var(--grid-min);
+      height: auto;
+      grid-template-rows: auto;
+   
+      .open-close {
+         position: relative;
+         width: 100%;
+         grid-column: span 2;
+         height: var(--grid-min);
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         cursor: pointer;
+         gap: calc(var(--s));
+         z-index: 3;
+         font-size: calc(var(--s) * 1.5);
+         text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg), 2px -2px var(--bg);
+   
+         input[type="checkbox"].open-close {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+         }
+   
+         i {
+            font-size: calc(var(--s) * 1.8);
+            transition: transform 200ms ease-in-out;
+         }
+   
+         &:has(input[type="checkbox"].open-close:checked) i {
+            transform: scaleY(-1);
+         }
+      }
+   
+      &:has(.open-close input[type="checkbox"].open-close:checked) {
+         height: auto;
+      }
+   
+      &:has(.open-close input[type="checkbox"].open-close:not(:checked)) {
+         height: var(--grid-min);
+      }
+   
+      .import-grid {
+         position: relative;
+         width: 100%;
+         height: 100%;
+         display: grid;
+         place-items: center;
+         grid-template-columns: 1fr 1fr;
+         gap: calc(var(--s) * 1.5);
+   
+   
+         .part {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            row-gap: calc(var(--s) * 1);
+   
+            &.row-1fr-2fr {
+               grid-template-rows: 3fr 10fr;
+               row-gap: calc(var(--s) * 0.5);
+               height: calc(var(--s) * 14);
+            }
+         }
+      }
+   
+      .take-inp.image {
+         position: relative;
+         width: 100%;
+         height: 100%;
+         aspect-ratio: 1/1;
+         display: none;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+   
+         &.show {
+            display: flex;
+         }
+   
+         & > p {
+            position: relative;
+            width: 100%;
+            height: calc(var(--s) * 2);
+            display: grid;
+            place-items: center;
+            font-size: calc(var(--s) * 1.4);
+            font-weight: 900;
+            font-family: f6b;
+         }
+   
+         section {
+            position: relative;
+            width: 100%;
+            height: 90%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+   
+            input {
+               display: none;
+            }
+   
+            .img-box {
+               position: relative;
+               background-size: cover;
+               background-position: center;
+               background-repeat: no-repeat;
+               background-clip: content-box;
+               width: auto;
+               height: auto;
+            }
+   
+            i {
+               position: absolute;
+               width: 100%;
+               height: 100%;
+               left: 0;
+               top: 0;
+               display: grid;
+               background-color: light-dark(#fff8, #0008);
+               place-items: center;
+               font-size: calc(var(--s) * 4);
+               opacity: 1;
+               transition: opacity 400ms;
+               cursor: pointer;
+   
+               &.sbi-bin {
+                  color: #f00;
+               }
+            }
+   
+            .img-box.active ~ i.sbi-upload4,
+            .img-box:not(.active) ~ i.sbi-bin {
+               display: none;
+            }
+   
+            .img-box.active ~ i {
+               opacity: 0;
+            }
+   
+            .img-box.active ~ i:hover {
+               opacity: 1;
+            }
+         }
+      }
    }
 }

@@ -88,8 +88,6 @@ function closeButtonClick() {
       ?.click();
 }
 
-
-
 // --------------- Set Value if Not Value ---------------
 function setInput(element, value, forcefully = true) {
    const el = element[0];
@@ -131,10 +129,8 @@ function setupMultipleValues(idName, _string) {
    }
 }
 
-function setupMultipleCommonName(idName, _string, fixedCount = 1) {
+function setupMultipleCommonName(idName, _string) {
    let values = _string.split("_");
-
-   values = selectUniqueElements(values, fixedCount, values.length);
 
    if (document.querySelectorAll(`#${idName}`).length === 1) {
       values.forEach(async (str, i) => {
@@ -212,7 +208,6 @@ function setupMultipleValuesBYIndex(idName, _string) {
    }
 }
 
-
 // --------------- Set Value in Object ---------------
 function setInObject(element, proName) {
    tempVal[proName] = element[0]?.value;
@@ -247,7 +242,7 @@ function extractNumbers(input) {
    const numbers = [];
 
    let match;
-   while (match = regex.exec(input)) {
+   while ((match = regex.exec(input))) {
       let value = parseFloat(match[1]);
       const unit = match[3].toUpperCase();
 
@@ -264,30 +259,40 @@ function extractNumbers(input) {
       return a.value - b.value;
    });
 
-   return numbers.map(item => item.value);
+   return numbers.map((item) => item.value);
 }
 
 function getDeliveryCharges(data) {
-   return [N(data?.DELIVERY_LOCAL || 39), N(data?.DELIVERY_NATIONAL || 59), N(data?.DELIVERY_ZONAL || 39)];
+   return [
+      N(data?.DELIVERY_LOCAL || 39),
+      N(data?.DELIVERY_NATIONAL || 59),
+      N(data?.DELIVERY_ZONAL || 39),
+   ];
 }
 
 function getUniqueId() {
    // const original = "1733" + parseInt(getUniqueId, 36) + "000";
-   return parseInt(Date.now().toString().slice(4, -3)).toString(36).toUpperCase();
+   return parseInt(Date.now().toString().slice(4, -3))
+      .toString(36)
+      .toUpperCase();
 }
 
 function getProductCost(data, quantity, value) {
-   return value === "PIECE" ?
-      (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT || 1)) * N(quantity) :
-      (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT_WEIGHT || 1)) * (N(quantity) / (value === "KG" ? 1 : 1000));
+   return value === "PIECE"
+      ? (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT || 1)) * N(quantity)
+      : (N(data?.UNIT_OF_COST || 200) / N(data?.UNIT_WEIGHT || 1)) *
+           (N(quantity) / (value === "KG" ? 1 : 1000));
 }
 
 function getTotalWeight(data, quantity, value) {
    console.log(data, quantity, value);
-   
-   return (N(data?.PACKET_WEIGHT || 1) +
-      (value === "PIECE" ? (N(data?.UNIT_WEIGHT || 1) / N(data?.UNIT || 1)) * N(quantity) :
-         (N(quantity) / (value === "G" ? 1000 : 1)))).toFixed(3);
+
+   return (
+      N(data?.PACKET_WEIGHT || 1) +
+      (value === "PIECE"
+         ? (N(data?.UNIT_WEIGHT || 1) / N(data?.UNIT || 1)) * N(quantity)
+         : N(quantity) / (value === "G" ? 1000 : 1))
+   ).toFixed(3);
 }
 
 function getUnitToPiece(data, value, quantity) {
@@ -298,7 +303,6 @@ function getUnitToPiece(data, value, quantity) {
       return W * quantity * (value === "KG" ? 1000 : 1);
    }
 }
-
 
 /* --------------- Copy Listing Inputs --------------- */
 
@@ -352,3 +356,32 @@ function selectUniqueElements(arr, fixedCount = 2, total = 4) {
    const selected = shuffled.slice(0, total - fixedCount);
    return [...fixedElements, ...selected];
 }
+
+function generateProductTitle(adjective, flowerType, feature) {
+   const adjectives = adjective.split("_");
+   const flowerTypes = flowerType.split("_");
+   const features = feature.split("_");
+
+   // Randomly pick one element from each array
+   adjective = `${rndF(adjectives)}_`;
+   flowerType = rndF(flowerTypes);
+   feature = getRandomFeatures(features, rndTo(0, 1));
+
+   // Combine elements into a title
+   return `${adjective}${flowerType} Seeds_${feature}`;
+}
+
+function getRandomFeatures(features, count) {
+   const shuffled = [...features].sort(() => 0.5 - Math.random());
+   const uniqueFeatures = [...new Set(shuffled)].slice(0, count); // Ensure uniqueness
+   return uniqueFeatures.join("_");
+}
+
+function rndTo(a, b) {
+   return Math.floor(Math.random() * (b - a + 1)) + a;
+}
+
+function rndF(ary) {
+   return ary[Math.floor(Math.random() * ary.length)];
+}
+

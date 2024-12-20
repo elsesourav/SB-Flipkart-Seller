@@ -400,12 +400,8 @@ function fillLintingInputs(DATA) {
    return new Promise(async (resolve) => {
       try {
          DATA = DATA ? DATA : await getListingData();
-         const sales_package =
-            DATA?.QUANTITY_IN == "per packet"
-               ? `${DATA?.QUANTITY} Piece`
-               : "1 Packet";
-         const inPackHave =
-            DATA?.QUANTITY_IN == "per packet" ? DATA?.QUANTITY : 1;
+         const sales_package = DATA?.QUANTITY.toString();
+         const inPackHave = DATA?.QUANTITY.toString();
          let { images } = DATA;
 
          const editButtons = I(
@@ -415,9 +411,7 @@ function fillLintingInputs(DATA) {
          images = selectRandomImages(images, DATA?.FIXED_IMG_FIRST || 3);
          await putImagesIntoListing(images, editButtons);
 
-         // console.log(DATA);
-
-         // ------- Price, Stock and Shipping Information
+         // ------- Price, Stock and Shipping Information ---------
 
          editButtons[1].click();
          await wait(500);
@@ -428,22 +422,23 @@ function fillLintingInputs(DATA) {
          await waitingForSaved();
          await wait(500);
 
-         console.log("DONE");
 
          editButtons[2].click();
          await wait(500);
-         // // ------- Product Description
+         // // ---------- Product Description ------------
 
          setInput(
             I("#model_name"),
             `${DATA?.MODEL_ID} ${uniqueId}` || uniqueId
          );
 
-         setupMultipleCommonName(
-            "common_name",
-            DATA?.COMMON_NAME || "",
-            DATA?.FIXED_COMMON_NAME_FIRST || 1
+         const NAME = generateProductTitle(
+            DATA?.NAME_ADJECTIVES || "",
+            DATA?.NAME_TYPES || "",
+            DATA?.NAME_FEATURES || ""
          );
+
+         setupMultipleCommonName("common_name", NAME);
 
          setInput(I("#quantity"), DATA.QUANTITY || 1);
 
@@ -463,7 +458,7 @@ function fillLintingInputs(DATA) {
          editButtons[3].click();
          await wait(500);
 
-         // // ------- Additional Description (Optional)
+         // // ------- Additional Description (Optional) --------
 
          setInput(I("#flowering_plant"), DATA?.FLOWERING_PLANT || "");
 
@@ -472,7 +467,7 @@ function fillLintingInputs(DATA) {
          setupMultipleKeywords(
             "keywords",
             DATA?.SEARCH_KEYWORDS || "",
-            DATA?.FIXED_KEYWORD_FIRST || 2
+            DATA?.FIXED_KEYWORD_FIRST || 0
          );
 
          setupMultipleValues("key_features", DATA?.KEY_FEATURES || "");
