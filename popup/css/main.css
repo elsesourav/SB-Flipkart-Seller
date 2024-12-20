@@ -316,7 +316,7 @@ body:has(.btn:nth-child(4) input:checked) {
                height: 100%;
                display: grid;
                align-items: center;
-               padding: calc(var(--s) / 2) calc(var(--s) / 1);
+               padding: calc(var(--s) / 2) calc(var(--s) / 2);
                gap: calc(var(--s) / 4);
                grid-template-columns: 5fr 6fr 1fr;
                border-radius: calc(var(--s) / 2);
@@ -341,8 +341,12 @@ body:has(.btn:nth-child(4) input:checked) {
                }
                
                .name {
-                  font-size: calc(var(--s) * 1.2);
+                  font-size: calc(var(--s) * 1);
                   font-family: f8b;
+                  text-wrap: wrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  white-space: nowrap;
                }
                
                .date {

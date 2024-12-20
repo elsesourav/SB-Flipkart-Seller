@@ -157,6 +157,10 @@ async function deleteFile(username, fileType, filename) {
    const form = new FormHTML();
    form.show();
 
+   form.clickOutside(() => {
+      form.hide();
+   });
+
    form.buttonClick((e, input) => {
       const password = input.value;
       if (password.length < 2) {
