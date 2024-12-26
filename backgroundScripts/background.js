@@ -15,7 +15,10 @@ async function createUser(username, password) {
          const dbRef = db.ref(`users/${username}`);
          const snapshot = await dbRef.once("value");
          if (snapshot.exists()) {
-            return resolve({ message: "User already exists", status: "User Exists" });
+            return resolve({
+               message: "User already exists",
+               status: "User Exists",
+            });
          }
 
          await dbRef.set({
@@ -33,7 +36,7 @@ async function createUser(username, password) {
 
 async function exportFile(username, fileType, filename, data, password) {
    console.log(username, fileType, filename, data, password);
-   
+
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}`);
@@ -52,7 +55,9 @@ async function exportFile(username, fileType, filename, data, password) {
 
          const { yy, mm, dd, hh, ss, ms } = DATE();
 
-         const fileRef = dbRef.child(`${fileType}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`);
+         const fileRef = dbRef.child(
+            `${fileType}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`
+         );
          await fileRef.set({
             id: Date.now().toString(36).toUpperCase(),
             filename,
@@ -116,16 +121,27 @@ async function getFiles(username, fileType, search = "") {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}/${fileType}`);
-         const query = dbRef.orderByChild("filename").startAt(search).endAt(search + "\uf8ff");
+         const query = dbRef
+            .orderByChild("filename")
+            .startAt(search)
+            .endAt(search + "\uf8ff");
          const snapshot = await query.once("value");
          if (!snapshot.exists()) {
-            return resolve({ message: "User not found", status: "NO_USER", data: [] });
+            return resolve({
+               message: "User not found",
+               status: "NO_USER",
+               data: [],
+            });
          }
 
          const files = snapshot.val() || {};
          const filteredFiles = Object.entries(files);
 
-         resolve({ message: "Files fetched successfully", status: "ok", data: filteredFiles });
+         resolve({
+            message: "Files fetched successfully",
+            status: "ok",
+            data: filteredFiles,
+         });
       } catch (error) {
          console.log(error);
          resolve({ message: error.message, status: "ERROR", data: [] });
@@ -288,7 +304,35 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          val.COUNT = 0;
          chromeStorageSetLocal(storageListingKey, val);
 
-         const { START_COUNT, END_COUNT, REPEAT_COUNT, STAPES_BY } = val;
+         const {
+            START_COUNT,
+            END_COUNT,
+            /*  
+            
+            
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+            
+            
+            
+            
+            */ STAPES_BY,
+         } = val;
 
          const TOTAL = Math.abs(N(END_COUNT) - N(START_COUNT)) / N(STAPES_BY);
          const F = N(END_COUNT) - N(START_COUNT) > 0 ? 1 : -1;
@@ -322,22 +366,44 @@ runtimeOnMessage("p_b_stop_listing", async (_, __, sendResponse) => {
    sendResponse({ status: "ok" });
 });
 
-runtimeOnMessage("p_b_create_user", async ({ username, password }, __, sendResponse) => {
-   const result = await createUser(username, password);
-   sendResponse(result);
-});
+runtimeOnMessage(
+   "p_b_create_user",
+   async ({ username, password }, __, sendResponse) => {
+      const result = await createUser(username, password);
+      sendResponse(result);
+   }
+);
 
-runtimeOnMessage("p_b_export_file", async ({ data, typeType, filename, username, password }, __, sendResponse) => {
-   const result = await exportFile(username, typeType, filename, data, password);
-   sendResponse(result);
-});
+runtimeOnMessage(
+   "p_b_export_file",
+   async (
+      { data, typeType, filename, username, password },
+      __,
+      sendResponse
+   ) => {
+      const result = await exportFile(
+         username,
+         typeType,
+         filename,
+         data,
+         password
+      );
+      sendResponse(result);
+   }
+);
 
-runtimeOnMessage("p_b_search_file", async ({ username, fileType, search }, __, sendResponse) => {
-   const result = await getFiles(username, fileType, search);
-   sendResponse(result);
-});
+runtimeOnMessage(
+   "p_b_search_file",
+   async ({ username, fileType, search }, __, sendResponse) => {
+      const result = await getFiles(username, fileType, search);
+      sendResponse(result);
+   }
+);
 
-runtimeOnMessage("p_b_delete_file", async ({ username, fileType, filename, password }, __, sendResponse) => {
-   const result = await deleteFile(username, fileType, filename, password);
-   sendResponse(result);
-});
+runtimeOnMessage(
+   "p_b_delete_file",
+   async ({ username, fileType, filename, password }, __, sendResponse) => {
+      const result = await deleteFile(username, fileType, filename, password);
+      sendResponse(result);
+   }
+);

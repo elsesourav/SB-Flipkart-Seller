@@ -46,7 +46,7 @@ function fillMappingInputs(data = null) {
          const PROFIT = N(DATA?.PROFIT || 15);
          const PACKING_COST = N(DATA?.PACKING_COST || 6);
 
-         const FLIPKART_COST = N(DATA?.FLIPKART_COST || 102);
+         const FIXED_COST = N(DATA?.FIXED_COST || 71);
          const PRODUCT_COST = getProductCost(DATA, quantity, value);
 
          const UNIT_TO_PIECE = getUnitToPiece(DATA, value, quantity);
@@ -55,15 +55,12 @@ function fillMappingInputs(data = null) {
                ? 0
                : parseInt(UNIT_TO_PIECE / N(DATA?.INCREMENT_UNIT || 100));
 
-         let sellingPrice = Math.round(
-            FLIPKART_COST +
-               PROFIT +
-               PACKING_COST +
-               PRODUCT_COST +
-               INCREMENT_AMOUNT
+         let sellingPrice = calculateProductPriceFromProfit(
+            FIXED_COST,
+            PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT
          );
 
-         // console.log(`FLIPKART_COST: ${FLIPKART_COST}, PROFIT: ${PROFIT}, PACKING_COST: ${PACKING_COST}, PRODUCT_COST: ${PRODUCT_COST}, INCREMENT_AMOUNT: ${INCREMENT_AMOUNT}`);
+         // console.log(`FIXED_COST: ${FIXED_COST}, PROFIT: ${PROFIT}, PACKING_COST: ${PACKING_COST}, PRODUCT_COST: ${PRODUCT_COST}, INCREMENT_AMOUNT: ${INCREMENT_AMOUNT}`);
          // console.log("sellingPrice: " + sellingPrice);
 
          if (DATA?.IS_INCLUDED) {
@@ -400,7 +397,9 @@ function fillLintingInputs(DATA) {
    return new Promise(async (resolve) => {
       try {
          DATA = DATA ? DATA : await getListingData();
-         const sales_package = DATA?.QUANTITY.toString();
+         const sales_package = `Pack of ${DATA?.QUANTITY}${
+            DATA?.QUANTITY_IN == "g" ? " grams" : ""
+         } seeds`;
          const inPackHave = DATA?.QUANTITY.toString();
          let { images } = DATA;
 
@@ -421,7 +420,6 @@ function fillLintingInputs(DATA) {
          saveButtonClick();
          await waitingForSaved();
          await wait(500);
-
 
          editButtons[2].click();
          await wait(500);

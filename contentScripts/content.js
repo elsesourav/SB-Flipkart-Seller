@@ -29,7 +29,6 @@ function waitForUploadingImage() {
    });
 }
 
-
 async function fillAndSetListingInputs() {
    await updateListingData();
    await wait(100);
@@ -41,15 +40,15 @@ async function setup_listing() {
    CE(
       { id: "__fwl__", class: "__fw__" },
       (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
-      (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
+      // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
    openInputBtn.addEventListener("click", fillAndSetListingInputs);
-   copyInputBtn.addEventListener("click", copyListingInputs);
+   // copyInputBtn.addEventListener("click", copyListingInputs);
 
    window.addEventListener("popstate", (e) => {
       openInputBtn.removeEventListener("click", fillAndSetListingInputs);
-      copyInputBtn.removeEventListener("click", copyListingInputs);
+      // copyInputBtn.removeEventListener("click", copyListingInputs);
    });
    // document.querySelector(".hTTPSU")?.addEventListener("click", () => {
    // });
@@ -105,15 +104,15 @@ async function setup_mapping() {
    CE(
       { id: "__fwm__", class: "__fw__" },
       (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
-      (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
+      // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
    openInputBtn.addEventListener("click", () => fillMappingInputs());
-   copyInputBtn.addEventListener("click", () => copyMappingInputs());
+   // copyInputBtn.addEventListener("click", () => copyMappingInputs());
 
    document.querySelector(".hTTPSU")?.addEventListener("click", () => {
       openInputBtn.removeEventListener("click", () => fillMappingInputs());
-      copyInputBtn.removeEventListener("click", () => copyMappingInputs());
+      // copyInputBtn.removeEventListener("click", () => copyMappingInputs());
    });
 }
 

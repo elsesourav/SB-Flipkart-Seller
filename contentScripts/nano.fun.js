@@ -385,3 +385,32 @@ function rndF(ary) {
    return ary[Math.floor(Math.random() * ary.length)];
 }
 
+function calculateProductPriceFromProfit(
+   fixedCost,
+   desiredProfit,
+   commissionRate = [0.14, 0.16, 0.18],
+   isRound = true
+) {
+   const tax = 1.18; // 18% tax
+
+   // Using mathematical formula to calculate price directly
+   // P = (desiredProfit + (fixedCost * tax)) / (1 - (commissionRate * tax))
+   let price;
+
+   // Try with 14% commission rate first (for price <= 300)
+   price = (desiredProfit + fixedCost * tax) / (1 - commissionRate[0] * tax);
+
+   if (price > 300) {
+      // Try with 16% commission rate (for price <= 500)
+      price = (desiredProfit + fixedCost * tax) / (1 - commissionRate[1] * tax);
+
+      if (price > 500) {
+         // Use 18% commission rate
+         price =
+            (desiredProfit + fixedCost * tax) / (1 - commissionRate[2] * tax);
+      }
+   }
+
+   const PP = Math.round(price * 100) / 100;
+   return isRound ? Math.round(PP) : PP;
+}
