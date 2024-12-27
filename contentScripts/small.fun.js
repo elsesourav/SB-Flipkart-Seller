@@ -405,9 +405,8 @@ function fillLintingInputs(DATA) {
 
          const editButtons = I(
             '#sub-app-container .hTTPSU[data-testid="button"]'
-         );
-
-         images = selectRandomImages(images, DATA?.FIXED_IMG_FIRST || 3);
+         );       
+         
          await putImagesIntoListing(images, editButtons);
 
          // ------- Price, Stock and Shipping Information ---------
@@ -567,7 +566,6 @@ function setBrand(DATA) {
    return new Promise(async (resolve) => {
       await wait(500);
       const input = I(`[placeholder="Enter Brand Name"]`)[0];
-      console.log(DATA?.BRAND_NAME);
 
       input.value = DATA?.BRAND_NAME || "SILBA";
       setInputLikeHuman(input);

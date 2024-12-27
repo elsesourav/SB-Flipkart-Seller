@@ -239,6 +239,10 @@ body:has(.btn:nth-child(4) input:checked) {
    -ms-user-select: none;
    -webkit-user-select: none;
 
+   &.images {
+      height: auto;
+   }
+
    &.full {
       grid-template-columns: 1fr;
 

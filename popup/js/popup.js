@@ -18,6 +18,11 @@ let holdTimer;
 let clearSingleListingButton = I("#MyListingClearBtn .clear");
 let clearMappingButton = I("#MyMappingClearBtn .clear");
 
+const UPLOAD_IMAGE_BUTTONS = I(".take-inp.images .upload");
+const UPLOAD_IMAGE_INPUTS = I(".take-inp.images input[type=file]");
+const IMAGE_LISTS = I(".take-inp.images .all-images");
+const DELETE_IMAGES_BUTTONS = I(".take-inp.images .delete-all");
+
 
 [aInputs, bInputs, cInputs].forEach((inp) => {
    inp.on("input", (_, __, ele) => {
@@ -79,7 +84,7 @@ async function init() {
 
    chromeStorageGetLocal(storageListingKey, (val) => {
       listingData = val;
-      setupSavedImages();
+      // setupSavedImages();
 
       // load input fields
       bInputs.forEach((inp) => {
@@ -137,33 +142,8 @@ async function init() {
       );
       I("nav .options .btn input")[settings.currentMode].checked = true;
    });
-}
 
-async function setupSavedImages() {
-   // First hide all image sections
-   imageSection.forEach((section) => {
-      section.classList.remove("show");
-   });
-
-   let count = 0;
-
-   // Show and setup existing images
-   for (let i = 0; i < MAX_IMAGE; i++) {
-      await chromeStorageGetLocal(`storage-image-${i}`, async (image) => {
-         if (image && image.file) {
-            count++;
-            imageSection[i].classList.add("show");
-            setImageInInput(i, image.file);
-         } else {
-            setImageInInput(i, null);
-         }
-      });
-   }
-
-   // Show next empty slot
-   if (count < MAX_IMAGE - 1) {
-      imageSection[count].classList.add("show");
-   }
+   setupSavedImages();
 }
 
 // increase decrease button (only switch limit .input)
@@ -272,35 +252,6 @@ function setImageInInput(i, file) {
    };
 }
 
-let imageFiles = {};
-
-I(".take-inp.image i.sbi-upload4").click((_, i) => {
-   imageInputFields[i].click();
-});
-
-async function reSortImages() {
-   const images = {};
-
-   let j = 0;
-   for (let i = 0; i < MAX_IMAGE; i++) {
-      await chromeStorageGetLocal(`storage-image-${i}`, (val) => {
-         if (val && val.file) {
-            images[j] = val;
-            j++;
-         }
-      });
-   }
-
-   for (let i = 0; i < j; i++) {
-      chromeStorageSetLocal(`storage-image-${i}`, images[i]);
-   }
-
-   for (let i = j; i < MAX_IMAGE; i++) {
-      chromeStorageSetLocal(`storage-image-${i}`, null);
-   }
-   setupSavedImages();
-}
-
 function saveListingData() {
    chromeStorageSetLocal(storageListingKey, listingData);
 }
@@ -369,97 +320,6 @@ function saveDataC() {
    });
 }
 
-// function downloadJSON(jsonData, filename = 'ES_Seller_Settings.json') {
-//    const jsonString = JSON.stringify(jsonData);
-//    const blob = new Blob([jsonString], { type: 'application/json' });
-//    const url = URL.createObjectURL(blob);
-
-//    // Create a temporary link element
-//    const link = document.createElement('a');
-//    link.href = url;
-//    link.download = filename;
-
-//    document.body.appendChild(link);
-//    link.click();
-//    document.body.removeChild(link);
-//    URL.revokeObjectURL(url);
-// }
-
-// // Add click event listener to the export button
-// document.querySelector(`input[name="EXPORT_FILE"]`).addEventListener("click", async () => {
-//    try {
-//       const mappingData = await chromeStorageGetLocal(storageMappingKey);
-//       const listingData = await chromeStorageGetLocal(storageListingKey);
-//       const ordersData = await chromeStorageGetLocal(storageOrdersKey);
-//       const settings = await chromeStorageGetLocal(storageSettingsKey);
-//       const init = await chromeStorageGetLocal(storageInitKey);
-
-//       const jsonData = JSON.parse(JSON.stringify({ mappingData, listingData, ordersData, settings, init }));
-//       downloadJSON(jsonData);
-//    } catch (error) {
-//       alert("Invalid JSON format");
-//    }
-// });
-
-// Function to read and parse JSON file
-// function importJSON(file) {
-//    return new Promise((resolve, reject) => {
-//       const reader = new FileReader();
-
-//       reader.onload = (event) => {
-//          try {
-//             const jsonData = JSON.parse(event.target.result);
-//             resolve(jsonData);
-//          } catch (error) {
-//             reject('Invalid JSON file format');
-//          }
-//       };
-
-//       reader.onerror = () => reject('Error reading file');
-//       reader.readAsText(file);
-//    });
-// }
-
-// I(`input[name="IMPORT_FILE"]`).click(() => I("#takeFile")[0].click());
-
-// // Handle file import
-// I("#takeFile").on("change", async (event) => {
-//    const file = event.target.files[0];
-//    if (file) {
-//       try {
-//          const text = await file.text();
-//          const jsonData = JSON.parse(text);
-
-//          // Validate the imported data structure
-//          if (jsonData.mappingData || jsonData.listingData || jsonData.ordersData || jsonData.settings) {
-//             // Store the imported data
-//             if (jsonData.mappingData) {
-//                await chromeStorageSetLocal(storageMappingKey, jsonData.mappingData);
-//             }
-//             if (jsonData.listingData) {
-//                await chromeStorageSetLocal(storageListingKey, jsonData.listingData);
-//             }
-//             if (jsonData.ordersData) {
-//                await chromeStorageSetLocal(storageOrdersKey, jsonData.ordersData);
-//             }
-//             if (jsonData.settings) {
-//                await chromeStorageSetLocal(storageSettingsKey, jsonData.settings);
-//             }
-
-//             if (jsonData.init) {
-//                await chromeStorageSetLocal(storageInitKey, jsonData.init);
-//             }
-
-//             init();
-//          } else {
-//             alert('Invalid file format');
-//          }
-//       } catch (error) {
-//          alert('Error reading file: ' + error.message);
-//       }
-//    }
-// });
-
 async function startAutoMationAction() {
    START_BTN[0].checked = false;
    PAUSE_BTN[0].checked = true;
@@ -508,12 +368,13 @@ async function pauseAutoMationAction() {
    });
 }
 
-function setTotalCount() {
+async function setTotalCount() {
    const startCount = I("#START_COUNT")[0]?.value || 0;
    const endCount = I("#END_COUNT")[0]?.value || 0;
-   const repeat = I("#REPEAT_COUNT")[0]?.value || 1;
+   const repeat = (await chromeStorageGetLocal(`storage-images-small-0`))?.files?.length || 0;
+   const stapes = I("#STAPES_BY")[0]?.value || 1;
 
-   const total = Math.abs((endCount - startCount) * repeat);
+   const total = Math.abs(((endCount - startCount) / stapes) * repeat);
    I("#TOTAL_COUNT")[0].innerText = total;
 }
 

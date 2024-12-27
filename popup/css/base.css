@@ -95,3 +95,7 @@ body {
       --gap: 50px;
    }
 }
+
+#testCanvas {
+   display: none;
+}

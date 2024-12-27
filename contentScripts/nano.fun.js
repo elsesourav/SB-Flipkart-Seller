@@ -155,8 +155,8 @@ function setupMultipleCommonName(idName, _string) {
    }
 }
 
-function setupMultipleKeywords(idName, _string, fixedCount = 2) {
-   const values = selectUniqueElements(_string.split("_"), fixedCount);
+function setupMultipleKeywords(idName, _string, fixedCount = 2, total = 5) {
+   const values = selectUniqueElements(_string.split("_"), fixedCount, total);
    if (document.querySelectorAll(`#${idName}`).length === 1) {
       values.forEach(async (str, i) => {
          const elements = document.querySelectorAll(`#${idName}`);
@@ -306,13 +306,6 @@ function getUnitToPiece(data, value, quantity) {
 
 /* --------------- Copy Listing Inputs --------------- */
 
-function selectRandomImages(images, fixedCount = 3) {
-   if (images.length > 4) {
-      images = selectUniqueElements(images, fixedCount);
-   }
-   return images;
-}
-
 function putImagesIntoListing(images, editButtons) {
    return new Promise(async (resolve) => {
       if (images.length >= 0) {
@@ -325,7 +318,7 @@ function putImagesIntoListing(images, editButtons) {
 
             if (images[i]) {
                const fileInput = I("#upload-image")[0];
-               if (fileInput) putImageIntoInputFile(fileInput, images[i].file);
+               if (fileInput) putImageIntoInputFile(fileInput, images[i]);
                await waitForUploadingImage();
                await wait(500);
             } else {

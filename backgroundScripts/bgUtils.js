@@ -52,17 +52,16 @@ const updateTab = (tabId, newUrl) => {
    });
 };
 
-const __create_new_listing__ = (quantity, count) => {
+const __create_new_listing__ = (quantity, count, thumbnailIndex) => {
    if (listing_run) {
       chromeStorageGetLocal(storageListingKey, async (val) => {
          if (!val) val = {};
          val.QUANTITY = quantity;
          val.COUNT = count;
+         val.THUMBNAIL_INDEX = thumbnailIndex;
          chromeStorageSetLocal(storageListingKey, val);
 
          await updateTab(currentTabId, URLS.newListing);
-         // console.log(quantity, count);
-         
          tabSendMessage(currentTabId, "b_c_create_single_listing", (r) => {
             console.log(r);
          });

@@ -35,7 +35,6 @@ async function createUser(username, password) {
 }
 
 async function exportFile(username, fileType, filename, data, password) {
-   console.log(username, fileType, filename, data, password);
 
    return new Promise(async (resolve) => {
       try {
@@ -192,14 +191,18 @@ function getProductData(url) {
    });
 }
 
-function getImagesFromLocalStorage() {
+function getImageFilesFromLocalStorage() {
    return new Promise(async (resolve) => {
+      const { THUMBNAIL_INDEX } = await chromeStorageGetLocal(storageListingKey);
+      const DATA = await chromeStorageGetLocal(`storage-images-0`);
+      const firstImg = DATA?.files[THUMBNAIL_INDEX];
       const images = [];
-      for (let i = 0; i < MAX_IMAGE; i++) {
-         const image = await chromeStorageGetLocal(`storage-image-${i}`);
-         if (image) {
-            images.push(image);
-         }
+      if (firstImg) images.push(firstImg);
+
+      for (let i = 1; i < 4; i++) {
+         const DATA = await chromeStorageGetLocal(`storage-images-${i}`);
+         const img = selectRandomImage(DATA?.files || []);
+         if (img) images.push(img);
       }
       resolve(images);
    });
@@ -232,7 +235,7 @@ runtimeOnMessage("c_b_listing_data_update", (__, _, sendResponse) => {
 
 runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
    chromeStorageGetLocal(storageListingKey, (val) => {
-      getImagesFromLocalStorage().then((images) => {
+      getImageFilesFromLocalStorage().then((images) => {
          sendResponse({
             ...val,
             images,
@@ -304,37 +307,11 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          val.COUNT = 0;
          chromeStorageSetLocal(storageListingKey, val);
 
-         const {
-            START_COUNT,
-            END_COUNT,
-            /*  
-            
-            
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-            
-            
-            
-            
-            
-            */ STAPES_BY,
-         } = val;
+         const { START_COUNT, END_COUNT, STAPES_BY } = val;
 
          const TOTAL = Math.abs(N(END_COUNT) - N(START_COUNT)) / N(STAPES_BY);
+         const REPEAT_COUNT = (await chromeStorageGetLocal(`storage-images-small-0`))?.files?.length || 0;
+         
          const F = N(END_COUNT) - N(START_COUNT) > 0 ? 1 : -1;
 
          for (let i = 0; i <= TOTAL; i++) {
@@ -342,7 +319,7 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
                const COUNT = i * N(REPEAT_COUNT) + j;
                const QUANTITY = N(START_COUNT) + i * N(STAPES_BY) * F;
                PROCESS_QUEUE.unshift(() =>
-                  __create_new_listing__(QUANTITY, COUNT)
+                  __create_new_listing__(QUANTITY, COUNT, j)
                );
             }
          }

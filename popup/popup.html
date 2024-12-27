@@ -34,6 +34,7 @@
    <script defer src="./js/alert.js"></script>
    <script defer src="./js/form.js"></script>
    <script defer src="./js/popup.js"></script>
+   <script defer src="./js/images.js"></script>
    <script defer src="./js/event.js"></script>
    <script defer src="./js/online.js"></script>
 </head>
@@ -625,7 +626,7 @@
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input autocomplete="off" name="STAPES_BY" type="text" inputmode="numeric" class="input-b inp-limit" />
+                        <input autocomplete="off" name="STAPES_BY" id="STAPES_BY" type="text" inputmode="numeric" class="input-b inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -665,131 +666,51 @@
                <span class="inp-span">UPLOAD IMAGES</span>
                <i class="sbi-chevron-circle-down"></i>
             </div>
-            <div class="take-inp image show">
-               <span class="inp-span">Image 1</span>
-               <section>
-                  <div class="img-box"></div>
-                  <input type="file" multiple accept=".png,.jpg,.jpeg" name="image_0" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 2</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_1" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 3</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_2" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 4</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_3" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 5</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_4" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 6</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_5" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 7</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_6" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 8</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 9</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 10</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 11</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
-            </div>
-            <div class="take-inp image">
-               <p>Image 12</p>
-               <section>
-                  <div class="img-box"></div>
-                  <input autocomplete="off" type="file" accept=".png,.jpg,.jpeg" name="image_7" class="input-b inp-image" />
-                  <i class="sbi-upload4"></i>
-                  <i class="sbi-bin"></i>
-               </section>
+
+            <div class="take-inp images">
+               <p>Image 1</p>
+               <section class="all-images"></section>
+               <div class="buttons">
+                  <input type="file" multiple accept=".png,.jpg,.jpeg" class="input-b-0" />
+                  <button class="btn delete-all">DELETE ALL <i class="sbi-delete-sweep"></i></button>
+                  <button class="btn upload">UPLOAD <i class="sbi-upload4"></i></button>
+               </div>
             </div>
 
-            <div class="take-inp center">
-               <span class="inp-span">FIXED IMG</span>
-               <section>
-                  <div class="take-value">
-                     <label>FIRST</label>
-                     <div class="inp num" step="1">
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input autocomplete="off" name="FIXED_IMG_FIRST" type="text" inputmode="numeric" class="input-b inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
+            <div class="gap x4"></div>
+
+            <div class="take-inp images">
+               <p>Image 2</p>
+               <section class="all-images"></section>
+               <div class="buttons">
+                  <input type="file" multiple accept=".png,.jpg,.jpeg" class="input-b-1" />
+                  <button class="btn delete-all">DELETE ALL <i class="sbi-delete-sweep"></i></button>
+                  <button class="btn upload">UPLOAD <i class="sbi-upload4"></i></button>
+               </div>
+            </div>
+
+            <div class="gap x4"></div>
+
+            <div class="take-inp images">
+               <p>Image 3</p>
+               <section class="all-images"></section>
+               <div class="buttons">
+                  <input type="file" multiple accept=".png,.jpg,.jpeg" class="input-b-2" />
+                  <button class="btn delete-all">DELETE ALL <i class="sbi-delete-sweep"></i></button>
+                  <button class="btn upload">UPLOAD <i class="sbi-upload4"></i></button>
+               </div>
+            </div>
+
+            <div class="gap x4"></div>
+
+            <div class="take-inp images">
+               <p>Image 4</p>
+               <section class="all-images"></section>
+               <div class="buttons">
+                  <input type="file" multiple accept=".png,.jpg,.jpeg" class="input-b-3" />
+                  <button class="btn delete-all">DELETE ALL <i class="sbi-delete-sweep"></i></button>
+                  <button class="btn upload">UPLOAD <i class="sbi-upload4"></i></button>
+               </div>
             </div>
          </div>
 
@@ -1854,6 +1775,7 @@
       </div>
 
    </main>
-</body>
 
+   <canvas id="testCanvas"></canvas>
+</body>
 </html>

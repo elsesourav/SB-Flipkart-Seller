@@ -124,8 +124,10 @@ function CE(first, ...children) {
    element.parent = (parent) => {
       if (parent) {
          parent.appendChild(element);
+         return element;
       }
    };
+   
    return element;
 }
 
@@ -331,4 +333,13 @@ function DATE() {
    const ss = date.getMinutes();
    const ms = date.getSeconds();
    return { yy, mm, dd, hh, ss, ms };
+}
+
+
+function selectRandomImage(images) {
+   if (images.length > 1) {
+      const imgs = [...images].sort(() => Math.random() - 0.5);
+      return imgs[Math.floor(Math.random() * imgs.length)];
+   }
+   return [];
 }
