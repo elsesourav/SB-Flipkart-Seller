@@ -39,6 +39,11 @@ class FormHTML {
          html: this.#css(),
          parent: document.head,
       }); // Apply all css --------------
+
+      // Prevent form closing when clicking inside the form
+      this.inner.addEventListener("click", (e) => {
+         e.stopPropagation();
+      });
    }
 
    //{ tag, parent, cls, id, text, html, css }
@@ -240,7 +245,9 @@ class FormHTML {
 
    clickOutside(fun) {
       this.box.addEventListener("click", (e) => {
-         fun(e, this.input);
+         if (e.target === this.box) {  // Only trigger if clicking the backdrop
+            fun(e, this.input);
+         }
       });
    }
 
@@ -249,6 +256,7 @@ class FormHTML {
          fun(e, this.input);
       });
    }
+   
 
    buttonClick(fun) {
       this.button.addEventListener("click", (e) => {

@@ -325,8 +325,10 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          }
          sendResponse({ status: "ok" });
 
-         const action = PROCESS_QUEUE.pop();
-         action();
+        if (PROCESS_QUEUE.length > 0) {
+            const action = PROCESS_QUEUE.pop();
+            action();
+         }
       }
    });
    sendResponse({ status: "error" });
