@@ -173,8 +173,13 @@ function getProductData(url) {
       try {
          const res = await fetch(url);
          const text = await res.text();
-         const price1 = text.match(/<div class="Nx9bqj CxhGGd">.*?₹([\d,]+)/s);
-         const price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?([\d,]+)/s);
+         let price1 = text.match(/<div class="Nx9bqj CxhGGd">.*?₹([\d,]+)/s);
+         let price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?([\d,]+)/s);
+
+         if (!price2) {
+            price1 = text.match(/<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>₹([\d,]+)</s);
+            price2 = text.match(/<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>([\d,]+)</s);
+         }
 
          const sellingMRP = price1 ? price1[1].replace(/,/g, "") : null;
          const MRP = price2 ? price2[1].replace(/,/g, "") : null;
