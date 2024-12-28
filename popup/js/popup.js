@@ -49,9 +49,9 @@ const DELETE_IMAGES_BUTTONS = I(".take-inp.images .delete-all");
 // ---------------- initial setup -------------------
 async function init() {
    // set background image random
-   I("#bgImage")[0].src = `${bgImagePath}bg${Math.floor(
-      Math.random() * 7
-   )}.png`;
+   // I("#bgImage")[0].src = `${bgImagePath}bg${Math.floor(
+   //    Math.random() * 7
+   // )}.png`;
 
    await chromeStorageGetLocal(storageInitKey, (val) => {
       if (!val) {
