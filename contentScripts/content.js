@@ -153,12 +153,9 @@ function setup_flipkart_product_url() {
             el.addEventListener("click", (evt) => {
                evt.stopPropagation();
                evt.preventDefault();
-               navigator.clipboard
-                  .writeText(link.href)
-                  .then(() =>
-                     console.log("Link copied to clipboard:", link.href)
-                  )
-                  .catch((err) => console.error("Failed to copy link:", err));
+               const FSN = getFSNFromPID(link.href);
+               // open new tab with link 
+               window.open(`${URLS.addMapping}${FSN}`, "_blank");
             });
             main.appendChild(el);
          }
@@ -189,6 +186,13 @@ onload = async () => {
    if (ifFlipkartSearchLocation()) {
       setStyle();
       setup_flipkart_product_url();
+   }
+
+   if (ifFlipkartMappingLocation()) {
+      const is = await startSellingClick();
+      if (is) {
+         fillMappingInputs();
+      }
    }
 };
 

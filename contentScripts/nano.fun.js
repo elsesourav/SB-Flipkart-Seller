@@ -60,6 +60,10 @@ function ifFlipkartSearchLocation() {
    return window.location.href.includes(URLS.flipkartSearch);
 }
 
+function ifFlipkartMappingLocation() {
+   return window.location.href.includes(URLS.addMapping);
+}
+
 function ifHaveSaveButton() {
    const [isSaveBtn] = [
       ...document.querySelectorAll(`[data-testid="button"]`),
@@ -406,4 +410,38 @@ function calculateProductPriceFromProfit(
 
    const PP = Math.round(price * 100) / 100;
    return isRound ? Math.round(PP) : PP;
+}
+
+// get fsn form pid
+function getFSNFromPID(url) {
+   const pidMatch = url.match(/[?&]pid=([^&]+)/);
+   if (pidMatch) {
+      return pidMatch[1];
+   }
+   return null;
+}
+
+function startSellingClick() {
+   return new Promise(async (resolve) => {
+      const element = document.querySelector("a.startSelling.listingsModalLink");
+      if (element) {
+         element.click();
+         resolve(true);
+      } else {
+         await wait(1000);
+         const element = document.querySelector("a.startSelling.listingsModalLink");
+         if (element) {
+            element.click();
+            resolve(true);
+         } else {
+            resolve(false);
+         }
+      }
+   });
+
+
+   if (!element) {
+      const element = document.querySelector("a.startSelling.listingsModalLink");
+      if (element) element.click();
+   }
 }

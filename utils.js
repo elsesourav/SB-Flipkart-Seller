@@ -14,6 +14,7 @@ const URLS = {
    flipkartSearch: "https://www.flipkart.com/search",
    newListing:
       "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed",
+   addMapping: "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
 };
 
 const MAX_IMAGE = 12;
