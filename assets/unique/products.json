@@ -5501,5 +5501,17 @@
       "NAME": "DHANIA",
       "TYPE": "PIECE",
       "QUANTITY": 1655
+   },
+   "PAPAYA__5__PIECE__SNFQ8S": {
+      "SKU_ID": "PAPAYA__5__PIECE__SNFQ8S",
+      "NAME": "PAPAYA",
+      "TYPE": "G",
+      "QUANTITY": 5
+   },
+   "PAPAYA__10__PIECE__SNFR5S": {
+      "SKU_ID": "PAPAYA__10__PIECE__SNFR5S",
+      "NAME": "PAPAYA",
+      "TYPE": "PIECE",
+      "QUANTITY": 120
    }
 }
