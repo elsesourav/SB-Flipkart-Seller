@@ -438,10 +438,10 @@ function startSellingClick() {
          }
       }
    });
+}
 
-
-   if (!element) {
-      const element = document.querySelector("a.startSelling.listingsModalLink");
-      if (element) element.click();
-   }
+function isProductMappingPossible() {
+   const element = document.querySelector("a.startSelling.listingsModalLink");
+   const is = element && !element.classList.contains("disabled");
+   return is;
 }

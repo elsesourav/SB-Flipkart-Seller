@@ -23,6 +23,10 @@ const UPLOAD_IMAGE_INPUTS = I(".take-inp.images input[type=file]");
 const IMAGE_LISTS = I(".take-inp.images .all-images");
 const DELETE_IMAGES_BUTTONS = I(".take-inp.images .delete-all");
 
+// Open More Mapping button click handler
+openMoreMapping.click(() => {
+   chrome.runtime.openOptionsPage();
+});
 
 [aInputs, bInputs, cInputs].forEach((inp) => {
    inp.on("input", (_, __, ele) => {

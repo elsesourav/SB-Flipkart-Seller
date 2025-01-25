@@ -13,6 +13,8 @@
 
    --grid-min: 35px;
 
+   --product-width: 200px;
+
    user-select: none;
    -moz-user-select: none;
    -ms-user-select: none;

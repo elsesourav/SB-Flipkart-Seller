@@ -39,7 +39,7 @@ async function setup_listing() {
    let openInputBtn, copyInputBtn;
    CE(
       { id: "__fwl__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs"))
       // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
@@ -103,7 +103,7 @@ async function setup_mapping() {
 
    CE(
       { id: "__fwm__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs")),
+      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs"))
       // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
    ).parent(document.body);
 
@@ -154,7 +154,7 @@ function setup_flipkart_product_url() {
                evt.stopPropagation();
                evt.preventDefault();
                const FSN = getFSNFromPID(link.href);
-               // open new tab with link 
+               // open new tab with link
                window.open(`${URLS.addMapping}${FSN}`, "_blank");
             });
             main.appendChild(el);
@@ -188,12 +188,12 @@ onload = async () => {
       setup_flipkart_product_url();
    }
 
-   if (ifFlipkartMappingLocation()) {
-      const is = await startSellingClick();
-      if (is) {
-         fillMappingInputs();
-      }
-   }
+   // if (ifFlipkartMappingLocation()) {
+   // const is = await startSellingClick();
+   //    if (is) {
+   //       fillMappingInputs();
+   //    }
+   // }
 };
 
 addEventListener("mousedown", async (_) => {
@@ -271,3 +271,61 @@ runtimeOnMessage("b_c_create_single_listing", async (__, _, sendResponse) => {
       alert(error);
    }
 });
+
+runtimeOnMessage("b_c_filter_mapping_possible_skus", async ({vals}, _, sendResponse) => {
+   sendResponse({ status: "ok" });
+   console.log(vals);
+})
+
+runtimeOnMessage(
+   "b_c_go_mapping_page_using_sku",
+   async ({ skus }, _, sendResponse) => {
+      sendResponse({ status: "ok" });
+
+      console.log(skus);
+      const saveInfo = {
+         skus,
+         unMappingSkus: [],
+      };
+      chromeStorageSetLocal(storageFilterSkusKey, saveInfo);
+      window.location.href = `${URLS.addMapping}${saveInfo.skus[0]}`;
+      window.location.reload();
+   }
+);
+
+
+(() => {
+   addEventListener("load", async (e) => {
+      if (window.location.href.includes(URLS.addMapping)) {
+         chromeStorageGetLocal(storageFilterSkusKey, async (vals) => {
+            if (!vals || vals.skus.length === 0) return;
+            if (!document.querySelector(".addListingsProduct-default.play-arena")) {
+               await wait(5000);
+               window.location.reload();
+               return;
+            }
+
+            const current = vals.skus[0];
+            vals.skus.shift();
+            const isMappingPossible = isProductMappingPossible();
+            if (isMappingPossible) vals.unMappingSkus.push(current);
+            chromeStorageSetLocal(storageFilterSkusKey, vals);
+
+            if (vals.skus.length > 0) {
+               window.location.href = `${URLS.addMapping}${vals.skus[0]}`;
+               // await wait(200);
+               window.location.reload();
+            } else {
+               runtimeSendMessage(
+                  "c_b_filter_mapping_possible_skus",
+                  vals,
+                  (response) => {
+                     console.log(response);
+                  }
+               );
+            }
+         });
+      }
+   });
+})();
+

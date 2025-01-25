@@ -5,16 +5,29 @@ const storageMappingKey = "SB_Seller_Mapping";
 const storageListingKey = "SB_Seller_Listing";
 const storageOrdersKey = "SB_Seller_Orders";
 const storageSettingsKey = "SB_Seller_Settings";
+const storageFilterSkusKey = "SB_Seller_FilterSkus";
 
 const URLS = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
    singleAddListing:
       "https://seller.flipkart.com/index.html#dashboard/addListings",
    singleOrder: "https://seller.flipkart.com/index.html#dashboard/my-orders",
-   flipkartSearch: "https://www.flipkart.com/search",
+   flipkartSearch: "https://www.flipkart.com/search?q=",
    newListing:
       "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed",
-   addMapping: "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
+   addMapping:
+      "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
+   flipkartSearchUrl: "https://2.rome.api.flipkart.com/api/4/page/fetch",
+};
+
+const FLIPKART_SEARCH_HEADER = {
+   accept: "*/*",
+   "accept-language": "en-US,en;q=0.9",
+   "content-type": "application/json",
+   "user-agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+   "x-user-agent":
+      "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop",
 };
 
 const MAX_IMAGE = 12;
@@ -128,7 +141,7 @@ function CE(first, ...children) {
          return element;
       }
    };
-   
+
    return element;
 }
 
@@ -335,7 +348,6 @@ function DATE() {
    const ms = date.getSeconds();
    return { yy, mm, dd, hh, ss, ms };
 }
-
 
 function selectRandomImage(images) {
    if (images.length > 1) {

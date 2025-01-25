@@ -35,7 +35,6 @@ async function createUser(username, password) {
 }
 
 async function exportFile(username, fileType, filename, data, password) {
-
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}`);
@@ -148,9 +147,81 @@ async function getFiles(username, fileType, search = "") {
    });
 }
 
+runtimeOnMessage(
+   "c_b_filter_mapping_possible_skus",
+   async (vals, _, sendResponse) => {
+      console.log(vals);
+      sendResponse({ status: "ok" });
+      // chrome extension option page send message
+      chrome.runtime.sendMessage(
+         { type: "b_c_filter_mapping_possible_skus", vals },
+         (response) => {
+            console.log(response);
+         }
+      );
+   }
+);
+
+// function passToContentScriptGetPossibleMapping(tabId, skus) {
+//    tabSendMessage(tabId, "b_c_get_possible_mapping", { skus }, async (response) => {
+//       console.log(response);
+//    });
+// }
+
+async function passToContentScriptGoMappingPage(skus) {
+   const hiddenTabId = await createTabAndWaitForLoad(
+      `${URLS.addMapping}#`,
+      true
+   );
+
+   tabSendMessage(
+      hiddenTabId,
+      "b_c_go_mapping_page_using_sku",
+      { skus },
+      async (response) => {
+         console.log(response);
+      }
+   );
+}
+
+// async function filterMappingInNewTab(productsSku) {
+//    // create a new tab with hidden mode
+//    return new Promise(async (resolve) => {
+//       try {
+//          const hiddenTab = await createNewHiddenTab(`${URLS.addMapping}#`);
+
+//          passToContentScriptGoMappingPage(hiddenTab, productsSku);
+//          console.log(productsSku);
+//          resolve(true);
+
+//          // for (const i in productsSku) {
+//          //    const sku = productsSku[i];
+//          //    console.log(sku);
+
+//          //    // resolve(hiddenTab);
+//          // }
+
+//          resolve(hiddenTab);
+//       } catch (error) {
+//          console.log(error);
+//          resolve(null);
+//       }
+//    });
+// }
+
 console.log("background loaded");
 
+runtimeOnMessage(
+   "c_b_filter_mapping_possible_sku",
+   async ({ skus }, _, sendResponse) => {
+      // console.log(values);
+      passToContentScriptGoMappingPage(skus);
+      sendResponse({ status: "ok" });
+   }
+);
+
 runtimeOnMessage("c_b_update_mapping", (values, _, sendResponse) => {
+   console.log(values);
    sendResponse({ status: "ok" });
    chromeStorageGetLocal(storageMappingKey, (val) => {
       for (const key in val) {
@@ -168,6 +239,51 @@ runtimeOnMessage("c_b_mapping_request", (__, _, sendResponse) => {
    });
 });
 
+const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
+   return new Promise(async (resolve) => {
+      const response = await fetch(URLS.flipkartSearchUrl, {
+         method: "POST",
+         headers: FLIPKART_SEARCH_HEADER,
+         body: JSON.stringify({
+            pageContext: {
+               fetchSeoData: true,
+               paginatedFetch: false,
+               pageNumber: pageNumber,
+            },
+            pageUri: `/search?q=${productName.split(" ").join("%20")}`,
+            requestContext: {
+               type: "BROWSE_PAGE",
+            },
+         }),
+      });
+
+      if (response.ok) {
+         const data = await response.json();
+         const { slots } = data?.RESPONSE;
+
+         // [[10,20,32],[5,6,3]] convert to [10,20,32,5,6,3]
+         const products = slots
+            .map((slot) => slot?.widget?.data?.products)
+            .filter((x) => x)
+            .flat()
+            .map((product) => {
+               const { id, titles, rating, pricing } = product?.productInfo?.value;
+               const { mrp, finalPrice } = pricing;
+
+               return { id, titles, rating, mrp, finalPrice };
+            });
+
+         resolve(products);
+      } else {
+         console.log(`Error: ${response.status}`);
+         resolve(null);
+      }
+   });
+};
+
+// fetchFlipkartSearchData("lotus seeds");
+
+
 function getProductData(url) {
    return new Promise(async (resolve) => {
       try {
@@ -177,8 +293,12 @@ function getProductData(url) {
          let price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?([\d,]+)/s);
 
          if (!price2) {
-            price1 = text.match(/<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>₹([\d,]+)</s);
-            price2 = text.match(/<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>([\d,]+)</s);
+            price1 = text.match(
+               /<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>₹([\d,]+)</s
+            );
+            price2 = text.match(
+               /<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>([\d,]+)</s
+            );
          }
 
          const sellingMRP = price1 ? price1[1].replace(/,/g, "") : null;
@@ -196,9 +316,40 @@ function getProductData(url) {
    });
 }
 
+function verifyProduct(productName, sellerId) {
+   return new Promise(async (resolve) => {
+      try {
+         
+         const res = await fetch(url);
+         const text = await res.text();
+         
+         resolve({ });
+      } catch (error) {
+         console.log(error);
+         resolve(null);
+      }
+   });
+}
+
+runtimeOnMessage("c_b_get_mapping_possible_product_data", async (data, _, sendResponse) => {
+   const { productName, startingPage, endingPage, sellerId } = data;
+
+   const products = [];
+   for (let i = startingPage; i <= endingPage; i++) {
+      const productData = await fetchFlipkartSearchData(productName, i);
+      if (productData) {
+         products.push(...productData);
+      }
+   }
+   sendResponse(products);
+});
+
+
 function getImageFilesFromLocalStorage() {
    return new Promise(async (resolve) => {
-      const { THUMBNAIL_INDEX } = await chromeStorageGetLocal(storageListingKey);
+      const { THUMBNAIL_INDEX } = await chromeStorageGetLocal(
+         storageListingKey
+      );
       const DATA = await chromeStorageGetLocal(`storage-images-0`);
       const firstImg = DATA?.files[THUMBNAIL_INDEX];
       const images = [];
@@ -209,6 +360,10 @@ function getImageFilesFromLocalStorage() {
          const img = selectRandomImage(DATA?.files || []);
          if (img) images.push(img);
       }
+
+      // 
+
+
       resolve(images);
    });
 }
@@ -315,8 +470,10 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          const { START_COUNT, END_COUNT, STAPES_BY } = val;
 
          const TOTAL = Math.abs(N(END_COUNT) - N(START_COUNT)) / N(STAPES_BY);
-         const REPEAT_COUNT = (await chromeStorageGetLocal(`storage-images-small-0`))?.files?.length || 0;
-         
+         const REPEAT_COUNT =
+            (await chromeStorageGetLocal(`storage-images-small-0`))?.files
+               ?.length || 0;
+
          const F = N(END_COUNT) - N(START_COUNT) > 0 ? 1 : -1;
 
          for (let i = 0; i <= TOTAL; i++) {
@@ -330,7 +487,7 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          }
          sendResponse({ status: "ok" });
 
-        if (PROCESS_QUEUE.length > 0) {
+         if (PROCESS_QUEUE.length > 0) {
             const action = PROCESS_QUEUE.pop();
             action();
          }

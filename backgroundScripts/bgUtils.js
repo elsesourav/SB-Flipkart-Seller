@@ -3,6 +3,32 @@ const createNewTab = (url) => {
       chrome.tabs.create({ url: url }, (tab) => resolve(tab.id));
    });
 };
+const createNewHiddenTab = (url) => {
+   return new Promise((resolve) => {
+      chrome.tabs.create({ url: url, active: false }, (tab) => resolve(tab.id));
+   });
+};
+
+const createTabAndWaitForLoad = (url, hidden = false) => {
+   return new Promise((resolve, reject) => {
+      chrome.tabs.create({ url, active: !hidden }, (tab) => {
+         if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+            return;
+         }
+
+         const listener = (tabId, changeInfo) => {
+            if (tabId === tab.id && changeInfo.status === "complete") {
+               // Remove the listener once the tab has finished loading
+               chrome.tabs.onUpdated.removeListener(listener);
+               resolve(tab.id);
+            }
+         };
+
+         chrome.tabs.onUpdated.addListener(listener);
+      });
+   });
+};
 
 const closeTab = (tabId) => {
    return new Promise((resolve, reject) => {
@@ -15,8 +41,6 @@ const closeTab = (tabId) => {
       });
    });
 };
-
-
 
 const getCurrentTab = () => {
    return new Promise((resolve) => {
@@ -46,9 +70,45 @@ const getAllTabId = () => {
 };
 
 const updateTab = (tabId, newUrl) => {
-   return new Promise(async (resolve) => {
-      await chrome.tabs.update(tabId, { url: newUrl });
-      resolve(true);
+   return new Promise((resolve, reject) => {
+      chrome.tabs.update(tabId, { url: newUrl }, (tab) => {
+         if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+         } else {
+            resolve(tab);
+         }
+      });
+   });
+};
+
+const updateAndReloadTab = (tabId, newUrl) => {
+   return new Promise((resolve, reject) => {
+      // Update the tab's URL
+      chrome.tabs.update(tabId, { url: newUrl }, (updatedTab) => {
+         if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError); // Handle any errors
+            return;
+         }
+
+         // Listen for the page to finish loading
+         const listener = (updatedTabId, changeInfo) => {
+            if (updatedTabId === tabId && changeInfo.status === "complete") {
+               // Remove listener once the tab is fully loaded
+               chrome.tabs.onUpdated.removeListener(listener);
+
+               // Reload the tab
+               chrome.tabs.reload(tabId, () => {
+                  if (chrome.runtime.lastError) {
+                     reject(chrome.runtime.lastError); // Handle reload errors
+                  } else {
+                     resolve(updatedTab); // Successfully updated and reloaded
+                  }
+               });
+            }
+         };
+
+         chrome.tabs.onUpdated.addListener(listener);
+      });
    });
 };
 

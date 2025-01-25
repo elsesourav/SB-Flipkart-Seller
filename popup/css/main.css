@@ -768,3 +768,32 @@ body:has(.btn:nth-child(4) input:checked) {
       }
    } */
 }
+
+
+#openMoreMapping {
+   display: flex;
+   gap: 10px;
+   justify-content: center;
+   align-items: center;
+   padding: 4px 8px;
+   border-radius: 4px;
+   cursor: pointer;
+   font-size: 14px;
+   font-weight: 500;
+   transition: all 0.2s ease;
+   background-color: #1e5fbe;
+   color: #fff;
+}
+
+#openMoreMapping {
+   padding: 8px 16px;
+   border-radius: 4px;
+   cursor: pointer;
+   font-size: 14px;
+   font-weight: 500;
+   transition: all 0.2s ease;
+}
+
+#openMoreMapping:hover {
+   background-color: #1e5fbe;
+}
