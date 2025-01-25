@@ -1,177 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Auto - Settings</title>
-    <link rel="stylesheet" href="./../assets/icons/css/font.css">
-    <link rel="stylesheet" href="./../assets/icons/css/icon.css">
-    <link rel="stylesheet" href="./../popup/css/base.css">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Seller Auto - Settings</title>
+      <link rel="stylesheet" href="./../assets/icons/css/font.css" />
+      <link rel="stylesheet" href="./../assets/icons/css/icon.css" />
+      <link rel="stylesheet" href="./../popup/css/base.css" />
 
-    <link rel="stylesheet" href="./option.css">
+      <link rel="stylesheet" href="./option.css" />
 
+      <script defer src="./../utils.js"></script>
+      <script defer src="./../querySelector.js"></script>
+      <script defer src="./options.js"></script>
+   </head>
+   <body>
+      <!-- <h1 class="title">More Mapping Options</h1> -->
+      <header>
+         <div class="title">More Mapping Options</div>
+         <div class="others">
+            <div class="logo">
+               <img src="./../assets/icons/icon.png" alt="extension icon" />
+            </div>
+            <section>
+               <p>Seller Automation ES</p>
+               <b>
+                  &copy;
+                  <span class="first">else</span>
+                  <span class="second">sourav</span>
+                  <span class="third">2024</span>
+               </b>
+            </section>
+         </div>
+      </header>
 
-    <script defer src="./../utils.js"></script>
-    <script defer src="./../querySelector.js"></script>
-    <script defer src="./options.js"></script>
-</head>
-<body>
-    <h1 class="title">More Mapping Options</h1>
-    <div class="search-inputs">
-        <div class="outer _3-1-1-1-1">
-            <select name="sellerId" id="sellerId">
-                <option value="8136cfdc49f34957">PuravEnterprise</option>
-                <option value="8ca6db1ce86346e2">ChaitiEnterprise</option>
-            </select>
-            <p>Page</p>
-            <select name="startPage" id="startPage">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-            </select>
-            <p>to</p>
-            <select name="endPage" id="endPage">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
-                <option value="24">24</option>
-                <option value="25">25</option>
-            </select>
-        </div>
-        <div class="outer _4-1">
-            <input type="text" name="search" id="searchProduct" placeholder="Search Product">
-            <button id="submit">Submit</button>
-        </div>
-        <div class="outer _2_5">
-            <select name="rating" id="rating">
-                <option value="0">Rating</option>
-                <option value="2.5">2.5</option>
-                <option value="3">3</option>
-                <option value="3.5">3.5</option>
-                <option value="4">4</option>
-                <option value="4.5">4.5</option>
-                <option value="5">5</option>
-            </select>
-            <input type="text" name="names" id="matchNames" placeholder="Filter Different Name">
-        </div>
-    </div>
-    <div class="show-possible-mapping-products" id="showPossibleMappingProducts">
-        <div class="product">
+      <nav>
+         <div class="search-inputs">
+            <div class="outer _3-1-1-1-1">
+               <select name="sellerId" id="sellerId">
+                  <option value="8136cfdc49f34957">PuravEnterprise</option>
+                  <option value="8ca6db1ce86346e2">ChaitiEnterprise</option>
+               </select>
+               <p>Page</p>
+               <select name="startPage" id="startPage">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+               </select>
+               <p>to</p>
+               <select name="endPage" id="endPage">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                  <option value="12">12</option>
+                  <option value="13">13</option>
+                  <option value="14">14</option>
+                  <option value="15">15</option>
+                  <option value="16">16</option>
+                  <option value="17">17</option>
+                  <option value="18">18</option>
+                  <option value="19">19</option>
+                  <option value="20">20</option>
+                  <option value="21">21</option>
+                  <option value="22">22</option>
+                  <option value="23">23</option>
+                  <option value="24">24</option>
+                  <option value="25">25</option>
+               </select>
+            </div>
+            <div class="outer _4-1">
+               <input
+                  type="text"
+                  name="search"
+                  id="searchProduct"
+                  placeholder="Search Product"
+               />
+               <button id="submit">Submit</button>
+            </div>
+            <div class="outer _2_5">
+               <select name="rating" id="rating">
+                  <option value="0">Rating</option>
+                  <option value="2">2</option>
+                  <option value="2.5">2.5</option>
+                  <option value="2.6">2.6</option>
+                  <option value="2.7">2.7</option>
+                  <option value="2.8">2.8</option>
+                  <option value="2.9">2.9</option>
+                  <option value="3">3</option>
+                  <option value="3.5">3.5</option>
+                  <option value="4">4</option>
+                  <option value="4.5">4.5</option>
+                  <option value="5">5</option>
+               </select>
+               <input
+                  type="text"
+                  name="names"
+                  id="matchNames"
+                  placeholder="Filter Different Name"
+               />
+            </div>
+         </div>
+      </nav>
+
+      <div
+         class="show-possible-mapping-products"
+         id="showPossibleMappingProducts"
+      >
+         <!-- <div class="card product">
+            <input type="checkbox" name="" class="select-product">
             <div class="show-img">
                 <img src="" alt="">
             </div>
-            <div class="name">Show Product Name Here</div>
+            <div class="rating">4.5</div>
+            <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
+            <div class="quantity">200 per packet</div>
             <div class="prices">
                 <div class="selling-price">140</div>
                 <div class="original-price">499</div>
             </div>
         </div>
-        <div class="product">
+        <div class="card product">
+            <input type="checkbox" name="" class="select-product">
             <div class="show-img">
                 <img src="" alt="">
             </div>
-            <div class="name">Show Product Name Here</div>
+            <div class="rating">4.5</div>
+            <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
+            <div class="quantity">200 per packet</div>
             <div class="prices">
                 <div class="selling-price">140</div>
                 <div class="original-price">499</div>
             </div>
-        </div>
-        <div class="product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="name">Show Product Name Here</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-        <div class="product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="name">Show Product Name Here</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-        <div class="product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="name">Show Product Name Here</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-        <div class="product">
-            <div class="show-img">
-                <div class="rating">4.5</div>
-                <img src="" alt="">
-            </div>
-            <div class="name">Show Product Name Here</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-        <div class="product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="name">Show Product Name Here</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-    </div>
-    
-    <iframe frameborder="1" width="2000" height="300" id="showPreview" style="display: none;"></iframe>
-    <canvas id="canvas" style="display: none;"></canvas>
-</body>
+        </div> -->
+      </div>
+
+      <div id="loadingWindow">
+         <div class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
+         </div>
+      </div>
+
+      <div id="selectedCount"></div>
+
+      <iframe
+         frameborder="1"
+         width="2000"
+         height="300"
+         id="showPreview"
+         style="display: none"
+      ></iframe>
+   </body>
 </html>

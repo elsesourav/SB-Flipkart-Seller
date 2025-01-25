@@ -267,7 +267,8 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
             .filter((x) => x)
             .flat()
             .map((product) => {
-               const { id, titles, rating, pricing } = product?.productInfo?.value;
+               const { id, titles, rating, pricing } =
+                  product?.productInfo?.value;
                const { mrp, finalPrice } = pricing;
 
                return { id, titles, rating, mrp, finalPrice };
@@ -283,6 +284,54 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
 
 // fetchFlipkartSearchData("lotus seeds");
 
+async function searchProduct(sku, sellerId) {
+   const url = `https://seller.flipkart.com/napi/listing/searchProduct?fsnSearch=${sku}&sellerId=${sellerId}`;
+   const response = await fetch(url);
+   return response.json();
+}
+
+async function checkApprovalStatus(vertical, brand, sellerId) {
+   const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
+   const response = await fetch(url);
+   const result = await response.json();
+   return result.approvalStatus === "APPROVED";
+}
+
+async function verifyProduct(sku, sellerId) {
+   try {
+      // Search for product details
+      const searchResult = await searchProduct(sku, sellerId);
+      const productInfo = searchResult?.result?.productList?.[0];
+
+      if (!productInfo) {
+         return { is: false, error: "Product not found" };
+      }
+
+      const { detail, alreadySelling, vertical, imagePaths } = productInfo;
+      const imageUrl = Object.values(imagePaths)?.[0];
+
+      // If already selling, no need to check further
+      if (alreadySelling) {
+         return { is: false, error: "Already selling" };
+      }
+
+      // Check approval status
+      const isApproved = await checkApprovalStatus(
+         vertical,
+         detail.Brand,
+         sellerId
+      );
+
+      return {
+         is: isApproved,
+         imageUrl: isApproved ? imageUrl : null,
+         error: isApproved ? null : "Not approved",
+      };
+   } catch (error) {
+      console.error("Error verifying product:", error);
+      return { is: false, error: error.message };
+   }
+}
 
 function getProductData(url) {
    return new Promise(async (resolve) => {
@@ -316,34 +365,67 @@ function getProductData(url) {
    });
 }
 
-function verifyProduct(productName, sellerId) {
-   return new Promise(async (resolve) => {
-      try {
-         
-         const res = await fetch(url);
-         const text = await res.text();
-         
-         resolve({ });
-      } catch (error) {
-         console.log(error);
-         resolve(null);
-      }
-   });
+const BATCH_SIZE = 5; // Number of concurrent requests
+
+async function processBatch(products, sellerId, startIdx) {
+   const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
+   if (batch.length === 0) return [];
+
+   const batchPromises = batch.map(product =>
+      verifyProduct(product.id, sellerId)
+         .then(result => {
+            if (result.is) {
+               return {
+                  ...product,
+                  imageUrl: result.imageUrl
+               };
+            }
+            return null;
+         })
+         .catch(error => {
+            console.log(`Error verifying product ${product.id}:`, error);
+            return null;
+         })
+   );
+
+   const results = await Promise.all(batchPromises);
+   return results.filter(result => result !== null);
 }
 
-runtimeOnMessage("c_b_get_mapping_possible_product_data", async (data, _, sendResponse) => {
-   const { productName, startingPage, endingPage, sellerId } = data;
+runtimeOnMessage(
+   "c_b_get_mapping_possible_product_data",
+   async (data, _, sendResponse) => {
+      const { productName, startingPage, endingPage, sellerId } = data;
 
-   const products = [];
-   for (let i = startingPage; i <= endingPage; i++) {
-      const productData = await fetchFlipkartSearchData(productName, i);
-      if (productData) {
-         products.push(...productData);
+      try {
+         // Fetch all products first
+         const products = [];
+         for (let i = startingPage; i <= endingPage; i++) {
+            const productData = await fetchFlipkartSearchData(productName, i);
+            if (productData) {
+               products.push(...productData);
+            }
+         }
+
+         // Send initial response with all products
+         // sendResponse(products);
+
+         // Process products in batches
+         const verifiedProducts = [];
+         for (let i = 0; i < products.length; i += BATCH_SIZE) {
+            const batchResults = await processBatch(products, sellerId, i);
+            verifiedProducts.push(...batchResults);
+         }
+
+         // console.log(verifiedProducts);
+         // Send final filtered response
+         sendResponse(verifiedProducts);
+      } catch (error) {
+         console.error("Error during product verification:", error);
+         sendResponse([]);
       }
    }
-   sendResponse(products);
-});
-
+);
 
 function getImageFilesFromLocalStorage() {
    return new Promise(async (resolve) => {
@@ -360,10 +442,6 @@ function getImageFilesFromLocalStorage() {
          const img = selectRandomImage(DATA?.files || []);
          if (img) images.push(img);
       }
-
-      // 
-
-
       resolve(images);
    });
 }
