@@ -1,224 +1,12 @@
-importScripts("./../utils.js", "./bgUtils.js");
 importScripts(
    "./firebaseApp.js",
    "./firebaseDatabase.js",
    "./firebaseConfig.js"
 );
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-async function createUser(username, password) {
-   return new Promise(async (resolve) => {
-      try {
-         // first check if user exists
-         const dbRef = db.ref(`users/${username}`);
-         const snapshot = await dbRef.once("value");
-         if (snapshot.exists()) {
-            return resolve({
-               message: "User already exists",
-               status: "User Exists",
-            });
-         }
-
-         await dbRef.set({
-            id: `ES-${Date.now().toString(36).toUpperCase()}`,
-            username,
-            password,
-         });
-         resolve({ message: "User created successfully", status: "Success" });
-      } catch (error) {
-         console.log(error);
-         resolve({ message: error.message, status: "Error" });
-      }
-   });
-}
-
-async function exportFile(username, fileType, filename, data, password) {
-   return new Promise(async (resolve) => {
-      try {
-         const dbRef = db.ref(`users/${username}`);
-         const snapshot = await dbRef.once("value");
-         if (!snapshot.exists()) {
-            return resolve({ message: "User not found", status: "NO_USER" });
-         }
-
-         const userData = snapshot.val();
-         if (userData.password !== password) {
-            return resolve({
-               message: "Incorrect password",
-               status: "Error",
-            });
-         }
-
-         const { yy, mm, dd, hh, ss, ms } = DATE();
-
-         const fileRef = dbRef.child(
-            `${fileType}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`
-         );
-         await fileRef.set({
-            id: Date.now().toString(36).toUpperCase(),
-            filename,
-            data,
-            date: `${dd}-${mm}-${yy} | ${hh}:${ss}`,
-         });
-         resolve({ message: "File exported successfully", status: "Success" });
-      } catch (error) {
-         console.log(error);
-         resolve({ message: error.message, status: "ERROR" });
-      }
-   });
-}
-
-async function importFile(username, fileType, filename) {
-   return new Promise(async (resolve) => {
-      try {
-         const dbRef = db.ref(`users/${username}/${fileType}/${filename}`);
-         const snapshot = await dbRef.once("value");
-         if (!snapshot.exists()) {
-            return resolve({ message: "File not found", status: "NO_FILE" });
-         }
-
-         const data = snapshot.val();
-         resolve({ message: "File imported successfully", status: "ok", data });
-      } catch (error) {
-         console.log(error);
-         resolve({ message: error.message, status: "ERROR" });
-      }
-   });
-}
-
-async function deleteFile(username, fileType, filename, password) {
-   return new Promise(async (resolve) => {
-      try {
-         const dbRef = db.ref(`users/${username}`);
-         const snapshot = await dbRef.once("value");
-         if (!snapshot.exists()) {
-            return resolve({ message: "User not found", status: "NO_USER" });
-         }
-
-         const userData = snapshot.val();
-         if (userData.password !== password) {
-            return resolve({
-               message: "Incorrect password",
-               status: "INCORRECT_PASSWORD",
-            });
-         }
-
-         const fileRef = dbRef.child(`${fileType}/${filename}`);
-         await fileRef.remove();
-         resolve({ message: "File deleted successfully", status: "Success" });
-      } catch (error) {
-         console.log(error);
-         resolve({ message: error.message, status: "ERROR" });
-      }
-   });
-}
-
-async function getFiles(username, fileType, search = "") {
-   return new Promise(async (resolve) => {
-      try {
-         const dbRef = db.ref(`users/${username}/${fileType}`);
-         const query = dbRef
-            .orderByChild("filename")
-            .startAt(search)
-            .endAt(search + "\uf8ff");
-         const snapshot = await query.once("value");
-         if (!snapshot.exists()) {
-            return resolve({
-               message: "User not found",
-               status: "NO_USER",
-               data: [],
-            });
-         }
-
-         const files = snapshot.val() || {};
-         const filteredFiles = Object.entries(files);
-
-         resolve({
-            message: "Files fetched successfully",
-            status: "ok",
-            data: filteredFiles,
-         });
-      } catch (error) {
-         console.log(error);
-         resolve({ message: error.message, status: "ERROR", data: [] });
-      }
-   });
-}
-
-runtimeOnMessage(
-   "c_b_filter_mapping_possible_skus",
-   async (vals, _, sendResponse) => {
-      console.log(vals);
-      sendResponse({ status: "ok" });
-      // chrome extension option page send message
-      chrome.runtime.sendMessage(
-         { type: "b_c_filter_mapping_possible_skus", vals },
-         (response) => {
-            console.log(response);
-         }
-      );
-   }
-);
-
-// function passToContentScriptGetPossibleMapping(tabId, skus) {
-//    tabSendMessage(tabId, "b_c_get_possible_mapping", { skus }, async (response) => {
-//       console.log(response);
-//    });
-// }
-
-async function passToContentScriptGoMappingPage(skus) {
-   const hiddenTabId = await createTabAndWaitForLoad(
-      `${URLS.addMapping}#`,
-      true
-   );
-
-   tabSendMessage(
-      hiddenTabId,
-      "b_c_go_mapping_page_using_sku",
-      { skus },
-      async (response) => {
-         console.log(response);
-      }
-   );
-}
-
-// async function filterMappingInNewTab(productsSku) {
-//    // create a new tab with hidden mode
-//    return new Promise(async (resolve) => {
-//       try {
-//          const hiddenTab = await createNewHiddenTab(`${URLS.addMapping}#`);
-
-//          passToContentScriptGoMappingPage(hiddenTab, productsSku);
-//          console.log(productsSku);
-//          resolve(true);
-
-//          // for (const i in productsSku) {
-//          //    const sku = productsSku[i];
-//          //    console.log(sku);
-
-//          //    // resolve(hiddenTab);
-//          // }
-
-//          resolve(hiddenTab);
-//       } catch (error) {
-//          console.log(error);
-//          resolve(null);
-//       }
-//    });
-// }
+importScripts("./../utils.js", "./bgUtils.js", "./apiCall.js");
+const BATCH_SIZE = 8; // Number of concurrent requests
 
 console.log("background loaded");
-
-runtimeOnMessage(
-   "c_b_filter_mapping_possible_sku",
-   async ({ skus }, _, sendResponse) => {
-      // console.log(values);
-      passToContentScriptGoMappingPage(skus);
-      sendResponse({ status: "ok" });
-   }
-);
 
 runtimeOnMessage("c_b_update_mapping", (values, _, sendResponse) => {
    console.log(values);
@@ -239,158 +27,10 @@ runtimeOnMessage("c_b_mapping_request", (__, _, sendResponse) => {
    });
 });
 
-const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
-   return new Promise(async (resolve) => {
-      const response = await fetch(URLS.flipkartSearchUrl, {
-         method: "POST",
-         headers: FLIPKART_SEARCH_HEADER,
-         body: JSON.stringify({
-            pageContext: {
-               fetchSeoData: true,
-               paginatedFetch: false,
-               pageNumber: pageNumber,
-            },
-            pageUri: `/search?q=${productName.split(" ").join("%20")}`,
-            requestContext: {
-               type: "BROWSE_PAGE",
-            },
-         }),
-      });
-
-      if (response.ok) {
-         const data = await response.json();
-         const { slots } = data?.RESPONSE;
-
-         // [[10,20,32],[5,6,3]] convert to [10,20,32,5,6,3]
-         const products = slots
-            .map((slot) => slot?.widget?.data?.products)
-            .filter((x) => x)
-            .flat()
-            .map((product) => {
-               const { id, titles, rating, pricing } =
-                  product?.productInfo?.value;
-               const { mrp, finalPrice } = pricing;
-
-               return { id, titles, rating, mrp, finalPrice };
-            });
-
-         resolve(products);
-      } else {
-         console.log(`Error: ${response.status}`);
-         resolve(null);
-      }
-   });
-};
-
-// fetchFlipkartSearchData("lotus seeds");
-
-async function searchProduct(sku, sellerId) {
-   const url = `https://seller.flipkart.com/napi/listing/searchProduct?fsnSearch=${sku}&sellerId=${sellerId}`;
-   const response = await fetch(url);
-   return response.json();
-}
-
-async function checkApprovalStatus(vertical, brand, sellerId) {
-   const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
-   const response = await fetch(url);
-   const result = await response.json();
-   return result.approvalStatus === "APPROVED";
-}
-
-async function verifyProduct(sku, sellerId) {
-   try {
-      // Search for product details
-      const searchResult = await searchProduct(sku, sellerId);
-      const productInfo = searchResult?.result?.productList?.[0];
-
-      if (!productInfo) {
-         return { is: false, error: "Product not found" };
-      }
-
-      const { detail, alreadySelling, vertical, imagePaths } = productInfo;
-      const imageUrl = Object.values(imagePaths)?.[0];
-
-      // If already selling, no need to check further
-      if (alreadySelling) {
-         return { is: false, error: "Already selling" };
-      }
-
-      // Check approval status
-      const isApproved = await checkApprovalStatus(
-         vertical,
-         detail.Brand,
-         sellerId
-      );
-
-      return {
-         is: isApproved,
-         imageUrl: isApproved ? imageUrl : null,
-         error: isApproved ? null : "Not approved",
-      };
-   } catch (error) {
-      console.error("Error verifying product:", error);
-      return { is: false, error: error.message };
-   }
-}
-
-function getProductData(url) {
-   return new Promise(async (resolve) => {
-      try {
-         const res = await fetch(url);
-         const text = await res.text();
-         let price1 = text.match(/<div class="Nx9bqj CxhGGd">.*?₹([\d,]+)/s);
-         let price2 = text.match(/<div class="yRaY8j A6\+E6v">.*?([\d,]+)/s);
-
-         if (!price2) {
-            price1 = text.match(
-               /<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>₹([\d,]+)</s
-            );
-            price2 = text.match(
-               /<div class="css-175oi2r r-18u37iz r-1wtj0ep r-1awozwy">.*?>([\d,]+)</s
-            );
-         }
-
-         const sellingMRP = price1 ? price1[1].replace(/,/g, "") : null;
-         const MRP = price2 ? price2[1].replace(/,/g, "") : null;
-
-         console.log(sellingMRP, MRP);
-         resolve({
-            sellingMRP,
-            MRP,
-         });
-      } catch (error) {
-         console.log(error);
-         resolve(null);
-      }
-   });
-}
-
-const BATCH_SIZE = 5; // Number of concurrent requests
-
-async function processBatch(products, sellerId, startIdx) {
-   const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
-   if (batch.length === 0) return [];
-
-   const batchPromises = batch.map(product =>
-      verifyProduct(product.id, sellerId)
-         .then(result => {
-            if (result.is) {
-               return {
-                  ...product,
-                  imageUrl: result.imageUrl
-               };
-            }
-            return null;
-         })
-         .catch(error => {
-            console.log(`Error verifying product ${product.id}:`, error);
-            return null;
-         })
-   );
-
-   const results = await Promise.all(batchPromises);
-   return results.filter(result => result !== null);
-}
+runtimeOnMessage("c_b_get_fk_csrf_token", async (__, _, sendResponse) => {
+   const token = await GET_FK_CSRF_TOKEN();
+   sendResponse({ token });
+});
 
 runtimeOnMessage(
    "c_b_get_mapping_possible_product_data",
@@ -407,44 +47,50 @@ runtimeOnMessage(
             }
          }
 
-         // Send initial response with all products
-         // sendResponse(products);
-
          // Process products in batches
          const verifiedProducts = [];
          for (let i = 0; i < products.length; i += BATCH_SIZE) {
-            const batchResults = await processBatch(products, sellerId, i);
+            const batchResults = await processBatchForVerification(products, sellerId, i);
             verifiedProducts.push(...batchResults);
          }
 
-         // console.log(verifiedProducts);
          // Send final filtered response
          sendResponse(verifiedProducts);
       } catch (error) {
-         console.error("Error during product verification:", error);
+         console.log("Error during product verification:", error);
          sendResponse([]);
       }
    }
 );
 
-function getImageFilesFromLocalStorage() {
-   return new Promise(async (resolve) => {
-      const { THUMBNAIL_INDEX } = await chromeStorageGetLocal(
-         storageListingKey
-      );
-      const DATA = await chromeStorageGetLocal(`storage-images-0`);
-      const firstImg = DATA?.files[THUMBNAIL_INDEX];
-      const images = [];
-      if (firstImg) images.push(firstImg);
+runtimeOnMessage(
+   "c_b_create_all_selected_product_mapping",
+   async (DATA, _, sendResponse) => {
+      try {
+         const newMappingData = getMixDataToNewMappingData(DATA);
+         
+         // Process mappings in batches
+         const mappedProducts = [];
+         for (let i = 0; i < newMappingData.length; i += BATCH_SIZE) {
+            const batchResults = await processBatchForMapping(newMappingData, i);
+            mappedProducts.push(...batchResults);
+         }
 
-      for (let i = 1; i < 4; i++) {
-         const DATA = await chromeStorageGetLocal(`storage-images-${i}`);
-         const img = selectRandomImage(DATA?.files || []);
-         if (img) images.push(img);
+         sendResponse({ 
+            status: "ok",
+            message: "All products mapped successfully",
+            data: mappedProducts
+         });
+      } catch (error) {
+         console.error("Error in product mapping:", error);
+         sendResponse({ 
+            status: "error",
+            message: "Failed to map products",
+            error: error.message
+         });
       }
-      resolve(images);
-   });
-}
+   }
+);
 
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));

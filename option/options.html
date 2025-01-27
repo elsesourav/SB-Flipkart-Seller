@@ -130,6 +130,14 @@
                />
             </div>
          </div>
+
+         <div class="features">
+            <div id="showNumberOfProductsSelected">0</div>
+            <p>Select By</p>
+            <div id="selectAllProducts">All</div>
+            <div id="selectNameMatchProducts">Name Match</div>
+            <div id="startMapping">Ready to Mapping</div>
+         </div>
       </nav>
 
       <div
@@ -174,12 +182,77 @@
 
       <div id="selectedCount"></div>
 
-      <iframe
-         frameborder="1"
-         width="2000"
-         height="300"
-         id="showPreview"
-         style="display: none"
-      ></iframe>
+      <div id="previewWindow" class="preview-window">
+         <div class="preview-content">
+            <div class="preview-header">
+               <h2>Selected Products Preview</h2>
+               <div id="closePreview" class="close-btn">&times;</div>
+            </div>
+            <div class="preview-body" id="previewBody">
+               <!-- Preview cards will be added here -->
+               <div class="preview-confirm-section" id="previewConfirmSection">
+                  <div class="confirm-check">
+                     <input type="checkbox" id="confirmCheck" />
+                     <label for="confirmCheck"
+                        >I have reviewed all selected products and confirm the
+                        mapping</label
+                     >
+                  </div>
+               </div>
+            </div>
+            <div class="preview-footer">
+               <div class="buttons">
+                  <button id="cancelMapping" class="cancel-btn">Cancel</button>
+                  <button id="confirmPreview" class="confirm-btn" disabled>
+                     Confirm Preview
+                  </button>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div id="confirmationWindow" class="confirmation-window">
+         <div class="confirmation-content">
+            <div class="confirmation-header">
+               <h2>Final Confirmation</h2>
+               <div id="closeConfirmation" class="close-btn">&times;</div>
+            </div>
+            <div class="confirmation-body">
+                <div class="show-data">
+                    <div class="c-name">
+                        <span>Name: </span>
+                        <span id="productName">LOTUS SEEDS</span>
+                    </div>
+                    <div class="c-profit">
+                        <span>Profit: </span>
+                        <span id="productProfit">100</span>
+                    </div>
+                    <div class="c-fixed-cost">
+                        <span>Fixed Cost: </span>
+                        <span id="productFixedCost">71</span>
+                    </div>
+                    <div class="c-packing-cost">
+                        <span>Packing Cost: </span>
+                        <span id="productPackingCost">5</span>
+                    </div>
+                    <div class="c-national-delivery">
+                        <span>National Delivery: </span>
+                        <span id="productNationalDelivery">14</span>
+                    </div>
+                    <div class="c-manufacturer">
+                        <span>Manufacturer: </span>
+                        <span id="productManufacturer">PuravEnterprise</span>
+                    </div>
+                </div>
+               <p>Type "<span id="confirmationInputValue">CONFIRM</span>" below to start the mapping process:</p>
+               <input type="text" id="confirmationInput" placeholder="Type Name here">
+               <div class="error-message" id="confirmationError"></div>
+            </div>
+            <div class="confirmation-footer">
+               <button id="cancelConfirmation" class="cancel-btn">Cancel</button>
+               <button id="startFinalMapping" class="confirm-btn" disabled>Start Mapping</button>
+            </div>
+         </div>
+      </div>
    </body>
 </html>

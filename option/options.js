@@ -8,10 +8,37 @@ const submitButton = document.getElementById("submit");
 const selectedCount = document.getElementById("selectedCount");
 const mappingProducts = document.getElementById("showPossibleMappingProducts");
 const loadingWindow = document.getElementById("loadingWindow");
+const showNumberOfProductsSelected = document.getElementById(
+   "showNumberOfProductsSelected"
+);
+const selectAllProducts = document.getElementById("selectAllProducts");
+const selectNameMatchProducts = document.getElementById(
+   "selectNameMatchProducts"
+);
+const startMapping = document.getElementById("startMapping");
+const previewWindow = document.getElementById("previewWindow");
+const previewBody = document.getElementById("previewBody");
+const closePreview = document.getElementById("closePreview");
+const cancelMapping = document.getElementById("cancelMapping");
+const confirmPreview = document.getElementById("confirmPreview");
+const confirmCheck = document.getElementById("confirmCheck");
+
+// Confirmation window elements
+const startMappingFinalStep = document.getElementById("startFinalMapping");
+const confirmationWindow = document.getElementById("confirmationWindow");
+const confirmationInput = document.getElementById("confirmationInput");
+const confirmationError = document.getElementById("confirmationError");
+const closeConfirmation = document.getElementById("closeConfirmation");
+const cancelConfirmation = document.getElementById("cancelConfirmation");
 
 let SAVED_PRODUCTS = [];
 let PRODUCTS = [];
 let SELECTED_PRODUCTS = [];
+
+let SELECTED_PRODUCTS_DATA = [];
+let EXTENSION_MAPPING_DATA = null;
+let FK_CSRF_TOKEN = null;
+let SELLER_ID = null;
 
 function showLoading() {
    loadingWindow.classList.add("show");
@@ -35,10 +62,13 @@ function createProductCard() {
       const { finalPrice, id, imageUrl, mrp, rating, titles } = product;
 
       // Highlight matching terms in the title
-      const { highlightedTitle, isFind } = highlightMatches(titles.newTitle, searchNames);
+      const { highlightedTitle, isFind } = highlightMatches(
+         titles.title,
+         searchNames
+      );
 
       htmlStr += `
-      <div class="card product ${isFind ? "glow" : ""}">
+      <div class="card product ${isFind ? "glow" : ""}" id="${id}">
          <input type="checkbox" name="" class="select-product">
          <div class="show-img">
             <img src="${imageUrl}" alt="product-image-${i}">
@@ -82,7 +112,7 @@ function highlightMatches(title, searchNames) {
 function filterByRating() {
    const ratingValue = rating.value;
    if (ratingValue === "0") {
-      PRODUCTS = [...SAVED_PRODUCTS];
+      // PRODUCTS = [...SAVED_PRODUCTS];
       return;
    }
 
@@ -124,8 +154,8 @@ function filterProducts() {
    PRODUCTS = [...SAVED_PRODUCTS];
 
    // Apply filters in sequence
+   filterByRating();
    filterByNames();
-   // filterByRating();
 
    createProductCard();
 }
@@ -136,27 +166,42 @@ matchNames.addEventListener(
    debounce(filterProducts, () => 1000)
 );
 
+async function verifyUserMustLogin() {
+   if (!FK_CSRF_TOKEN) {
+      const { token } = await getFkCsrfToken();
+      FK_CSRF_TOKEN = token;
+   }
+
+   if (!FK_CSRF_TOKEN) {
+      alert("You don't login to Flipkart Seller Page, please login first");
+      return false;
+   }
+   return true;
+}
+
 submitButton.addEventListener("click", async () => {
    const productName = searchProduct.value;
    if (!productName) return;
 
    const startingPage = startPage.value || 1;
    const endingPage = endPage.value || 1;
-   const sid = sellerId.value;
+   SELLER_ID = sellerId.value;
 
    const data = {
       productName,
       startingPage,
       endingPage,
-      sellerId: sid,
+      sellerId: SELLER_ID,
    };
+
+   if (!(await verifyUserMustLogin())) return;
 
    showLoading();
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data);
       SAVED_PRODUCTS = [...PRODUCTS];
-      createProductCard();
+      filterProducts();
    } catch (error) {
       console.error("Error:", error);
    } finally {
@@ -195,3 +240,233 @@ function updateSelectedCount() {
    } selected`;
    selectedCount.classList.toggle("show", count > 0);
 }
+
+// Selection features
+function updateSelectedCount() {
+   const selectedProducts = document.querySelectorAll(
+      ".select-product:checked"
+   );
+   showNumberOfProductsSelected.textContent = selectedProducts.length;
+
+   // Update start mapping button state
+   const startMappingBtn = document.getElementById("startMapping");
+   if (selectedProducts.length > 0) {
+      startMappingBtn.classList.add("active");
+   } else {
+      startMappingBtn.classList.remove("active");
+   }
+}
+
+// Add event listeners to all checkboxes
+mappingProducts.addEventListener("change", (e) => {
+   if (e.target.classList.contains("select-product")) {
+      updateSelectedCount();
+   }
+});
+
+// Select all products
+selectAllProducts.addEventListener("click", () => {
+   const checkboxes = document.querySelectorAll(".select-product");
+   const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
+
+   checkboxes.forEach((checkbox) => {
+      checkbox.checked = !allChecked;
+   });
+
+   selectAllProducts.classList.toggle("active", !allChecked);
+   selectNameMatchProducts.classList.remove("active");
+   updateSelectedCount();
+});
+
+// Select products with matching names
+selectNameMatchProducts.addEventListener("click", () => {
+   const cards = document.querySelectorAll(".card.product");
+   const allMatchingSelected = Array.from(cards)
+      .filter((card) => card.classList.contains("glow"))
+      .every((card) => card.querySelector(".select-product").checked);
+
+   cards.forEach((card) => {
+      if (card.classList.contains("glow")) {
+         card.querySelector(".select-product").checked = !allMatchingSelected;
+      }
+   });
+
+   selectNameMatchProducts.classList.toggle("active", !allMatchingSelected);
+   selectAllProducts.classList.remove("active");
+   updateSelectedCount();
+});
+
+function showPreviewWindow() {
+   previewWindow.classList.add("show");
+   confirmCheck.checked = false;
+   confirmPreview.disabled = true;
+}
+
+function hidePreviewWindow() {
+   previewWindow.classList.remove("show");
+}
+
+function createPreviewContent(products) {
+   const cards = products
+      .map((product) => {
+         return `
+            <div class="preview-card">
+               <img src="${product.imageUrl}" alt="product-image-${product.id}">
+               <div class="title">${product.titles.title}</div>
+               <div class="price">₹${product.finalPrice.value}</div>
+            </div>
+         `;
+      })
+      .join("");
+
+   const confirmSection = document.getElementById("previewConfirmSection");
+   previewBody.innerHTML = cards;
+   previewBody.appendChild(confirmSection);
+}
+
+// Start mapping process
+startMapping.addEventListener("click", async () => {
+   const selectedProducts = document.querySelectorAll(
+      ".select-product:checked"
+   );
+   if (selectedProducts.length === 0) {
+      alert("Please select at least one product to map");
+      return;
+   }
+
+   // scroll to top 0 default
+   previewBody.scrollTo({ top: 0, behavior: "smooth" });
+
+   // Get selected products data
+   SELECTED_PRODUCTS_DATA = Array.from(selectedProducts).map((checkbox) => {
+      const card = checkbox.closest(".card");
+      return SAVED_PRODUCTS.find((p) => p.id === card.id);
+   });
+
+   // Show preview window with selected products
+   createPreviewContent(SELECTED_PRODUCTS_DATA);
+   showPreviewWindow();
+});
+
+// Update confirmation button state based on checkbox
+confirmCheck.addEventListener("change", () => {
+   confirmPreview.disabled = !confirmCheck.checked;
+});
+
+function resetPreviewWindow() {
+   confirmCheck.checked = false;
+   confirmPreview.disabled = true;
+   hidePreviewWindow();
+}
+
+// Preview window event listeners
+closePreview.addEventListener("click", resetPreviewWindow);
+cancelMapping.addEventListener("click", resetPreviewWindow);
+
+// Update preview confirmation click handler
+confirmPreview.addEventListener("click", async () => {
+   EXTENSION_MAPPING_DATA = await getMappingData();
+   hidePreviewWindow();
+   showConfirmationWindow();
+});
+
+function getMappingData() {
+   return new Promise((resolve) => {
+      runtimeSendMessage("c_b_mapping_request", (r) => {
+         resolve(r);
+      });
+   });
+}
+
+function getFkCsrfToken() {
+   return new Promise((resolve) => {
+      runtimeSendMessage("c_b_get_fk_csrf_token", (r) => {
+         resolve(r);
+      });
+   });
+}
+
+// Close preview window when clicking outside
+previewWindow.addEventListener("click", (e) => {
+   if (e.target === previewWindow) {
+      resetPreviewWindow();
+   }
+});
+
+function showConfirmationWindow() {
+   confirmationWindow.classList.add("show");
+   confirmationInput.value = "";
+   confirmationError.textContent = "";
+   startMappingFinalStep.disabled = true;
+
+   productName.innerHTML = EXTENSION_MAPPING_DATA?.SKU_NAME;
+   productProfit.innerHTML = EXTENSION_MAPPING_DATA?.PROFIT;
+   productFixedCost.innerHTML = EXTENSION_MAPPING_DATA?.FIXED_COST;
+   productPackingCost.innerHTML = EXTENSION_MAPPING_DATA?.PACKING_COST;
+   productNationalDelivery.innerHTML =
+      EXTENSION_MAPPING_DATA?.DELIVERY_NATIONAL;
+   productManufacturer.innerHTML = EXTENSION_MAPPING_DATA?.MANUFACTURER_DETAILS;
+   confirmationInputValue.innerHTML =
+      EXTENSION_MAPPING_DATA?.SKU_NAME.toUpperCase().trim();
+
+   confirmationInput.focus();
+}
+
+function hideConfirmationWindow() {
+   confirmationWindow.classList.remove("show");
+   confirmationInput.value = "";
+   confirmationError.textContent = "";
+}
+
+// Handle confirmation input
+confirmationInput.addEventListener("input", () => {
+   const value = confirmationInput.value.trim();
+   startMappingFinalStep.disabled = value !== EXTENSION_MAPPING_DATA?.SKU_NAME;
+
+   if (value && value !== EXTENSION_MAPPING_DATA?.SKU_NAME) {
+      confirmationError.textContent = `Please type "${EXTENSION_MAPPING_DATA?.SKU_NAME}" exactly`;
+   } else {
+      confirmationError.textContent = "";
+   }
+});
+
+// Confirmation window event listeners
+closeConfirmation.addEventListener("click", hideConfirmationWindow);
+cancelConfirmation.addEventListener("click", hideConfirmationWindow);
+
+confirmationWindow.addEventListener("click", (e) => {
+   if (e.target === confirmationWindow) {
+      hideConfirmationWindow();
+   }
+});
+
+// Start final mapping process
+startMappingFinalStep.addEventListener("click", async () => {
+   showLoading();
+   hideConfirmationWindow();
+   hideLoading();
+
+   createAllSelectedProductMapping();
+});
+
+function createAllSelectedProductMapping() {
+   runtimeSendMessage(
+      "c_b_create_all_selected_product_mapping",
+      {
+         products: SELECTED_PRODUCTS_DATA,
+         fkCsrfToken: FK_CSRF_TOKEN,
+         mappingData: EXTENSION_MAPPING_DATA,
+         sellerId: SELLER_ID,
+      },
+      (r) => {
+         console.log(r);
+      }
+   );
+}
+
+// Handle Enter key in confirmation input
+confirmationInput.addEventListener("keyup", (e) => {
+   if (e.key === "Enter" && !startMappingFinalStep.disabled) {
+      startMappingFinalStep.click();
+   }
+});

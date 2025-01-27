@@ -18,6 +18,9 @@ const URLS = {
    addMapping:
       "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
    flipkartSearchUrl: "https://2.rome.api.flipkart.com/api/4/page/fetch",
+   flipkartAPIMapping:
+      "https://seller.flipkart.com/napi/listing/create-update-listings",
+   flipkartSellerIndexPage: "https://seller.flipkart.com/index.html",
 };
 
 const FLIPKART_SEARCH_HEADER = {
@@ -356,3 +359,15 @@ function selectRandomImage(images) {
    }
    return [];
 }
+
+function getSecondsForMonths(months) {
+   // Average days in a month
+   const averageDaysInMonth = 30.44;
+   return Math.round(months * averageDaysInMonth * 24 * 60 * 60);
+}
+
+
+function dateToMilliseconds(dateString) {
+   const date = new Date(dateString);
+   return date.getTime();
+ }
