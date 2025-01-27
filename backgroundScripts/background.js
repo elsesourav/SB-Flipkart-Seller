@@ -68,21 +68,12 @@ runtimeOnMessage(
    async (DATA, _, sendResponse) => {
       try {
          const newMappingData = getMixDataToNewMappingData(DATA);
-         
-         // Process mappings in batches
-         const mappedProducts = [];
-         for (let i = 0; i < newMappingData.length; i += BATCH_SIZE) {
-            const batchResults = await processBatchForMapping(newMappingData, i);
-            mappedProducts.push(...batchResults);
-         }
+         const mappedProducts = await createProductMappingBulk(newMappingData);
 
-         sendResponse({ 
-            status: "ok",
-            message: "All products mapped successfully",
-            data: mappedProducts
-         });
+         sendResponse(mappedProducts);
+
       } catch (error) {
-         console.error("Error in product mapping:", error);
+         console.log("Error in product mapping:", error);
          sendResponse({ 
             status: "error",
             message: "Failed to map products",
@@ -91,6 +82,8 @@ runtimeOnMessage(
       }
    }
 );
+
+
 
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));

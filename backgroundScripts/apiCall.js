@@ -322,6 +322,127 @@ function processBatchForMapping(products, startIdx) {
    });
 }
 
+function createProductMappingBulk(DATA) {
+   return new Promise(async (resolve) => {
+
+      const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS } = DATA;
+
+      const BULK_REQUESTS = PRODUCTS.map((product) => {
+         const {
+            ID,
+            SKU,
+            SELLING_PRICE,
+            MRP,
+            LISTING_STATUS,
+            PROCUREMENT_TYPE,
+            SHIPPING_DAYS,
+            STOCK_SIZE,
+            HSN,
+            MINIMUM_ORDER_QUANTITY,
+            DELIVERY_LOCAL,
+            DELIVERY_NATIONAL,
+            DELIVERY_ZONAL,
+            EARLIEST_MFG_DATE,
+            SHELF_LIFE,
+            MANUFACTURER_DETAILS,
+            PACKER_DETAILS,
+            TOTAL_WEIGHT,
+            PACKAGING_LENGTH,
+            PACKAGING_BREADTH,
+            PACKAGING_HEIGHT,
+         } = product;
+   
+         const PRODUCT_DATA = {
+            sku_id: [{ value: SKU, qualifier: "" }],
+            country_of_origin: [{ value: "IN", qualifier: "" }],
+            earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
+            flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
+            hsn: [{ value: HSN, qualifier: "" }],
+            listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
+            local_shipping_fee_from_buyer: [
+               { value: DELIVERY_LOCAL, qualifier: "INR" },
+            ],
+            luxury_cess: [{ qualifier: "Percentage" }],
+            manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
+            minimum_order_quantity: [
+               { value: MINIMUM_ORDER_QUANTITY, qualifier: "" },
+            ],
+            mrp: [{ value: MRP, qualifier: "INR" }],
+            national_shipping_fee_from_buyer: [
+               { value: DELIVERY_NATIONAL, qualifier: "INR" },
+            ],
+            packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
+            procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
+            service_profile: [{ value: "NON_FBF", qualifier: "" }],
+            shelf_life: [{ value: SHELF_LIFE, qualifier: "Months" }],
+            shipping_days: [{ value: SHIPPING_DAYS, qualifier: "HR" }],
+            shipping_provider: [{ value: "FLIPKART", qualifier: "" }],
+            stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
+            tax_code: [{ value: "GST_5", qualifier: "" }],
+            zonal_shipping_fee_from_buyer: [
+               { value: DELIVERY_ZONAL, qualifier: "INR" },
+            ],
+         };
+   
+         const PACKAGE_DATA = {
+            id: { value: "packages-0" },
+            length: { value: PACKAGING_LENGTH, qualifier: "CM" },
+            breadth: { value: PACKAGING_BREADTH, qualifier: "CM" },
+            height: { value: PACKAGING_HEIGHT, qualifier: "CM" },
+            weight: { value: TOTAL_WEIGHT, qualifier: "KG" },
+            sku_id: { value: SKU, qualifier: "" },
+         };
+
+         return {
+            attributeValues: PRODUCT_DATA,
+            context: { ignore_warnings: true },
+            packages: [PACKAGE_DATA],
+            productId: ID,
+            skuId: SKU,
+         };
+      });
+
+
+      const HEADER = {
+         accept: "*/*",
+         "content-type": "application/json",
+         "fk-csrf-token": FK_CSRF_TOKEN,
+      };
+      
+
+      const REQUEST_BODY = {
+         sellerId: SELLER_ID,
+         bulkRequests: BULK_REQUESTS,
+      };
+
+      const REQUEST_OPTIONS = {
+         method: "POST",
+         headers: HEADER,
+         body: JSON.stringify(REQUEST_BODY),
+         credentials: "include",
+      };
+
+      try {
+         const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
+
+         console.log(response);
+         
+         if (!response.ok) {
+            console.log("Mapping failed:", await response.text());
+            resolve({ status: "error", is: false });
+            return;
+         }
+
+         const data = await response.json();
+         resolve({ status: "ok", is: true, bulkResponse: data?.result?.bulkResponse });
+      } catch (error) {
+         console.log("Error mapping product:", error);
+         resolve({ status: "error", is: false });
+      }
+   });
+}
+
+
 function createProductMapping(DATA) {
    return new Promise(async (resolve) => {
       const {
@@ -352,47 +473,49 @@ function createProductMapping(DATA) {
 
       const HEADER = {
          accept: "*/*",
-         "accept-language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7",
-         "cache-control": "no-cache",
          "content-type": "application/json",
          "fk-csrf-token": FK_CSRF_TOKEN,
-         sourceid: "ui.latch-on",
-         "user-agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
       };
 
       const PRODUCT_DATA = {
          sku_id: [{ value: SKU, qualifier: "" }],
-         flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
-         mrp: [{ value: MRP, qualifier: "INR" }],
-         listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
-         procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
-         shipping_days: [{ value: SHIPPING_DAYS, qualifier: "HR" }],
-         stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
-         hsn: [{ value: HSN, qualifier: "" }],
-         national_shipping_fee_from_buyer: [{ value: DELIVERY_NATIONAL, qualifier: "INR" }],
-         local_shipping_fee_from_buyer: [{ value: DELIVERY_LOCAL, qualifier: "INR" }],
-         zonal_shipping_fee_from_buyer: [{ value: DELIVERY_ZONAL, qualifier: "INR" }],
-         earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
-         shelf_life: [{ value: SHELF_LIFE, qualifier: "Months" }],
-         manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
-         packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
-         minimum_order_quantity: [{ value: MINIMUM_ORDER_QUANTITY, qualifier: "" }],
-         service_profile: [{ value: "NON_FBF", qualifier: "" }],
          country_of_origin: [{ value: "IN", qualifier: "" }],
+         earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
+         flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
+         hsn: [{ value: HSN, qualifier: "" }],
+         listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
+         local_shipping_fee_from_buyer: [
+            { value: DELIVERY_LOCAL, qualifier: "INR" },
+         ],
+         luxury_cess: [{ qualifier: "Percentage" }],
+         manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
+         minimum_order_quantity: [
+            { value: MINIMUM_ORDER_QUANTITY, qualifier: "" },
+         ],
+         mrp: [{ value: MRP, qualifier: "INR" }],
+         national_shipping_fee_from_buyer: [
+            { value: DELIVERY_NATIONAL, qualifier: "INR" },
+         ],
+         packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
+         procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
+         service_profile: [{ value: "NON_FBF", qualifier: "" }],
+         shelf_life: [{ value: SHELF_LIFE, qualifier: "Months" }],
+         shipping_days: [{ value: SHIPPING_DAYS, qualifier: "HR" }],
          shipping_provider: [{ value: "FLIPKART", qualifier: "" }],
-         fulfillment_profile: [{ value: "NON_FBF", qualifier: "" }],
+         stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
+         tax_code: [{ value: "GST_5", qualifier: "" }],
+         zonal_shipping_fee_from_buyer: [
+            { value: DELIVERY_ZONAL, qualifier: "INR" },
+         ],
       };
 
       const PACKAGE_DATA = {
-         attributeValues: {
-            id: { value: "packages-0" },
-            length: { value: PACKAGING_LENGTH, qualifier: "CM" },
-            breadth: { value: PACKAGING_BREADTH, qualifier: "CM" },
-            height: { value: PACKAGING_HEIGHT, qualifier: "CM" },
-            weight: { value: TOTAL_WEIGHT, qualifier: "KG" },
-            sku_id: { value: SKU, qualifier: "" },
-         },
+         id: { value: "packages-0" },
+         length: { value: PACKAGING_LENGTH, qualifier: "CM" },
+         breadth: { value: PACKAGING_BREADTH, qualifier: "CM" },
+         height: { value: PACKAGING_HEIGHT, qualifier: "CM" },
+         weight: { value: TOTAL_WEIGHT, qualifier: "KG" },
+         sku_id: { value: SKU, qualifier: "" },
       };
 
       const REQUEST_BODY = {
@@ -400,6 +523,7 @@ function createProductMapping(DATA) {
          bulkRequests: [
             {
                attributeValues: PRODUCT_DATA,
+               context: { ignore_warnings: true },
                packages: [PACKAGE_DATA],
                productId: ID,
                skuId: SKU,
@@ -407,34 +531,30 @@ function createProductMapping(DATA) {
          ],
       };
 
-      console.log(HEADER);
-      console.log(PRODUCT_DATA);
-      console.log(PACKAGE_DATA);
-      console.log(REQUEST_BODY);
-
       const REQUEST_OPTIONS = {
          method: "POST",
          headers: HEADER,
          body: JSON.stringify(REQUEST_BODY),
+         credentials: "include",
       };
 
       try {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
-
          console.log(response);
 
          if (!response.ok) {
+            console.log("Mapping failed:", await response.text());
             resolve({ status: "error", is: false, id: ID });
             return;
          }
 
          const data = await response.json();
-         console.log(data);
-         
+
          resolve({ status: "ok", is: true, id: ID, data });
       } catch (error) {
-         console.error("Error mapping product:", error);
+         console.log("Error mapping product:", error);
          resolve({ status: "error", is: false, id: ID });
       }
    });
 }
+

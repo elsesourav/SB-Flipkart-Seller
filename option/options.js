@@ -22,6 +22,7 @@ const closePreview = document.getElementById("closePreview");
 const cancelMapping = document.getElementById("cancelMapping");
 const confirmPreview = document.getElementById("confirmPreview");
 const confirmCheck = document.getElementById("confirmCheck");
+const previewProducts = document.getElementById("previewProducts");
 
 // Confirmation window elements
 const startMappingFinalStep = document.getElementById("startFinalMapping");
@@ -30,6 +31,13 @@ const confirmationInput = document.getElementById("confirmationInput");
 const confirmationError = document.getElementById("confirmationError");
 const closeConfirmation = document.getElementById("closeConfirmation");
 const cancelConfirmation = document.getElementById("cancelConfirmation");
+
+// Success window elements
+const successWindow = document.querySelector(".success-window");
+const mapMoreBtn = document.getElementById("mapMoreBtn");
+const totalProductsEl = document.getElementById("totalProducts");
+const successProductsEl = document.getElementById("successProducts");
+const failedProductsEl = document.getElementById("failedProducts");
 
 let SAVED_PRODUCTS = [];
 let PRODUCTS = [];
@@ -69,7 +77,7 @@ function createProductCard() {
 
       htmlStr += `
       <div class="card product ${isFind ? "glow" : ""}" id="${id}">
-         <input type="checkbox" name="" class="select-product">
+         <input type="checkbox" name="" class="select-product" data-product-id="${id}">
          <div class="show-img">
             <img src="${imageUrl}" alt="product-image-${i}">
          </div>
@@ -298,31 +306,80 @@ selectNameMatchProducts.addEventListener("click", () => {
 
 function showPreviewWindow() {
    previewWindow.classList.add("show");
-   confirmCheck.checked = false;
-   confirmPreview.disabled = true;
+   updatePreviewProducts();
 }
 
 function hidePreviewWindow() {
    previewWindow.classList.remove("show");
 }
 
-function createPreviewContent(products) {
-   const cards = products
-      .map((product) => {
-         return `
-            <div class="preview-card">
-               <img src="${product.imageUrl}" alt="product-image-${product.id}">
-               <div class="title">${product.titles.title}</div>
-               <div class="price">₹${product.finalPrice.value}</div>
-            </div>
-         `;
-      })
-      .join("");
+function updatePreviewProducts() {
+   // Clear existing products
+   previewProducts.innerHTML = "";
 
-   const confirmSection = document.getElementById("previewConfirmSection");
-   previewBody.innerHTML = cards;
-   previewBody.appendChild(confirmSection);
+   // Add each selected product
+   SELECTED_PRODUCTS_DATA.forEach((product) => {
+      const productElement = document.createElement("div");
+      productElement.className = "preview-product";
+      productElement.dataset.productId = product.id;
+
+      productElement.innerHTML = `
+         <div class="product-info">
+            <img src="${product.imageUrl}" alt="Product Image" class="product-image">
+            <div class="product-details">
+               <h3 class="product-title">${product.titles.title}</h3>
+               <p class="product-id">ID: ${product.id}</p>
+            </div>
+         </div>
+         <button class="remove-product-btn" data-product-id="${product.id}">
+            <i class="icon-trash-2"></i>
+         </button>
+      `;
+
+      previewProducts.appendChild(productElement);
+   });
+
+   // Add event listeners to remove buttons
+   const removeButtons = previewProducts.querySelectorAll(
+      ".remove-product-btn"
+   );
+   removeButtons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+         const productId = e.currentTarget.dataset.productId;
+         removeProductFromSelection(productId);
+      });
+   });
 }
+
+function removeProductFromSelection(productId) {
+   // Remove from SELECTED_PRODUCTS_DATA
+   SELECTED_PRODUCTS_DATA = SELECTED_PRODUCTS_DATA.filter(
+      (product) => product.id !== productId
+   );
+
+   // Uncheck the corresponding checkbox in the main list
+   const checkbox = document.querySelector(
+      `.select-product[data-product-id="${productId}"]`
+   );
+   if (checkbox) {
+      checkbox.checked = false;
+   }
+
+   // Update preview window
+   updatePreviewProducts();
+
+   // Update selected count
+   updateSelectedCount();
+
+   // If no products left, close preview window
+   if (SELECTED_PRODUCTS_DATA.length === 0) {
+      hidePreviewWindow();
+   }
+}
+
+// Event listeners for preview window
+closePreview.addEventListener("click", hidePreviewWindow);
+cancelMapping.addEventListener("click", hidePreviewWindow);
 
 // Start mapping process
 startMapping.addEventListener("click", async () => {
@@ -347,6 +404,24 @@ startMapping.addEventListener("click", async () => {
    createPreviewContent(SELECTED_PRODUCTS_DATA);
    showPreviewWindow();
 });
+
+function createPreviewContent(products) {
+   const cards = products
+      .map((product) => {
+         return `
+            <div class="preview-card">
+               <img src="${product.imageUrl}" alt="product-image-${product.id}">
+               <div class="title">${product.titles.title}</div>
+               <div class="price">₹${product.finalPrice.value}</div>
+            </div>
+         `;
+      })
+      .join("");
+
+   const confirmSection = document.getElementById("previewConfirmSection");
+   previewBody.innerHTML = cards;
+   previewBody.appendChild(confirmSection);
+}
 
 // Update confirmation button state based on checkbox
 confirmCheck.addEventListener("change", () => {
@@ -450,6 +525,7 @@ startMappingFinalStep.addEventListener("click", async () => {
 });
 
 function createAllSelectedProductMapping() {
+   showLoading();
    runtimeSendMessage(
       "c_b_create_all_selected_product_mapping",
       {
@@ -458,11 +534,42 @@ function createAllSelectedProductMapping() {
          mappingData: EXTENSION_MAPPING_DATA,
          sellerId: SELLER_ID,
       },
-      (r) => {
-         console.log(r);
+      (response) => {
+         hideLoading();
+
+         // Calculate stats
+         const total = SELECTED_PRODUCTS_DATA.length;
+         const success = response?.bulkResponse?.length || 0;
+         const failed = total - success;
+
+         // Update and show success window
+         updateSuccessStats(total, success, failed);
+         showSuccessWindow();
       }
    );
 }
+
+// Show/hide success window
+function showSuccessWindow() {
+   successWindow.classList.add("show");
+}
+
+function hideSuccessWindow() {
+   successWindow.classList.remove("show");
+}
+
+// Update success window stats
+function updateSuccessStats(total, success, failed) {
+   totalProductsEl.textContent = total;
+   successProductsEl.textContent = success;
+   failedProductsEl.textContent = failed;
+}
+
+// Map more button click handler
+mapMoreBtn.addEventListener("click", () => {
+   hideSuccessWindow();
+   window.location.reload();
+});
 
 // Handle Enter key in confirmation input
 confirmationInput.addEventListener("keyup", (e) => {

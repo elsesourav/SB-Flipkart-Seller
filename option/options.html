@@ -183,30 +183,32 @@
       <div id="selectedCount"></div>
 
       <div id="previewWindow" class="preview-window">
-         <div class="preview-content">
+         <div class="preview-window-content">
             <div class="preview-header">
                <h2>Selected Products Preview</h2>
-               <div id="closePreview" class="close-btn">&times;</div>
+               <button id="closePreview" class="close-btn">
+                  <i class="icon-x"></i>
+               </button>
             </div>
-            <div class="preview-body" id="previewBody">
-               <!-- Preview cards will be added here -->
-               <div class="preview-confirm-section" id="previewConfirmSection">
-                  <div class="confirm-check">
-                     <input type="checkbox" id="confirmCheck" />
-                     <label for="confirmCheck"
-                        >I have reviewed all selected products and confirm the
-                        mapping</label
-                     >
+            <div class="preview-body">
+               <div class="preview-products" id="previewProducts">
+                  <div class="preview-product">
+                     <div class="product-info">
+                        <img src="" alt="Product Image" class="product-image">
+                        <div class="product-details">
+                           <h3 class="product-title"></h3>
+                           <p class="product-id"></p>
+                        </div>
+                     </div>
+                     <button class="remove-product-btn">
+                        <i class="icon-trash-2"></i>
+                     </button>
                   </div>
                </div>
             </div>
             <div class="preview-footer">
-               <div class="buttons">
-                  <button id="cancelMapping" class="cancel-btn">Cancel</button>
-                  <button id="confirmPreview" class="confirm-btn" disabled>
-                     Confirm Preview
-                  </button>
-               </div>
+               <button id="cancelPreview" class="cancel-btn">Cancel</button>
+               <button id="startMappingBtn" class="start-btn">Start Mapping</button>
             </div>
          </div>
       </div>
@@ -251,6 +253,43 @@
             <div class="confirmation-footer">
                <button id="cancelConfirmation" class="cancel-btn">Cancel</button>
                <button id="startFinalMapping" class="confirm-btn" disabled>Start Mapping</button>
+            </div>
+         </div>
+      </div>
+
+      <div class="success-window">
+         <div class="success-window-content">
+            <div class="success-header">
+               <i class="icon-check-circle success-icon"></i>
+               <h2>Mapping Completed Successfully!</h2>
+            </div>
+            <div class="success-body">
+               <div class="mapping-stats">
+                  <div class="stat-item">
+                     <i class="icon-box"></i>
+                     <div class="stat-details">
+                        <span class="label">Total Products</span>
+                        <span class="value" id="totalProducts">0</span>
+                     </div>
+                  </div>
+                  <div class="stat-item">
+                     <i class="icon-check success"></i>
+                     <div class="stat-details">
+                        <span class="label">Successfully Mapped</span>
+                        <span class="value success" id="successProducts">0</span>
+                     </div>
+                  </div>
+                  <div class="stat-item">
+                     <i class="icon-x error"></i>
+                     <div class="stat-details">
+                        <span class="label">Failed</span>
+                        <span class="value error" id="failedProducts">0</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="success-footer">
+               <button class="map-more-btn" id="mapMoreBtn">Map More Products</button>
             </div>
          </div>
       </div>

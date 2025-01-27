@@ -247,9 +247,6 @@ function getMixDataToNewMappingData(DATA) {
 
       return {
          ID: id,
-         SELLER_ID: sellerId,
-         FK_CSRF_TOKEN: fkCsrfToken,
-
          SKU: sku,
          SELLING_PRICE,
          MRP: mrp.value,
@@ -274,7 +271,7 @@ function getMixDataToNewMappingData(DATA) {
       };
    });
 
-   return newData;
+   return { SELLER_ID: sellerId, FK_CSRF_TOKEN: fkCsrfToken, PRODUCTS: newData };
 }
 
 function getTotalWeight(data, quantity, value) {
