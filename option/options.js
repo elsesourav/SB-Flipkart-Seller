@@ -5,7 +5,7 @@ const startPage = document.getElementById("startPage");
 const endPage = document.getElementById("endPage");
 const sellerId = document.getElementById("sellerId");
 const submitButton = document.getElementById("submit");
-const selectedCount = document.getElementById("selectedCount");
+// const selectedCount = document.getElementById("selectedCount");
 const mappingProducts = document.getElementById("showPossibleMappingProducts");
 const loadingWindow = document.getElementById("loadingWindow");
 const showNumberOfProductsSelected = document.getElementById(
@@ -19,9 +19,9 @@ const startMapping = document.getElementById("startMapping");
 const previewWindow = document.getElementById("previewWindow");
 const previewBody = document.getElementById("previewBody");
 const closePreview = document.getElementById("closePreview");
-const cancelMapping = document.getElementById("cancelMapping");
+const cancelPreview = document.getElementById("cancelPreview");
 const confirmPreview = document.getElementById("confirmPreview");
-const confirmCheck = document.getElementById("confirmCheck");
+// const confirmCheck = document.getElementById("confirmationInput");
 const previewProducts = document.getElementById("previewProducts");
 
 // Confirmation window elements
@@ -225,52 +225,52 @@ function getMappingPossibleProductData(data) {
    });
 }
 
-// Handle card selection
-mappingProducts.addEventListener("change", (e) => {
-   if (e.target.classList.contains("select-product")) {
-      const card = e.target.closest(".card");
-      if (card) {
-         card.classList.toggle("selected", e.target.checked);
-         updateSelectedCount();
-      }
-   }
-});
+// // Handle card selection
+// mappingProducts.addEventListener("change", (e) => {
+//    if (e.target.classList.contains("select-product")) {
+//       const card = e.target.closest(".card");
+//       if (card) {
+//          card.classList.toggle("selected", e.target.checked);
+//          updateSelectedCount();
+//       }
+//    }
+// });
 
-// Update selected count display
-function updateSelectedCount() {
-   const selectedCards = document.querySelectorAll(
-      ".card .select-product:checked"
-   );
-   const count = selectedCards.length;
+// // Update selected count display
+// function updateSelectedCount() {
+//    const selectedCards = document.querySelectorAll(
+//       ".card .select-product:checked"
+//    );
+//    const count = selectedCards.length;
 
-   selectedCount.textContent = `${count} card${
-      count !== 1 ? "s" : ""
-   } selected`;
-   selectedCount.classList.toggle("show", count > 0);
-}
+//    selectedCount.textContent = `${count} card${
+//       count !== 1 ? "s" : ""
+//    } selected`;
+//    selectedCount.classList.toggle("show", count > 0);
+// }
 
 // Selection features
-function updateSelectedCount() {
-   const selectedProducts = document.querySelectorAll(
-      ".select-product:checked"
-   );
-   showNumberOfProductsSelected.textContent = selectedProducts.length;
+// function updateSelectedCount() {
+//    const selectedProducts = document.querySelectorAll(
+//       ".select-product:checked"
+//    );
+//    showNumberOfProductsSelected.textContent = selectedProducts.length;
 
-   // Update start mapping button state
-   const startMappingBtn = document.getElementById("startMapping");
-   if (selectedProducts.length > 0) {
-      startMappingBtn.classList.add("active");
-   } else {
-      startMappingBtn.classList.remove("active");
-   }
-}
+//    // Update start mapping button state
+//    const startMappingBtn = document.getElementById("startMapping");
+//    if (selectedProducts.length > 0) {
+//       startMappingBtn.classList.add("active");
+//    } else {
+//       startMappingBtn.classList.remove("active");
+//    }
+// }
 
-// Add event listeners to all checkboxes
-mappingProducts.addEventListener("change", (e) => {
-   if (e.target.classList.contains("select-product")) {
-      updateSelectedCount();
-   }
-});
+// // Add event listeners to all checkboxes
+// mappingProducts.addEventListener("change", (e) => {
+//    if (e.target.classList.contains("select-product")) {
+//       updateSelectedCount();
+//    }
+// });
 
 // Select all products
 selectAllProducts.addEventListener("click", () => {
@@ -283,7 +283,7 @@ selectAllProducts.addEventListener("click", () => {
 
    selectAllProducts.classList.toggle("active", !allChecked);
    selectNameMatchProducts.classList.remove("active");
-   updateSelectedCount();
+   // updateSelectedCount();
 });
 
 // Select products with matching names
@@ -301,7 +301,7 @@ selectNameMatchProducts.addEventListener("click", () => {
 
    selectNameMatchProducts.classList.toggle("active", !allMatchingSelected);
    selectAllProducts.classList.remove("active");
-   updateSelectedCount();
+   // updateSelectedCount();
 });
 
 function showPreviewWindow() {
@@ -369,7 +369,7 @@ function removeProductFromSelection(productId) {
    updatePreviewProducts();
 
    // Update selected count
-   updateSelectedCount();
+   // updateSelectedCount();
 
    // If no products left, close preview window
    if (SELECTED_PRODUCTS_DATA.length === 0) {
@@ -379,7 +379,7 @@ function removeProductFromSelection(productId) {
 
 // Event listeners for preview window
 closePreview.addEventListener("click", hidePreviewWindow);
-cancelMapping.addEventListener("click", hidePreviewWindow);
+cancelPreview.addEventListener("click", hidePreviewWindow);
 
 // Start mapping process
 startMapping.addEventListener("click", async () => {
@@ -424,19 +424,19 @@ function createPreviewContent(products) {
 }
 
 // Update confirmation button state based on checkbox
-confirmCheck.addEventListener("change", () => {
-   confirmPreview.disabled = !confirmCheck.checked;
-});
+// confirmCheck.addEventListener("change", () => {
+//    confirmPreview.disabled = !confirmCheck.checked;
+// });
 
 function resetPreviewWindow() {
-   confirmCheck.checked = false;
+   // confirmCheck.checked = false;
    confirmPreview.disabled = true;
    hidePreviewWindow();
 }
 
 // Preview window event listeners
 closePreview.addEventListener("click", resetPreviewWindow);
-cancelMapping.addEventListener("click", resetPreviewWindow);
+cancelPreview.addEventListener("click", resetPreviewWindow);
 
 // Update preview confirmation click handler
 confirmPreview.addEventListener("click", async () => {
