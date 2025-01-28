@@ -320,3 +320,4 @@ function removeProductFromSelection(pid) {
       hidePreviewWindow();
    }
 }
+
