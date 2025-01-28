@@ -432,15 +432,15 @@ function createProductMappingBulk(DATA) {
          
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
-            resolve({ status: "error", is: false });
+            resolve([]);
             return;
          }
 
          const data = await response.json();
-         resolve({ status: "ok", is: true, bulkResponse: data?.result?.bulkResponse });
+         resolve(data?.result?.bulkResponse);
       } catch (error) {
          console.log("Error mapping product:", error);
-         resolve({ status: "error", is: false });
+         resolve([]);
       }
    });
 }

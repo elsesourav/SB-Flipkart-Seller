@@ -274,7 +274,7 @@ async function createAllSelectedProductMapping() {
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;
-   const success = response?.bulkResponse?.length || 0;
+   const success = response?.length || 0;
    const failed = total - success;
    updateSuccessStats(total, success, failed);
    showSuccessWindow();

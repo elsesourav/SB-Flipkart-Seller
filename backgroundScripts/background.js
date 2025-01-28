@@ -68,9 +68,21 @@ runtimeOnMessage(
    async (DATA, _, sendResponse) => {
       try {
          const newMappingData = getMixDataToNewMappingData(DATA);
-         const mappedProducts = await createProductMappingBulk(newMappingData);
-
-         sendResponse(mappedProducts);
+         const BATCH_SIZE = 25;
+         const allResults = [];
+         
+         // Process data in batches of 25
+         for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
+            const batchData = {
+               ...newMappingData,
+               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE)
+            };
+            
+            const batchResult = await createProductMappingBulk(batchData);
+            allResults.push(...batchResult);
+         }
+         // Send final results
+         sendResponse(allResults);
 
       } catch (error) {
          console.log("Error in product mapping:", error);

@@ -30,57 +30,9 @@ matchNames.addEventListener(
 searchSubmit.addEventListener("click", searchSubmitAction);
 searchProduct.addEventListener("keydown", (e) => {
    if (e.key === "Enter") {
-      searchSubmit.click();
+      searchSubmitAction();
    }
 });
-
-
-// const mappingProducts = document.getElementById("showPossibleMappingProducts");
-// mappingProducts.addEventListener("change", (e) => {
-//    if (e.target.classList.contains("select-product")) {
-//       const card = e.target.closest(".card");
-//       if (card) {
-//          card.classList.toggle("selected", e.target.checked);
-//          updateSelectedCount();
-//       }
-//    }
-// });
-
-// // Update selected count display
-// function updateSelectedCount() {
-//    const selectedCards = document.querySelectorAll(
-//       ".card .select-product:checked"
-//    );
-//    const count = selectedCards.length;
-
-//    selectedCount.textContent = `${count} card${
-//       count !== 1 ? "s" : ""
-//    } selected`;
-//    selectedCount.classList.toggle("show", count > 0);
-// }
-
-// Selection features
-// function updateSelectedCount() {
-//    const selectedProducts = document.querySelectorAll(
-//       ".select-product:checked"
-//    );
-//    showNumberOfProductsSelected.textContent = selectedProducts.length;
-
-//    // Update start mapping button state
-//    const startMappingBtn = document.getElementById("startMapping");
-//    if (selectedProducts.length > 0) {
-//       startMappingBtn.classList.add("active");
-//    } else {
-//       startMappingBtn.classList.remove("active");
-//    }
-// }
-
-// // Add event listeners to all checkboxes
-// mappingProducts.addEventListener("change", (e) => {
-//    if (e.target.classList.contains("select-product")) {
-//       updateSelectedCount();
-//    }
-// });
 
 // Select all products
 selectAllProducts.addEventListener("click", () => {
