@@ -1,0 +1,119 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   -ms-overflow-style: none;
+   /* IE and Edge */
+   scrollbar-width: none;
+   /* Firefox */
+
+   /* outline: solid 1px #f004; */
+}
+
+:root {
+   color-scheme: light dark;
+   --black: #111;
+   --white: #eee;
+   --switch-color-off: var(--white);
+   --switch-color-on: #85ff7a;
+
+   --s: 12px;
+   --product-width: 250px;
+
+   /* Colors */
+   --surface: #1a1b24;
+   --surface-variant: #282a38;
+   --surface-variant-hover: #2d2f40;
+   
+   --primary: #2ecc71;
+   --primary-variant: #27ae60;
+   --on-primary: #ffffff;
+   
+   --error: #e74c3c;
+   --error-container: rgba(231, 76, 60, 0.1);
+   
+   --text-primary: #ffffff;
+   --text-secondary: #8a8a8a;
+   
+   --accent-purple: #9b59b6;
+   --accent-orange: #e67e22;
+   --accent-blue: #3498db;
+
+   user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   -webkit-user-select: none;
+}
+
+body {
+   position: relative;
+   width: 100%;
+   height: 100svh;
+   background: light-dark(#ddd, #333);
+   overflow: hidden;
+   padding: calc(var(--s) * 1.5);
+}
+.container {
+   position: relative;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: calc(var(--s));
+   overflow-y: auto;
+   overflow-x: hidden;
+}
+
+.close-btn {
+   font-size: 2em;
+   color: #fff;
+   cursor: pointer;
+   transition: color 0.2s ease;
+   width: 40px;
+   height: 40px;
+   display: grid;
+   place-items: center;
+   border: none;
+   outline: none;
+   border-radius: 50%;
+
+   &:hover {
+      color: #f00;
+      background: #282a38;
+   }
+}
+
+.cards.preview-products {
+   --nh: calc(var(--product-width) + 100px);
+}
+
+
+/* .preview-card {
+   position: relative;
+   background: #282a38;
+   border-radius: calc(var(--s) / 2);
+   padding: calc(var(--s));
+   display: grid;
+   gap: calc(var(--s) / 2);
+
+   img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: calc(var(--s) / 4);
+      background: #1a1b24;
+   }
+
+   .title {
+      font-family: f3;
+      font-size: 1.2em;
+      color: #fff;
+   }
+
+   .price {
+      font-family: f7b;
+      font-size: 1.2em;
+      color: #2ecc71;
+   }
+} */

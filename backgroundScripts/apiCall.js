@@ -271,15 +271,18 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
 
          // [[10,20,32],[5,6,3]] convert to [10,20,32,5,6,3]
          const products = slots
-            .map((slot) => slot?.widget?.data?.products)
-            .filter((x) => x)
-            .flat()
-            .map((product) => {
+            ?.map((slot) => slot?.widget?.data?.products)
+            ?.filter((x) => x)
+            ?.flat()
+            ?.map((product) => {
                const { id, titles, rating, pricing } =
                   product?.productInfo?.value;
-               const { mrp, finalPrice } = pricing;
-
-               return { id, titles, rating, mrp, finalPrice };
+                  if (pricing) {
+                     const { mrp, finalPrice } = pricing;
+                     return { id, titles, rating, mrp, finalPrice };
+                  } else {
+                     return { id, titles, rating, mrp: 0, finalPrice: 0 };
+                  }
             });
 
          resolve(products);

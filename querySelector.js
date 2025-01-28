@@ -194,3 +194,4 @@
  * @returns {NodeListOf<HTMLElement>} - A NodeList of matched elements.
  */
 const I = (selector, parent = document) => parent.querySelectorAll(selector);
+const ID = (selector, parent = document) => parent.getElementById(selector);

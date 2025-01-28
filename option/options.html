@@ -6,209 +6,200 @@
       <title>Seller Auto - Settings</title>
       <link rel="stylesheet" href="./../assets/icons/css/font.css" />
       <link rel="stylesheet" href="./../assets/icons/css/icon.css" />
-      <link rel="stylesheet" href="./../popup/css/base.css" />
 
-      <link rel="stylesheet" href="./option.css" />
+      <link rel="stylesheet" href="./css/options.css" />
+      <link rel="stylesheet" href="./css/options.card.css" />
+      <link rel="stylesheet" href="./css/options.nav.css" />
+      <link rel="stylesheet" href="./css/options.loading.css" />
+      <link rel="stylesheet" href="./css/options.prewiew.css" />
+      <link rel="stylesheet" href="./css/options.confirmation.css" />
+      <link rel="stylesheet" href="./css/options.success.css" />
 
       <script defer src="./../utils.js"></script>
       <script defer src="./../querySelector.js"></script>
+      <script defer src="./option.utils.js"></script>
       <script defer src="./options.js"></script>
    </head>
    <body>
       <!-- <h1 class="title">More Mapping Options</h1> -->
-      <header>
-         <div class="title">More Mapping Options</div>
-         <div class="others">
-            <div class="logo">
-               <img src="./../assets/icons/icon.png" alt="extension icon" />
+      <div class="container">
+         <header>
+            <div class="title">More Mapping Options</div>
+            <div class="others">
+               <div class="logo">
+                  <img src="./../assets/icons/icon.png" alt="extension icon" />
+               </div>
+               <section>
+                  <p>Seller Automation ES</p>
+                  <b>
+                     &copy;
+                     <span class="first">else</span>
+                     <span class="second">sourav</span>
+                     <span class="third">2024</span>
+                  </b>
+               </section>
             </div>
-            <section>
-               <p>Seller Automation ES</p>
-               <b>
-                  &copy;
-                  <span class="first">else</span>
-                  <span class="second">sourav</span>
-                  <span class="third">2024</span>
-               </b>
-            </section>
-         </div>
-      </header>
+         </header>
 
-      <nav>
-         <div class="search-inputs">
-            <div class="outer _3-1-1-1-1">
-               <select name="sellerId" id="sellerId">
-                  <option value="8136cfdc49f34957">PuravEnterprise</option>
-                  <option value="8ca6db1ce86346e2">ChaitiEnterprise</option>
-               </select>
-               <p>Page</p>
-               <select name="startPage" id="startPage">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                  <option value="24">24</option>
-                  <option value="25">25</option>
-               </select>
-               <p>to</p>
-               <select name="endPage" id="endPage">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                  <option value="24">24</option>
-                  <option value="25">25</option>
-               </select>
+         <nav>
+            <div class="search-inputs">
+               <div class="outer _3-1-1-1-1">
+                  <select name="sellerId" id="sellerId">
+                     <option value="8136cfdc49f34957">PuravEnterprise</option>
+                     <option value="8ca6db1ce86346e2">ChaitiEnterprise</option>
+                  </select>
+                  <p>Page</p>
+                  <select name="startPage" id="startPage">
+                     <option value="1">1</option>
+                     <option value="2">2</option>
+                     <option value="3">3</option>
+                     <option value="4">4</option>
+                     <option value="5">5</option>
+                     <option value="6">6</option>
+                     <option value="7">7</option>
+                     <option value="8">8</option>
+                     <option value="9">9</option>
+                     <option value="10">10</option>
+                     <option value="11">11</option>
+                     <option value="12">12</option>
+                     <option value="13">13</option>
+                     <option value="14">14</option>
+                     <option value="15">15</option>
+                     <option value="16">16</option>
+                     <option value="17">17</option>
+                     <option value="18">18</option>
+                     <option value="19">19</option>
+                     <option value="20">20</option>
+                     <option value="21">21</option>
+                     <option value="22">22</option>
+                     <option value="23">23</option>
+                     <option value="24">24</option>
+                     <option value="25">25</option>
+                  </select>
+                  <p>to</p>
+                  <select name="endPage" id="endPage">
+                     <option value="1">1</option>
+                     <option value="2">2</option>
+                     <option value="3">3</option>
+                     <option value="4">4</option>
+                     <option value="5">5</option>
+                     <option value="6">6</option>
+                     <option value="7">7</option>
+                     <option value="8">8</option>
+                     <option value="9">9</option>
+                     <option value="10">10</option>
+                     <option value="11">11</option>
+                     <option value="12">12</option>
+                     <option value="13">13</option>
+                     <option value="14">14</option>
+                     <option value="15">15</option>
+                     <option value="16">16</option>
+                     <option value="17">17</option>
+                     <option value="18">18</option>
+                     <option value="19">19</option>
+                     <option value="20">20</option>
+                     <option value="21">21</option>
+                     <option value="22">22</option>
+                     <option value="23">23</option>
+                     <option value="24">24</option>
+                     <option value="25">25</option>
+                  </select>
+               </div>
+               <div class="outer _4-1">
+                  <input
+                     type="text"
+                     name="search"
+                     id="searchProduct"
+                     placeholder="Search Product"
+                  />
+                  <button id="searchSubmit">Submit</button>
+               </div>
+               <div class="outer _2_5">
+                  <select name="rating" id="rating">
+                     <option value="0">Rating</option>
+                     <option value="2">2</option>
+                     <option value="2.5">2.5</option>
+                     <option value="2.6">2.6</option>
+                     <option value="2.7">2.7</option>
+                     <option value="2.8">2.8</option>
+                     <option value="2.9">2.9</option>
+                     <option value="3">3</option>
+                     <option value="3.5">3.5</option>
+                     <option value="4">4</option>
+                     <option value="4.5">4.5</option>
+                     <option value="5">5</option>
+                  </select>
+                  <input
+                     type="text"
+                     name="names"
+                     id="matchNames"
+                     placeholder="Filter Different Name"
+                  />
+               </div>
             </div>
-            <div class="outer _4-1">
-               <input
-                  type="text"
-                  name="search"
-                  id="searchProduct"
-                  placeholder="Search Product"
-               />
-               <button id="submit">Submit</button>
-            </div>
-            <div class="outer _2_5">
-               <select name="rating" id="rating">
-                  <option value="0">Rating</option>
-                  <option value="2">2</option>
-                  <option value="2.5">2.5</option>
-                  <option value="2.6">2.6</option>
-                  <option value="2.7">2.7</option>
-                  <option value="2.8">2.8</option>
-                  <option value="2.9">2.9</option>
-                  <option value="3">3</option>
-                  <option value="3.5">3.5</option>
-                  <option value="4">4</option>
-                  <option value="4.5">4.5</option>
-                  <option value="5">5</option>
-               </select>
-               <input
-                  type="text"
-                  name="names"
-                  id="matchNames"
-                  placeholder="Filter Different Name"
-               />
-            </div>
-         </div>
 
-         <div class="features">
-            <div id="showNumberOfProductsSelected">0</div>
-            <p>Select By</p>
-            <div id="selectAllProducts">All</div>
-            <div id="selectNameMatchProducts">Name Match</div>
-            <div id="startMapping">Ready to Mapping</div>
-         </div>
-      </nav>
+            <div class="features">
+               <div id="showNumberOfProductsSelected">0</div>
+               <p>Select By</p>
+               <div id="selectAllProducts">All</div>
+               <div id="selectNameMatchProducts">Name Match</div>
+               <div id="startMapping">Ready to Mapping</div>
+            </div>
+         </nav>
 
-      <div
-         class="show-possible-mapping-products"
-         id="showPossibleMappingProducts"
-      >
-         <!-- <div class="card product">
-            <input type="checkbox" name="" class="select-product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="rating">4.5</div>
-            <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
-            <div class="quantity">200 per packet</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div>
-        <div class="card product">
-            <input type="checkbox" name="" class="select-product">
-            <div class="show-img">
-                <img src="" alt="">
-            </div>
-            <div class="rating">4.5</div>
-            <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
-            <div class="quantity">200 per packet</div>
-            <div class="prices">
-                <div class="selling-price">140</div>
-                <div class="original-price">499</div>
-            </div>
-        </div> -->
-      </div>
-
-      <div id="loadingWindow">
-         <div class="loader">
-            <span></span>
-            <span></span>
-            <span></span>
+         <div id="showPossibleMappingProducts" class="cards">
+            <!-- <div class="card product">
+               <input type="checkbox" name="" class="select-product">
+               <div class="show-img">
+                   <img src="" alt="">
+               </div>
+               <div class="rating">4.5</div>
+               <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
+               <div class="quantity">200 per packet</div>
+               <div class="prices">
+                   <div class="selling-price">140</div>
+                   <div class="original-price">499</div>
+               </div>
+           </div> -->
          </div>
       </div>
-
-      <div id="selectedCount"></div>
 
       <div id="previewWindow" class="preview-window">
          <div class="preview-window-content">
             <div class="preview-header">
                <h2>Selected Products Preview</h2>
                <button id="closePreview" class="close-btn">
-                  <i class="icon-x"></i>
+                  <i class="sbi-close"></i>
                </button>
             </div>
-            <div class="preview-body">
-               <div class="preview-products" id="previewProducts">
-                  <div class="preview-product">
-                     <div class="product-info">
-                        <img src="" alt="Product Image" class="product-image">
-                        <div class="product-details">
-                           <h3 class="product-title"></h3>
-                           <p class="product-id"></p>
-                        </div>
+            <div class="preview-body" id="previewBody">
+               <div class="cards" id="previewProducts">
+                  <!-- <div class="card preview-product">
+                     <div class="show-img"><img src="" alt=""></div>
+                     <div class="name bright"></div>
+                     <div class="quantity"></div>
+                     <div class="prices">
+                        <div class="selling-price"></div>
+                        <div class="original-price"></div>
                      </div>
-                     <button class="remove-product-btn">
+                     <div class="remove-product-btn" onclick="">
                         <i class="icon-trash-2"></i>
-                     </button>
-                  </div>
+                     </div>
+                  </div> -->
+               </div>
+               <div class="confirm-check">
+                  <input type="checkbox" id="confirmCheck" />
+                  <label for="confirmCheck">
+                     I have reviewed all selected products and confirm the
+                     mapping
+                  </label>
                </div>
             </div>
             <div class="preview-footer">
                <button id="cancelPreview" class="cancel-btn">Cancel</button>
-               <button id="startMappingBtn" class="start-btn">Start Mapping</button>
+               <button id="startMappingBtn" class="confirm-btn" disabled>
+                  Start Mapping
+               </button>
             </div>
          </div>
       </div>
@@ -217,42 +208,55 @@
          <div class="confirmation-content">
             <div class="confirmation-header">
                <h2>Final Confirmation</h2>
-               <div id="closeConfirmation" class="close-btn">&times;</div>
+               <div id="closeConfirmation" class="close-btn">
+                  <i class="sbi-close"></i>
+               </div>
             </div>
             <div class="confirmation-body">
-                <div class="show-data">
-                    <div class="c-name">
-                        <span>Name: </span>
-                        <span id="productName">LOTUS SEEDS</span>
-                    </div>
-                    <div class="c-profit">
-                        <span>Profit: </span>
-                        <span id="productProfit">100</span>
-                    </div>
-                    <div class="c-fixed-cost">
-                        <span>Fixed Cost: </span>
-                        <span id="productFixedCost">71</span>
-                    </div>
-                    <div class="c-packing-cost">
-                        <span>Packing Cost: </span>
-                        <span id="productPackingCost">5</span>
-                    </div>
-                    <div class="c-national-delivery">
-                        <span>National Delivery: </span>
-                        <span id="productNationalDelivery">14</span>
-                    </div>
-                    <div class="c-manufacturer">
-                        <span>Manufacturer: </span>
-                        <span id="productManufacturer">PuravEnterprise</span>
-                    </div>
-                </div>
-               <p>Type "<span id="confirmationInputValue">CONFIRM</span>" below to start the mapping process:</p>
-               <input type="text" id="confirmationInput" placeholder="Type Name here">
+               <div class="show-data">
+                  <div class="c-name">
+                     <span>Name: </span>
+                     <span id="productName">LOTUS SEEDS</span>
+                  </div>
+                  <div class="c-profit">
+                     <span>Profit: </span>
+                     <span id="productProfit">100</span>
+                  </div>
+                  <div class="c-fixed-cost">
+                     <span>Fixed Cost: </span>
+                     <span id="productFixedCost">71</span>
+                  </div>
+                  <div class="c-packing-cost">
+                     <span>Packing Cost: </span>
+                     <span id="productPackingCost">5</span>
+                  </div>
+                  <div class="c-national-delivery">
+                     <span>National Delivery: </span>
+                     <span id="productNationalDelivery">14</span>
+                  </div>
+                  <div class="c-manufacturer">
+                     <span>Manufacturer: </span>
+                     <span id="productManufacturer">PuravEnterprise</span>
+                  </div>
+               </div>
+               <p>
+                  Type "<span id="confirmationInputValue">CONFIRM</span>" below
+                  to start the mapping process:
+               </p>
+               <input
+                  type="text"
+                  id="confirmationInput"
+                  placeholder="Type Name here"
+               />
                <div class="error-message" id="confirmationError"></div>
             </div>
             <div class="confirmation-footer">
-               <button id="cancelConfirmation" class="cancel-btn">Cancel</button>
-               <button id="startFinalMapping" class="confirm-btn" disabled>Start Mapping</button>
+               <button id="cancelConfirmation" class="cancel-btn">
+                  Cancel
+               </button>
+               <button id="startFinalMapping" class="confirm-btn" disabled>
+                  Start Mapping
+               </button>
             </div>
          </div>
       </div>
@@ -260,7 +264,7 @@
       <div class="success-window">
          <div class="success-window-content">
             <div class="success-header">
-               <i class="icon-check-circle success-icon"></i>
+               <i class="sbi-checkmark success-icon"></i>
                <h2>Mapping Completed Successfully!</h2>
             </div>
             <div class="success-body">
@@ -276,7 +280,9 @@
                      <i class="icon-check success"></i>
                      <div class="stat-details">
                         <span class="label">Successfully Mapped</span>
-                        <span class="value success" id="successProducts">0</span>
+                        <span class="value success" id="successProducts"
+                           >0</span
+                        >
                      </div>
                   </div>
                   <div class="stat-item">
@@ -289,8 +295,18 @@
                </div>
             </div>
             <div class="success-footer">
-               <button class="map-more-btn" id="mapMoreBtn">Map More Products</button>
+               <button class="map-more-btn" id="mapMoreBtn">
+                  Map More Products
+               </button>
             </div>
+         </div>
+      </div>
+
+      <div id="loadingWindow">
+         <div class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
          </div>
       </div>
    </body>
