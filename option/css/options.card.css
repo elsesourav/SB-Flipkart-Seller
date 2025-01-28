@@ -9,8 +9,8 @@
    /* outline: solid 1px light-dark(#fff, #000); */
    place-items: center;
    grid-template-columns: repeat(
-      auto-fit,
-      minmax(min(100%, var(--nh)), 1fr)
+      auto-fill,
+      minmax(var(--nh), 1fr)
    );
    gap: calc(var(--s) * 1);
    padding: calc(var(--s) * 0.8);

@@ -306,23 +306,13 @@ function createPreviewContent(products) {
    removeBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
          btn.parentElement.classList.add("hide");
+         removeProductFromSelection(btn.parentElement.dataset.productId);
       });
    });
 }
 
-function removeProductFromSelection(productId) {
-   // Remove from SELECTED_PRODUCTS_DATA
-   SELECTED_PRODUCTS_DATA = SELECTED_PRODUCTS_DATA.filter(
-      (product) => product.id !== productId
-   );
-
-   // Uncheck the corresponding checkbox in the main list
-   // const checkbox = document.querySelector(
-   //    `.preview-product[data-product-id="${productId}"]`
-   // );
-   // checkbox?.classList?.add("hide");
-
-   // Update selected count
+function removeProductFromSelection(pid) {
+   SELECTED_PRODUCTS_DATA = SELECTED_PRODUCTS_DATA.filter((p) => p.id !== pid);
    updateSelectedCount();
 
    // If no products left, close preview window
