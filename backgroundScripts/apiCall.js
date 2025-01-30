@@ -192,7 +192,10 @@ function checkApprovalStatus(vertical, brand, sellerId) {
          const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
          const response = await fetch(url);
          const result = await response.json();
-         resolve({ isError: false, result: result.approvalStatus === "APPROVED" });
+         resolve({
+            isError: false,
+            result: result.approvalStatus === "APPROVED",
+         });
       } catch (error) {
          resolve({ isError: true, result: null });
       }
@@ -295,12 +298,12 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
             ?.map((product) => {
                const { id, titles, rating, pricing } =
                   product?.productInfo?.value;
-                  if (pricing) {
-                     const { mrp, finalPrice } = pricing;
-                     return { id, titles, rating, mrp, finalPrice };
-                  } else {
-                     return { id, titles, rating, mrp: 0, finalPrice: 0 };
-                  }
+               if (pricing) {
+                  const { mrp, finalPrice } = pricing;
+                  return { id, titles, rating, mrp, finalPrice };
+               } else {
+                  return { id, titles, rating, mrp: 0, finalPrice: 0 };
+               }
             });
 
          resolve(products);
@@ -345,7 +348,6 @@ function processBatchForMapping(products, startIdx) {
 
 function createProductMappingBulk(DATA) {
    return new Promise(async (resolve) => {
-
       const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS } = DATA;
 
       const BULK_REQUESTS = PRODUCTS.map((product) => {
@@ -372,19 +374,23 @@ function createProductMappingBulk(DATA) {
             PACKAGING_BREADTH,
             PACKAGING_HEIGHT,
          } = product;
-   
+
          const PRODUCT_DATA = {
             sku_id: [{ value: SKU, qualifier: "" }],
             country_of_origin: [{ value: "IN", qualifier: "" }],
             earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
-            flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
+            flipkart_selling_price: [
+               { value: SELLING_PRICE, qualifier: "INR" },
+            ],
             hsn: [{ value: HSN, qualifier: "" }],
             listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
             local_shipping_fee_from_buyer: [
                { value: DELIVERY_LOCAL, qualifier: "INR" },
             ],
             luxury_cess: [{ qualifier: "Percentage" }],
-            manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
+            manufacturer_details: [
+               { value: MANUFACTURER_DETAILS, qualifier: "" },
+            ],
             minimum_order_quantity: [
                { value: MINIMUM_ORDER_QUANTITY, qualifier: "" },
             ],
@@ -404,7 +410,7 @@ function createProductMappingBulk(DATA) {
                { value: DELIVERY_ZONAL, qualifier: "INR" },
             ],
          };
-   
+
          const PACKAGE_DATA = {
             id: { value: "packages-0" },
             length: { value: PACKAGING_LENGTH, qualifier: "CM" },
@@ -428,7 +434,6 @@ function createProductMappingBulk(DATA) {
          "content-type": "application/json",
          "fk-csrf-token": FK_CSRF_TOKEN,
       };
-      
 
       const REQUEST_BODY = {
          sellerId: SELLER_ID,
@@ -446,7 +451,7 @@ function createProductMappingBulk(DATA) {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
 
          console.log(response);
-         
+
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
             resolve([]);
@@ -461,7 +466,6 @@ function createProductMappingBulk(DATA) {
       }
    });
 }
-
 
 function createProductMapping(DATA) {
    return new Promise(async (resolve) => {

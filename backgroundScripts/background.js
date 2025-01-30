@@ -57,6 +57,7 @@ runtimeOnMessage(
             }
             verifiedProducts.push(...batchResults);
          }
+         
 
          // Send final filtered response
          sendResponse(verifiedProducts);

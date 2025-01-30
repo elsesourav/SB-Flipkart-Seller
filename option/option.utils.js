@@ -206,12 +206,12 @@ function filterByNames() {
 
    // Sort products: matching names first, non-matching last
    PRODUCTS.sort((a, b) => {
-      const titleA = a.titles.newTitle.toLowerCase();
-      const titleB = b.titles.newTitle.toLowerCase();
+      const titleA = a.titles?.newTitle?.toLowerCase();
+      const titleB = b.titles?.newTitle?.toLowerCase();
 
       // Check if titles match any of the search names
-      const matchesA = names.some((name) => titleA.includes(name));
-      const matchesB = names.some((name) => titleB.includes(name));
+      const matchesA = names.some((name) => titleA?.includes(name));
+      const matchesB = names.some((name) => titleB?.includes(name));
 
       if (matchesA && !matchesB) return -1; // A matches, B doesn't -> A comes first
       if (!matchesA && matchesB) return 1; // B matches, A doesn't -> B comes first
