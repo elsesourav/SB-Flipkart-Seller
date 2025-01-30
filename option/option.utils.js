@@ -87,8 +87,8 @@ async function searchSubmitAction() {
    const productName = searchProduct.value;
    if (!productName) return;
 
-   const startingPage = startPage.value || 1;
-   const endingPage = endPage.value || 1;
+   const startingPage = N(startPage.value) || 1;
+   const endingPage = N(endPage.value) || 1;
    SELLER_ID = sellerId.value;
 
    const data = {
@@ -104,6 +104,11 @@ async function searchSubmitAction() {
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data);
+      if (PRODUCTS?.isError) {
+         PRODUCTS = [];
+         alert("Too many requests");
+         return;
+      }
       SAVED_PRODUCTS = [...PRODUCTS];
       filterProducts();
    } catch (error) {

@@ -188,10 +188,14 @@ function searchProduct(sku, sellerId) {
 
 function checkApprovalStatus(vertical, brand, sellerId) {
    return new Promise(async (resolve) => {
-      const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
-      const response = await fetch(url);
-      const result = await response.json();
-      resolve(result.approvalStatus === "APPROVED");
+      try {
+         const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
+         const response = await fetch(url);
+         const result = await response.json();
+         resolve({ isError: false, result: result.approvalStatus === "APPROVED" });
+      } catch (error) {
+         resolve({ isError: true, result: null });
+      }
    });
 }
 
@@ -208,7 +212,10 @@ function processBatchForVerification(products, sellerId, startIdx) {
          const batchPromises = batch.map(async (product) => {
             try {
                const result = await verifyProduct(product.id, sellerId);
-               if (result.is) {
+               if (result?.isError) {
+                  throw new Error("Too many requests");
+               }
+               if (result?.is) {
                   return {
                      ...product,
                      imageUrl: result.imageUrl,
@@ -216,14 +223,25 @@ function processBatchForVerification(products, sellerId, startIdx) {
                }
                return null;
             } catch (error) {
+               if (error.message === "Too many requests") {
+                  throw error; // Propagate rate limit error up
+               }
                console.log(`Error verifying product ${product.id}:`, error);
                return null;
             }
          });
 
-         const results = await Promise.all(batchPromises);
-         const validResults = results.filter((result) => result !== null);
-         resolve(validResults);
+         try {
+            const results = await Promise.all(batchPromises);
+            const validResults = results.filter((result) => result !== null);
+            resolve(validResults);
+         } catch (error) {
+            if (error.message === "Too many requests") {
+               resolve({ isError: true, error: "Too many requests" });
+            } else {
+               resolve([]);
+            }
+         }
       } catch (error) {
          console.error("Error processing batch:", error);
          resolve([]);
@@ -405,7 +423,6 @@ function createProductMappingBulk(DATA) {
          };
       });
 
-
       const HEADER = {
          accept: "*/*",
          "content-type": "application/json",
@@ -560,4 +577,3 @@ function createProductMapping(DATA) {
       }
    });
 }
-

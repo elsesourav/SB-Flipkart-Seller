@@ -156,7 +156,7 @@ function verifyProduct(sku, sellerId) {
          const productInfo = searchResult?.result?.productList?.[0];
 
          if (!productInfo) {
-            resolve({ is: false, error: "Product not found" });
+            resolve({ isError: false, is: false, error: "Product not found" });
          }
 
          const { detail, alreadySelling, vertical, imagePaths } = productInfo;
@@ -164,24 +164,29 @@ function verifyProduct(sku, sellerId) {
 
          // If already selling, no need to check further
          if (alreadySelling) {
-            resolve({ is: false, error: "Already selling" });
+            resolve({ isError: false, error: "Already selling" });
          }
 
          // Check approval status
-         const isApproved = await checkApprovalStatus(
+         const result = await checkApprovalStatus(
             vertical,
             detail.Brand,
             sellerId
          );
+         
+         if (result?.isError) {
+            resolve({ isError: true });
+         }
 
          resolve({
-            is: isApproved,
-            imageUrl: isApproved ? imageUrl : null,
-            error: isApproved ? null : "Not approved",
+            isError: false,
+            is: result?.result,
+            imageUrl: result?.result ? imageUrl : null,
+            error: result?.result ? null : "Not approved",
          });
       } catch (error) {
-         console.error("Error verifying product:", error);
-         resolve({ is: false, error: error.message });
+         resolve({ isError: false, error: error.message });
+         console.log("Error verifying product:", error);
       }
    });
 }

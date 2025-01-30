@@ -51,6 +51,10 @@ runtimeOnMessage(
          const verifiedProducts = [];
          for (let i = 0; i < products.length; i += BATCH_SIZE) {
             const batchResults = await processBatchForVerification(products, sellerId, i);
+            if (batchResults?.isError) {
+               sendResponse({ isError: true, error: "Too many requests" });
+               return;
+            }
             verifiedProducts.push(...batchResults);
          }
 

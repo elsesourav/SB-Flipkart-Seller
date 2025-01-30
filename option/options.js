@@ -20,14 +20,17 @@ let EXTENSION_MAPPING_DATA = null;
 let FK_CSRF_TOKEN = null;
 let SELLER_ID = null;
 
-rating.addEventListener("input", filterProducts);
+rating.addEventListener(
+   "change",
+   debounce(filterProducts, () => 1000)
+);
 matchNames.addEventListener(
    "input",
    debounce(filterProducts, () => 1000)
 );
 
-
 searchSubmit.addEventListener("click", searchSubmitAction);
+
 searchProduct.addEventListener("keydown", (e) => {
    if (e.key === "Enter") {
       searchSubmitAction();
@@ -103,7 +106,7 @@ cancelPreview.addEventListener("click", hidePreviewWindow);
 // Update preview confirmation click handler
 startMappingBtn.addEventListener("click", async () => {
    EXTENSION_MAPPING_DATA = await getMappingData();
-   
+
    hidePreviewWindow();
    showConfirmationWindow();
 });
