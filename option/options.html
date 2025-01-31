@@ -261,32 +261,40 @@
          </div>
       </div>
 
-      <div class="success-window">
+      <div class="success-window" id="successWindow">
          <div class="success-window-content">
             <div class="success-header">
                <i class="sbi-checkmark success-icon"></i>
                <h2>Mapping Completed Successfully!</h2>
+               <div class="close-btn" id="closeSuccess">
+                  <i class="sbi-close"></i>
+               </div>
             </div>
             <div class="success-body">
                <div class="mapping-stats">
                   <div class="stat-item">
-                     <i class="icon-box"></i>
+                     <i class="sbi-bullseye"></i>
                      <div class="stat-details">
                         <span class="label">Total Products</span>
                         <span class="value" id="totalProducts">0</span>
                      </div>
                   </div>
                   <div class="stat-item">
-                     <i class="icon-check success"></i>
+                     <i class="sbi-check"></i>
                      <div class="stat-details">
-                        <span class="label">Successfully Mapped</span>
-                        <span class="value success" id="successProducts"
-                           >0</span
-                        >
+                        <span class="label">Update Mapped</span>
+                        <span class="value success" id="updateProducts">0</span>
                      </div>
                   </div>
                   <div class="stat-item">
-                     <i class="icon-x error"></i>
+                     <i class="sbi-check"></i>
+                     <div class="stat-details">
+                        <span class="label">New Mapped</span>
+                        <span class="value success" id="newProducts">0</span>
+                     </div>
+                  </div>
+                  <div class="stat-item">
+                     <i class="sbi-warning"></i>
                      <div class="stat-details">
                         <span class="label">Failed</span>
                         <span class="value error" id="failedProducts">0</span>

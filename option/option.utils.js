@@ -77,10 +77,11 @@ showPossibleMappingProducts.addEventListener("change", (e) => {
    }
 });
 
-function updateSuccessStats(total, success, failed) {
-   totalProductsEl.textContent = total;
-   successProductsEl.textContent = success;
-   failedProductsEl.textContent = failed;
+function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
+   totalProducts.textContent = total;
+   updateProducts.textContent = oldSuccess;
+   newProducts.textContent = newSuccess;
+   failedProducts.textContent = failed;
 }
 
 async function searchSubmitAction() {
@@ -118,8 +119,48 @@ async function searchSubmitAction() {
    }
 }
 
+function getHTMLProductCards(ps, searchNames = []) {
+   return ps
+      .map((p) => {
+         const {
+            finalPrice,
+            id,
+            imageUrl,
+            mrp,
+            rating,
+            titles,
+            alreadySelling,
+         } = p;
+         const classRating = rating.count <= 0 ? "hidden" : "";
+
+         const { highlightedTitle, isFind } = highlightMatches(
+            titles.title,
+            searchNames
+         );
+         let className = alreadySelling ? "listed " : " ";
+         className += isFind ? "glow" : "";
+         const classQuantity =
+            titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
+
+         return `
+         <div class="card product ${className}" id="${id}">
+            <input type="checkbox" class="select-product" data-product-id="${id}">
+            <div class="show-img">
+               <img src="${imageUrl}" alt="product-image-${id}">
+            </div>
+            <div class="rating ${classRating}">${rating.average}</div>
+            <div class="name">${highlightedTitle}</div>
+            <div class="quantity${classQuantity}">${titles.subtitle}</div>
+            <div class="prices">
+               <div class="selling-price">${finalPrice.value}</div>
+               <div class="original-price">${mrp.value}</div>
+            </div>
+         </div>`;
+      })
+      .join("");
+}
+
 function createProductCard() {
-   let htmlStr = "";
    const searchNames = matchNames.value
       ? matchNames.value
            .toLowerCase()
@@ -127,37 +168,13 @@ function createProductCard() {
            .map((n) => n.trim())
       : [];
 
-   for (const i in PRODUCTS) {
-      const product = PRODUCTS[i];
-      const { finalPrice, id, imageUrl, mrp, rating, titles } = product;
-
-      // Highlight matching terms in the title
-      const { highlightedTitle, isFind } = highlightMatches(
-         titles.title,
-         searchNames
-      );
-
-      htmlStr += `
-      <div class="card product ${isFind ? "glow" : ""}" id="${id}">
-         <input type="checkbox" name="" class="select-product" data-product-id="${id}">
-         <div class="show-img">
-            <img src="${imageUrl}" alt="product-image-${i}">
-         </div>
-         <div class="rating ${rating.count <= 0 ? "hidden" : ""}">
-            ${rating.average}
-         </div>
-         <div class="name">${highlightedTitle}</div>
-         <div class="quantity">${titles.subtitle}</div>
-         <div class="prices">
-            <div class="selling-price">${finalPrice.value}</div>
-            <div class="original-price">${mrp.value}</div>
-         </div>
-      </div>`;
-   }
-   showPossibleMappingProducts.innerHTML = htmlStr;
+   showPossibleMappingProducts.innerHTML = getHTMLProductCards(
+      PRODUCTS,
+      searchNames
+   );
 }
 
-function highlightMatches(title, searchNames) {
+function highlightMatches(title, searchNames = []) {
    let highlightedTitle = title;
    let isFind = false;
 
@@ -166,6 +183,8 @@ function highlightMatches(title, searchNames) {
    highlightedTitle = highlightedTitle.replace(numberRegex, "<p>$&</p>");
 
    // Then highlight search terms and set isFind
+   if (!searchNames.length) return { highlightedTitle, isFind };
+
    searchNames.forEach((name) => {
       if (name) {
          const regex = new RegExp(`(${name})`, "gi");
@@ -245,7 +264,7 @@ function showConfirmationWindow() {
    confirmationWindow.classList.add("show");
    confirmationInput.value = "";
    confirmationError.textContent = "";
-   startMappingFinalStep.disabled = true;
+   startFinalMapping.disabled = true;
 
    const {
       SKU_NAME,
@@ -273,37 +292,60 @@ function hideConfirmationWindow() {
    confirmationError.textContent = "";
 }
 
+function getOldAndNewProductSize(DATA) {
+   DATA = DATA?.filter((p) => p?.status !== "failure");
+   let oldSize = 0;
+   let newSize = 0;
+
+   DATA.forEach((p) => {
+      if (SELECTED_PRODUCTS_DATA.filter((e) => e.id === p.productID)?.[0]?.alreadySelling) {
+         oldSize++;
+      } else {
+         newSize++;
+      }
+   });
+   return { oldSize, newSize };
+}
+
 async function createAllSelectedProductMapping() {
    showLoading();
    const response = await createMappingSendRequest();
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;
-   const success = response?.length || 0;
-   const failed = total - success;
-   updateSuccessStats(total, success, failed);
+   const { oldSize, newSize } = getOldAndNewProductSize(response);
+   const failed = total - (oldSize + newSize);
+
+   updateSuccessStats(total, oldSize, newSize, failed);
    showSuccessWindow();
 }
 
-function createPreviewContent(products) {
-   const cards = products
-      .map((product) => {
+function getHTMLPreviewProductCards(ps) {
+   return ps
+      .map((p) => {
+         const { finalPrice, id, imageUrl, mrp, titles, alreadySelling } = p;
+         const className = alreadySelling ? "listed" : "";
+         const { highlightedTitle } = highlightMatches(titles.title);
+         const classQuantity =
+            titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
+
          return `
-            <div class="card preview-product" data-product-id="${product.id}">
-               <div class="show-img"><img src="${product.imageUrl}" alt="image-${product.titles.title}"></div>
-               <div class="name bright">${product.titles.title}</div>
-               <div class="quantity">${product.titles.subtitle}</div>
-               <div class="prices">
-                  <div class="selling-price">${product.finalPrice.value}</div>
-                  <div class="original-price">${product.mrp.value}</div>
-               </div>
-               <div class="remove-product-btn">
-                  <i class="sbi-bin"></i>
-               </div>
-            </div> 
-         `;
+         <div class="card preview-product ${className}" data-product-id="${id}">
+            <div class="show-img"><img src="${imageUrl}" alt="image-${titles.title}"></div>
+            <div class="name bright">${highlightedTitle}</div>
+            <div class="quantity${classQuantity}">${titles.subtitle}</div>
+            <div class="prices">
+               <div class="selling-price">${finalPrice.value}</div>
+               <div class="original-price">${mrp.value}</div>
+            </div>
+         </div> 
+      `;
       })
       .join("");
+}
+
+function createPreviewContent(products) {
+   const cards = getHTMLPreviewProductCards(products);
    previewProducts.innerHTML = cards;
    previewBody.scrollTop = 0;
    const removeBtns = document.querySelectorAll(".remove-product-btn");
@@ -325,4 +367,3 @@ function removeProductFromSelection(pid) {
       hidePreviewWindow();
    }
 }
-

@@ -29,6 +29,7 @@
    --primary-variant: #27ae60;
    --on-primary: #ffffff;
    
+   --success: #2ecc71;
    --error: #e74c3c;
    --error-container: rgba(231, 76, 60, 0.1);
    
@@ -68,6 +69,7 @@ body {
 .close-btn {
    font-size: 2em;
    color: #fff;
+   background: #62636e; 
    cursor: pointer;
    transition: color 0.2s ease;
    width: 40px;
@@ -77,6 +79,7 @@ body {
    border: none;
    outline: none;
    border-radius: 50%;
+   transition: color 300ms, background 300ms;
 
    &:hover {
       color: #f00;

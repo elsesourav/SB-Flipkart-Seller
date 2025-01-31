@@ -35,6 +35,9 @@
 .card.glow {
    background: #080d2d;
 }
+.card.listed {
+   border: solid 1px #ffcc00;
+}
 
 .card.hide {
    position: absolute;
@@ -133,6 +136,10 @@
    color: light-dark(#666, #aaa);
    width: 100%;
    text-align: left;
+}
+
+.card .quantity.color {
+   color: #15c4ff;
 }
 
 .card .prices {

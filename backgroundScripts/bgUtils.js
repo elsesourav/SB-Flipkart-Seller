@@ -163,9 +163,9 @@ function verifyProduct(sku, sellerId) {
          const imageUrl = Object.values(imagePaths)?.[0];
 
          // If already selling, no need to check further
-         if (alreadySelling) {
-            resolve({ isError: false, error: "Already selling" });
-         }
+         // if (alreadySelling) {
+         //    resolve({ isError: false, error: "Already selling" });
+         // }
 
          // Check approval status
          const result = await checkApprovalStatus(
@@ -181,6 +181,7 @@ function verifyProduct(sku, sellerId) {
          resolve({
             isError: false,
             is: result?.result,
+            alreadySelling: alreadySelling,
             imageUrl: result?.result ? imageUrl : null,
             error: result?.result ? null : "Not approved",
          });

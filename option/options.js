@@ -1,16 +1,3 @@
-// const selectedCount = document.getElementById("selectedCount");
-
-// const confirmCheck = document.getElementById("confirmationInput");
-
-// Confirmation window elements
-const startMappingFinalStep = document.getElementById("startFinalMapping");
-
-// Success window elements
-const successWindow = document.querySelector(".success-window");
-const totalProductsEl = document.getElementById("totalProducts");
-const successProductsEl = document.getElementById("successProducts");
-const failedProductsEl = document.getElementById("failedProducts");
-
 let SAVED_PRODUCTS = [];
 let PRODUCTS = [];
 let SELECTED_PRODUCTS = [];
@@ -121,7 +108,7 @@ previewWindow.addEventListener("click", (e) => {
 // Handle confirmation input
 confirmationInput.addEventListener("input", () => {
    const value = confirmationInput.value.trim();
-   startMappingFinalStep.disabled = value !== EXTENSION_MAPPING_DATA?.SKU_NAME;
+   startFinalMapping.disabled = value !== EXTENSION_MAPPING_DATA?.SKU_NAME;
 
    if (value && value !== EXTENSION_MAPPING_DATA?.SKU_NAME) {
       confirmationError.textContent = `Please type "${EXTENSION_MAPPING_DATA?.SKU_NAME}" exactly`;
@@ -141,7 +128,7 @@ confirmationWindow.addEventListener("click", (e) => {
 });
 
 // Start final mapping process
-startMappingFinalStep.addEventListener("click", async () => {
+startFinalMapping.addEventListener("click", async () => {
    showLoading();
    hideConfirmationWindow();
    hideLoading();
@@ -153,10 +140,14 @@ mapMoreBtn.addEventListener("click", () => {
    hideSuccessWindow();
    window.location.reload();
 });
+closeSuccess.addEventListener("click", () => {
+   hideSuccessWindow();
+});
+
 
 // Handle Enter key in confirmation input
 confirmationInput.addEventListener("keyup", (e) => {
-   if (e.key === "Enter" && !startMappingFinalStep.disabled) {
-      startMappingFinalStep.click();
+   if (e.key === "Enter" && !startFinalMapping.disabled) {
+      startFinalMapping.click();
    }
 });
