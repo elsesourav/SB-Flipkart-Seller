@@ -242,6 +242,14 @@ runtimeOnMessage("p_b_stop_listing", async (_, __, sendResponse) => {
 });
 
 runtimeOnMessage(
+   "p_b_verify_user",
+   async ({ username, password }, __, sendResponse) => {
+      const result = await verifyUser(username, password);
+      sendResponse(result);
+   }
+);
+
+runtimeOnMessage(
    "p_b_create_user",
    async ({ username, password }, __, sendResponse) => {
       const result = await createUser(username, password);

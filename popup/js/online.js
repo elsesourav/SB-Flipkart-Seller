@@ -1,7 +1,15 @@
 const createUserButton = I("#createUserButton");
+const loginUserButton = I("#loginUserButton");
+const logoutUserButton = I("#logoutUserButton");
+
 const closeCreateUserForm = I("#closeCreateUserForm");
+const closeLoginUserForm = I("#closeLoginUserForm");
+
 const createUserForm = I("#createUserForm");
+const loginUserForm = I("#loginUserForm");
+
 const createUserMainButton = I("#createUser");
+const loginUserMainButton = I("#loginUser");
 const importSearchResult = I("#importSearchResult");
 
 const exportButton = I("#exportButton");
@@ -21,9 +29,15 @@ let selectedFile = null;
 createUserButton.click(() => {
    createUserForm.removeClass("hide");
 });
-
 closeCreateUserForm.click(() => {
    createUserForm.addClass("hide");
+});
+
+loginUserButton.click(() => {
+   loginUserForm.removeClass("hide");
+});
+closeLoginUserForm.click(() => {
+   loginUserForm.addClass("hide");
 });
 
 function resetCreateUserForm() {
@@ -80,6 +94,65 @@ createUserMainButton.click(() => {
          });
       }
    );
+});
+
+loginUserMainButton.click(() => {
+   const username = I("#usernameLogin")[0].value.toLowerCase();
+   const password = I("#passwordLogin")[0].value;
+
+   if (username.length < 2 || password.length < 2) {
+      const message =
+         username.length < 2
+            ? "Username must be at least 2 characters long"
+            : "Password must be at least 2 characters long";
+
+      const alert = new AlertHTML({
+         title: "Alert",
+         message: message,
+         btnNm1: "Okay",
+         oneBtn: true,
+      });
+      alert.show();
+      alert.clickBtn1(() => {
+         alert.hide();
+      });
+      return;
+   }
+
+   runtimeSendMessage(
+      "p_b_verify_user",
+      { username, password },
+      ({ status, message }) => {
+         const alert = new AlertHTML({
+            title: status,
+            titleColor: status === "SUCCESS" ? "green" : "red",
+            titleIcon:
+               status === "SUCCESS" ? "sbi-checkmark" : "sbi-notification",
+            message: message,
+            btnNm1: "Okay",
+            oneBtn: true,
+         });
+         alert.show();
+
+         if (status === "SUCCESS") {
+            chromeStorageSetLocal(storageUserLoginKey, { username, password });
+            loginUserButton.classList.add("hide");
+            logoutUserButton.classList.remove("hide");
+         }
+         alert.clickBtn1(() => {
+            alert.hide();
+            I("#usernameLogin")[0].value = "";
+            I("#passwordLogin")[0].value = "";
+            loginUserForm.addClass("hide");
+         });
+      }
+   );
+});
+
+logoutUserButton.click(() => {
+   chromeStorageRemoveLocal(storageUserLoginKey);
+   loginUserButton.classList.remove("hide");
+   logoutUserButton.classList.add("hide");
 });
 
 exportButton.click(async () => {

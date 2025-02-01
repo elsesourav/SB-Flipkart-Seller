@@ -5,6 +5,7 @@ const storageMappingKey = "SB_Seller_Mapping";
 const storageListingKey = "SB_Seller_Listing";
 const storageOrdersKey = "SB_Seller_Orders";
 const storageSettingsKey = "SB_Seller_Settings";
+const storageUserLoginKey = "SB_Seller_UserLogin";
 const storageFilterSkusKey = "SB_Seller_FilterSkus";
 
 const URLS = {
@@ -320,6 +321,14 @@ function chromeStorageGetLocal(key, callback) {
             resolve(OBJ);
          }
       });
+   });
+}
+
+function chromeStorageRemoveLocal(key) {
+   chrome.storage.local.remove(key).then(() => {
+      if (chrome.runtime.lastError) {
+         console.log("Error removing item:", chrome.runtime.lastError);
+      }
    });
 }
 

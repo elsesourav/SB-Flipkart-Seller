@@ -19,6 +19,21 @@
    -moz-user-select: none;
    -ms-user-select: none;
    -webkit-user-select: none;
+
+   --bg-gradient: linear-gradient(
+      to right,
+      #a1ffce 0%,
+      #faffd1 51%,
+      #a1ffce 100%
+   );
+   @media (prefers-color-scheme: dark) {
+      --bg-gradient: linear-gradient(
+         to right,
+         #ee0979 0%,
+         #ff6a00 51%,
+         #ee0979 100%
+      );
+   }
 }
 
 * {

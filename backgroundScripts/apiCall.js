@@ -4,7 +4,34 @@
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-async function createUser(username, password) {
+function verifyUser(username, password) {
+   return new Promise(async (resolve) => {
+      try {
+         const dbRef = db.ref(`users/${username}`);
+         const snapshot = await dbRef.once("value");
+         if (!snapshot.exists()) {
+            return resolve({
+               message: "User not found",
+               status: "NO_USER",
+            });
+         }
+         const { password: dbPassword } = snapshot.val();
+
+         if (dbPassword !== password) {
+            return resolve({
+               message: "Invalid password",
+               status: "INVALID_PASSWORD",
+            });
+         }
+
+         resolve({ message: "User Successfully Logged In", status: "SUCCESS" });
+      } catch (error) {
+         return resolve({ message: error.message, status: "ERROR" });
+      }
+   });
+}
+
+function createUser(username, password) {
    return new Promise(async (resolve) => {
       try {
          // first check if user exists
@@ -30,7 +57,7 @@ async function createUser(username, password) {
    });
 }
 
-async function exportFile(username, fileType, filename, data, password) {
+function exportFile(username, fileType, filename, data, password) {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}`);
@@ -66,7 +93,7 @@ async function exportFile(username, fileType, filename, data, password) {
    });
 }
 
-async function importFile(username, fileType, filename) {
+function importFile(username, fileType, filename) {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}/${fileType}/${filename}`);
@@ -84,7 +111,7 @@ async function importFile(username, fileType, filename) {
    });
 }
 
-async function deleteFile(username, fileType, filename, password) {
+function deleteFile(username, fileType, filename, password) {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}`);
@@ -111,7 +138,7 @@ async function deleteFile(username, fileType, filename, password) {
    });
 }
 
-async function getFiles(username, fileType, search = "") {
+function getFiles(username, fileType, search = "") {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}/${fileType}`);
@@ -221,6 +248,7 @@ function processBatchForVerification(products, sellerId, startIdx) {
                if (result?.isError) {
                   throw new Error("Too many requests");
                }
+
                if (result?.is) {
                   return {
                      ...product,

@@ -1,5 +1,6 @@
 main {
    --bg: light-dark(#ccc, #333);
+   --text: light-dark(#333, #ccc);
    position: relative;
    width: 100%;
    height: 100%;
@@ -147,10 +148,11 @@ main .container {
             height: calc(var(--s) * 6);
             font-size: calc(var(--s) * 5);
             color: #0f8bff;
-            text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg), 2px -2px var(--bg);
+            text-shadow: 2px 2px var(--bg), -2px -2px var(--bg),
+               -2px 2px var(--bg), 2px -2px var(--bg);
             display: grid;
             place-items: center;
-            overflow: hidden
+            overflow: hidden;
          }
       }
    }
@@ -159,30 +161,42 @@ main .container {
       position: relative;
       width: 100%;
       display: flex;
+      gap: calc(var(--s) * 2);
       justify-content: center;
       align-items: center;
 
-      .create-user-button {
+      .user-button {
          position: relative;
+         width: calc(var(--s) * 5);
+         height: calc(var(--s) * 5);
+         border-radius: calc(var(--s) * 1);
+         display: grid;
+         place-items: center;
          padding: calc(var(--s) * 0.5);
          background-color: light-dark(#fff5, #0005);
-         border-radius: calc(var(--s) / 2);
          color: light-dark(#000, #fff);
          outline: solid 1px light-dark(#000, #fff);
-         transition: color 200ms ease-in-out, background-color 200ms ease-in-out, outline 200ms ease-in-out;
+         transition: 300ms;
          cursor: pointer;
-         
-         i {
-            font-size: calc(var(--s) * 4);
-            box-shadow: none;
-            transition: linear 200ms box-shadow;
+
+         &.hide {
+            display: none;
          }
-         
+
+         i {
+            font-size: calc(var(--s) * 3);
+            scale: 1;
+            transition: 300ms;
+         }
+
          &:hover {
             background-color: light-dark(#000, #fff);
             outline: 1px solid light-dark(#fff, #000);
-            text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg), 2px -2px var(--bg);
-            color: #0f8bff;
+
+            i {
+               color: #00f;
+               scale: 1.1;
+            }
          }
       }
    }
@@ -258,7 +272,6 @@ body:has(.btn:nth-child(4) input:checked) {
          height: 100%;
          grid-template-columns: 1fr;
 
-
          input[type="button"] {
             width: 100%;
             height: 100%;
@@ -276,7 +289,6 @@ body:has(.btn:nth-child(4) input:checked) {
             }
          }
       }
-
    }
 
    &.show-output {
@@ -333,7 +345,7 @@ body:has(.btn:nth-child(4) input:checked) {
                &:hover {
                   border: solid 1px light-dark(#000, #fff);
                }
-               
+
                &.selected {
                   background-color: light-dark(#000, #fff);
                   color: light-dark(#fff, #000);
@@ -343,7 +355,7 @@ body:has(.btn:nth-child(4) input:checked) {
                      color: light-dark(#fff, #000);
                   }
                }
-               
+
                .name {
                   font-size: calc(var(--s) * 1);
                   font-family: f8b;
@@ -352,7 +364,7 @@ body:has(.btn:nth-child(4) input:checked) {
                   overflow: hidden;
                   white-space: nowrap;
                }
-               
+
                .date {
                   text-align: center;
                   font-size: calc(var(--s) * 1);
@@ -413,7 +425,8 @@ body:has(.btn:nth-child(4) input:checked) {
       position: relative;
       width: auto;
       padding-left: 8px;
-      text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg), 2px -2px var(--bg);
+      text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg),
+         2px -2px var(--bg);
       font-size: calc(var(--s) * 1.4);
       font-weight: 900;
       font-family: f6b;
@@ -767,33 +780,4 @@ body:has(.btn:nth-child(4) input:checked) {
          color: #ff0000;
       }
    } */
-}
-
-
-#openMoreMapping {
-   display: flex;
-   gap: 10px;
-   justify-content: center;
-   align-items: center;
-   padding: 4px 8px;
-   border-radius: 4px;
-   cursor: pointer;
-   font-size: 14px;
-   font-weight: 500;
-   transition: all 0.2s ease;
-   background-color: #1e5fbe;
-   color: #fff;
-}
-
-#openMoreMapping {
-   padding: 8px 16px;
-   border-radius: 4px;
-   cursor: pointer;
-   font-size: 14px;
-   font-weight: 500;
-   transition: all 0.2s ease;
-}
-
-#openMoreMapping:hover {
-   background-color: #1e5fbe;
 }

@@ -41,8 +41,8 @@
 
 <body>
    <!----------------------------------------------------------------
-                                    Header
-      ------------------------------------------------------------------>
+                                 Header
+   ------------------------------------------------------------------>
    <header>
       <div class="logo">
          <img src="./../assets/icons/icon.png" alt="extension icon" />
@@ -59,8 +59,8 @@
    </header>
 
    <!----------------------------------------------------------------
-      Both (Auto and Manually)
-      ------------------------------------------------------------------>
+                  Both (Auto and Manually)
+   ------------------------------------------------------------------>
    <!-- add different switch options -->
    <nav>
       <div class="options">
@@ -81,18 +81,29 @@
             <label for="settings_control">SETTINGS</label>
          </div>
       </div>
+
+      <div class="head">
+         <div class="openMoreOptions">
+            <p>OPEN MORE OPTIONS</p>
+         </div>
+         <div class="button import">
+            <p>IMPORT</p>
+            <i class="sbi-install"></i>
+         </div>
+         <div class="button export">
+            <p>EXPORT</p>
+            <i class="sbi-save2"></i>
+         </div>
+      </div>
    </nav>
 
    <main>
       <img src="./../assets/img/bg.png" id="bgImage">
 
+      <!----------------------------------------------------------------
+                                 Mapping
+      ------------------------------------------------------------------>
       <div class="container" id="mappingContainer">
-         <div id="openMoreMapping">
-            <p>MORE MAPPING</p>
-         </div>
-
-         <div class="gap x4"></div>
-
          <div class="basic-grid no-flip">
             <div class="take-inp">
                <span class="inp-span">Name</span>
@@ -501,6 +512,9 @@
          </div>
       </div>
 
+      <!----------------------------------------------------------------
+                                 Listing
+      ------------------------------------------------------------------>
       <div class="container" id="myListing">
          <div class="basic-grid no-flip">
             <div class="show-output">
@@ -1541,6 +1555,9 @@
          </div>
       </div>
 
+      <!----------------------------------------------------------------
+                                 Orders
+      ------------------------------------------------------------------>
       <div class="container" id="orders">
          <div class="basic-grid no-flip">
             <div class="take-inp check-box">
@@ -1566,6 +1583,9 @@
          </div>
       </div>
 
+      <!----------------------------------------------------------------
+                                 Settings
+      ------------------------------------------------------------------>
       <div class="container" id="settings">
          <div class="basic-grid flip">
             <div class="open-close">
@@ -1714,14 +1734,24 @@
          <p class="gap x8"></p>
 
          <footer class="create-user">
-            <div class="create-user-button" id="createUserButton">
+            <div class="user-button" id="createUserButton">
                <i class="sbi-user-plus"></i> 
+            </div>
+            <div class="user-button" id="loginUserButton">
+               <i class="sbi-user1"></i>
+            </div>
+            <div class="user-button hide" id="logoutUserButton">
+               <i class="sbi-sign-out"></i>
             </div>
          </footer>
 
          <p class="gap x8"></p>
       </div>
 
+
+      <!----------------------------------------------------------------
+                                 Create User
+      ------------------------------------------------------------------>
       <div class="container float hide" id="createUserForm">
          <div class="basic-grid no-flip form">
 
@@ -1772,6 +1802,55 @@
                   <div class="take-value">
                      <div class="inp button">
                         <input autocomplete="off" type="button" id="createUser" value="CREATE" />
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+         </div>
+      </div>
+
+      <!----------------------------------------------------------------
+                                 Login User
+      ------------------------------------------------------------------>
+      <div class="container float hide" id="loginUserForm">
+         <div class="basic-grid no-flip form">
+            <div class="close absolute" id="closeLoginUserForm">
+               <i class="sbi-close"></i>
+            </div>
+
+            <div class="user-icon">
+               <i class="sbi-user-circle-o"></i>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">UserName</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input autocomplete="off" type="text" id="usernameLogin"/>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">Password</span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp text">
+                        <input autocomplete="off" type="password" id="passwordLogin"/>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <!-- submit -->
+            <div class="take-inp full">
+               <section>
+                  <div class="take-value">
+                     <div class="inp button">
+                        <input autocomplete="off" type="button" id="loginUser" value="LOGIN" />
                      </div>
                   </div>
                </section>

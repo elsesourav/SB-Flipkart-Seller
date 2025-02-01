@@ -23,8 +23,8 @@ const UPLOAD_IMAGE_INPUTS = I(".take-inp.images input[type=file]");
 const IMAGE_LISTS = I(".take-inp.images .all-images");
 const DELETE_IMAGES_BUTTONS = I(".take-inp.images .delete-all");
 
-// Open More Mapping button click handler
-openMoreMapping.click(() => {
+// Open More Options button click handler
+I(".openMoreOptions").click(() => {
    chrome.runtime.openOptionsPage();
 });
 
@@ -134,7 +134,7 @@ async function init() {
       setJsonContent(ordersData.editor);
       I("#NumberInBengaliDiv")[0].classList.toggle(
          "hide",
-         !ordersData.WordInBengali
+         !ordersData.WORD_IN_BENGALI
       );
    });
 
@@ -147,6 +147,15 @@ async function init() {
       I("nav .options .btn input")[settings.currentMode].checked = true;
    });
 
+   chromeStorageGetLocal(storageUserLoginKey, (val) => {
+      if (val) {
+         loginUserButton.classList.add("hide");
+         logoutUserButton.classList.remove("hide");
+      } else {
+         loginUserButton.classList.remove("hide");
+         logoutUserButton.classList.add("hide");
+      }
+   });
    setupSavedImages();
 }
 
