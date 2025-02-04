@@ -9,7 +9,7 @@ class AlertHTML {
       buttonHeight = 45,
       title,
       message,
-      btnNm1 = "No",
+      btnNm1 = "Okay",
       btnNm2 = "Yes",
       btnNm1Color = "#1eff00",
       btnNm2Color = "#ff0000",

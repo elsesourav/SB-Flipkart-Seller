@@ -3,14 +3,15 @@ main {
    --text: light-dark(#333, #ccc);
    position: relative;
    width: 100%;
-   height: 100%;
+   height: auto;
    display: grid;
    background-color: var(--bg);
    align-items: center;
    padding: 0 var(--s);
    border-radius: calc(var(--s) / 2);
    animation: opacity linear 400ms;
-   overflow: hidden;
+   /* overflow-y: auto;
+   overflow-x: hidden; */
 
    img#bgImage {
       position: absolute;
@@ -39,7 +40,7 @@ main {
       }
    }
 
-   &:before,
+   /* &:before,
    &:after {
       content: "";
       position: absolute;
@@ -55,18 +56,20 @@ main {
       top: auto;
       bottom: 0;
       background: linear-gradient(to top, var(--bg) 50%, transparent);
-   }
+   } */
 }
 
 main .container {
    position: relative;
    width: 100%;
-   height: 100%;
+   height: auto;
    opacity: 1;
    padding: calc(var(--s) * 1.5) 0;
+   
    transition: ease-in opacity 300ms;
-   overflow-y: scroll;
-   overflow-x: hidden;
+   /* overflow: hidden; */
+   /* overflow-y: scroll;
+   overflow-x: hidden; */
 
    @starting-style {
       opacity: 0;
@@ -77,7 +80,7 @@ main .container {
       position: fixed;
       border-radius: 0;
       padding: 0;
-      z-index: 3;
+      z-index: 10;
       inset: var(--m);
       width: calc(100% - var(--m) * 2);
       height: calc(100% - var(--m) * 2);
@@ -99,13 +102,17 @@ main .container {
          opacity: 0;
       }
 
+      &.big .basic-grid {
+         width: 86%;
+      }
+
       .basic-grid {
          grid-template-columns: 1fr;
-         width: 60%;
+         width: 65%;
          height: auto;
          row-gap: calc(var(--s) * 1.5);
-         background-color: light-dark(#fff9, #0009);
-         border: groove 4px #0f8bff;
+         background-color: light-dark(#8383d7ee, #353545ee);
+         border: solid 4px light-dark(#000000, #ffffff);
          border-radius: calc(var(--s) / 2);
          padding: calc(var(--s) * 1.5) calc(var(--s) * 1);
          border-radius: calc(var(--s));
@@ -139,6 +146,7 @@ main .container {
 
             &:hover {
                background-color: #0f8bff;
+               border-radius: inherit;
             }
          }
 
@@ -289,10 +297,16 @@ body:has(.btn:nth-child(4) input:checked) {
             }
          }
       }
+
+   }
+   
+   &.imp-exp {
+      height: calc(var(--s) * 18) !important;
    }
 
    &.show-output {
       grid-template-columns: 3fr 2fr;
+
 
       .out-span {
          position: relative;
@@ -311,6 +325,7 @@ body:has(.btn:nth-child(4) input:checked) {
          padding: calc(var(--s) / 4);
          overflow: hidden;
 
+
          section.scroll {
             width: 100%;
             height: 100%;
@@ -325,6 +340,11 @@ body:has(.btn:nth-child(4) input:checked) {
             align-items: start;
             gap: calc(var(--s) / 2);
             grid-template-rows: repeat(auto-fill, calc(var(--s) * 3));
+
+
+            &.big .file {
+               grid-template-columns: 8fr 6fr 1fr !important;
+            }
 
             .file {
                position: relative;
@@ -341,6 +361,11 @@ body:has(.btn:nth-child(4) input:checked) {
                color: light-dark(#000, #fff);
                transition: background-color 200ms, color 200ms, border 200ms;
                cursor: pointer;
+
+
+               &.hide {
+                  display: none;
+               }
 
                &:hover {
                   border: solid 1px light-dark(#000, #fff);

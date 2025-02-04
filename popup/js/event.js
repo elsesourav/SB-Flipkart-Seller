@@ -19,12 +19,12 @@ I("#WordInBengali").click((_, __, ele) => {
 
 I(".grid-flip").click((_, i) => {
    settings.listingOpen[i] = _.target.checked;
-   chromeStorageSetLocal(storageSettingsKey, settings);
+   chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
 });
 
 I("nav .options .btn").click((_, i) => {
    settings.currentMode = i;
-   chromeStorageSetLocal(storageSettingsKey, settings);
+   chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
    jsonEditor.refresh();
 });
 
@@ -40,7 +40,7 @@ jsonEditor.on("change", () => {
    try {
       const editorValue = getJsonContent();
       ordersData.editor = editorValue;
-      chromeStorageSetLocal(storageOrdersKey, ordersData);
+      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, ordersData);
       jsonEditorTitle.removeClass("error");
    } catch (e) {
       console.log("Invalid JSON");

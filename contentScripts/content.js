@@ -64,6 +64,14 @@ function setup_orders_print() {
    document.body.appendChild(TABLE);
    setStyle(true);
 
+
+   `<div class="styles__TabTitle-sc-pm37sa-0 fcTnJe">Dispatched Orders</div>
+      <div class="styles__ActivePrimaryNavTabDiv-sc-5k1co9-0 styles__InactivePrimaryNavTabDiv-sc-5k1co9-1 BFknH">
+         <div class="styles__PrimaryTabContentWrapper-sc-pm37sa-4 gTelNg">
+         <div class="styles__PrimaryTabContentValue-sc-pm37sa-5 bimpXx"><span class="styles__PrimaryTabContentNumerator-sc-pm37sa-6 hhnmuk">232</span></div><div>In Transit</div></div></div><div class="styles__ActivePrimaryNavTabDiv-sc-5k1co9-0 styles__InactivePrimaryNavTabDiv-sc-5k1co9-1 BFknH"><div class="styles__PrimaryTabContentWrapper-sc-pm37sa-4 gTelNg"><div class="styles__PrimaryTabContentValue-sc-pm37sa-5 bimpXx"><span class="styles__PrimaryTabContentNumerator-sc-pm37sa-6 hhnmuk">0</span></div><div>Pending Services</div>
+      </div>
+   </div>`
+
    CE(
       { id: "__fwo__", class: "__fw__" },
       (openInputBtn = CE({ class: "__btn__" }, "Orders")),

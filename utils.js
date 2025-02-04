@@ -1,12 +1,14 @@
 "use strict";
 
-const storageInitKey = "SB_Seller_Init";
-const storageMappingKey = "SB_Seller_Mapping";
-const storageListingKey = "SB_Seller_Listing";
-const storageOrdersKey = "SB_Seller_Orders";
-const storageSettingsKey = "SB_Seller_Settings";
-const storageUserLoginKey = "SB_Seller_UserLogin";
-const storageFilterSkusKey = "SB_Seller_FilterSkus";
+const KEYS = {
+   STORAGE_INIT: "SB_Seller_Init",
+   STORAGE_MAPPING: "SB_Seller_Mapping",
+   STORAGE_LISTING: "SB_Seller_Listing",
+   STORAGE_ORDERS: "SB_Seller_Orders",
+   STORAGE_SETTINGS: "SB_Seller_Settings",
+   STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
+   STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
+}
 
 const URLS = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",

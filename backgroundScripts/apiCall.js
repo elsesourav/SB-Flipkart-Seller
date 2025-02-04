@@ -49,7 +49,7 @@ function createUser(username, password) {
             username,
             password,
          });
-         resolve({ message: "User created successfully", status: "Success" });
+         resolve({ message: "User created successfully", status: "SUCCESS" });
       } catch (error) {
          console.log(error);
          resolve({ message: error.message, status: "Error" });
@@ -70,22 +70,24 @@ function exportFile(username, fileType, filename, data, password) {
          if (userData.password !== password) {
             return resolve({
                message: "Incorrect password",
-               status: "Error",
+               status: "INCORRECT_PASSWORD",
             });
          }
 
          const { yy, mm, dd, hh, ss, ms } = DATE();
 
          const fileRef = dbRef.child(
-            `${fileType}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`
+            `${fileType.toLowerCase()}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`
          );
          await fileRef.set({
             id: Date.now().toString(36).toUpperCase(),
             filename,
+            filenameLower: filename.toLowerCase(),
+            fileType,
             data,
             date: `${dd}-${mm}-${yy} | ${hh}:${ss}`,
          });
-         resolve({ message: "File exported successfully", status: "Success" });
+         resolve({ message: "File exported successfully", status: "SUCCESS" });
       } catch (error) {
          console.log(error);
          resolve({ message: error.message, status: "ERROR" });
@@ -117,20 +119,20 @@ function deleteFile(username, fileType, filename, password) {
          const dbRef = db.ref(`users/${username}`);
          const snapshot = await dbRef.once("value");
          if (!snapshot.exists()) {
-            return resolve({ message: "User not found", status: "NO_USER" });
+            return resolve({ message: "User not found", status: "NO USER" });
          }
 
          const userData = snapshot.val();
          if (userData.password !== password) {
             return resolve({
-               message: "Incorrect password",
-               status: "INCORRECT_PASSWORD",
+               message: "Incorrect password please check and try again",
+               status: "INCORRECT PASSWORD",
             });
          }
-
+         
          const fileRef = dbRef.child(`${fileType}/${filename}`);
          await fileRef.remove();
-         resolve({ message: "File deleted successfully", status: "Success" });
+         resolve({ message: "File deleted successfully", status: "SUCCESS" });
       } catch (error) {
          console.log(error);
          resolve({ message: error.message, status: "ERROR" });
@@ -143,9 +145,10 @@ function getFiles(username, fileType, search = "") {
       try {
          const dbRef = db.ref(`users/${username}/${fileType}`);
          const query = dbRef
-            .orderByChild("filename")
+            .orderByChild("filenameLower")
             .startAt(search)
             .endAt(search + "\uf8ff");
+            
          const snapshot = await query.once("value");
          if (!snapshot.exists()) {
             return resolve({
@@ -156,12 +159,12 @@ function getFiles(username, fileType, search = "") {
          }
 
          const files = snapshot.val() || {};
-         const filteredFiles = Object.entries(files);
+         const filesArray = Object.entries(files);
 
          resolve({
             message: "Files fetched successfully",
             status: "ok",
-            data: filteredFiles,
+            data: filesArray,
          });
       } catch (error) {
          console.log(error);

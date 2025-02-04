@@ -2,49 +2,68 @@ const createUserButton = I("#createUserButton");
 const loginUserButton = I("#loginUserButton");
 const logoutUserButton = I("#logoutUserButton");
 
-const closeCreateUserForm = I("#closeCreateUserForm");
-const closeLoginUserForm = I("#closeLoginUserForm");
+const closeButtons = I(".container > div > .close");
 
 const createUserForm = I("#createUserForm");
 const loginUserForm = I("#loginUserForm");
 
 const createUserMainButton = I("#createUser");
 const loginUserMainButton = I("#loginUser");
-const importSearchResult = I("#importSearchResult");
 
-const exportButton = I("#exportButton");
-const exportTypeSelector = I("#exportTypeSelector");
-const exportUsername = I("#exportUsername");
-const exportPassword = I("#exportPassword");
-const exportFileName = I("#exportFileName");
+const exportButtonElement = I("#exportButtonMain");
+const importButtonElement = I("#importButtonMain");
 
-const importButton = I("#importButton");
-const importTypeSelector = I("#importTypeSelector");
-const importUsername = I("#importUsername");
-const importSearch = I("#importSearch");
+const importWindow = I("#importWindow");
+const exportWindow = I("#exportWindow");
+
+const importTypes = I(".import-type");
+const importUsernames = I(".import-username");
+const importSearches = I(".import-search");
+const importResults = I(".import-result");
+const importButtons = I(".import-btn");
+
+const exportTypes = I(".export-type");
+const exportUsernames = I(".export-username");
+const exportPasswords = I(".export-password");
+const exportFileNames = I(".export-filename");
+const exportButtons = I(".export-btn");
 
 const SEARCH_DELAY = () => 1000;
-let selectedFile = null;
+let IMPORT_SELECTED_FILE = null;
 
-createUserButton.click(() => {
-   createUserForm.removeClass("hide");
-});
-closeCreateUserForm.click(() => {
-   createUserForm.addClass("hide");
-});
-
-loginUserButton.click(() => {
-   loginUserForm.removeClass("hide");
-});
-closeLoginUserForm.click(() => {
-   loginUserForm.addClass("hide");
-});
+function showAlertMessage(status, message, callback = () => {}) {
+   const alert = new AlertHTML({
+      title: status,
+      titleColor: status === "SUCCESS" ? "green" : "red",
+      titleIcon: status === "SUCCESS" ? "sbi-checkmark" : "sbi-notification",
+      message: message,
+      btnNm1: "Okay",
+      oneBtn: true,
+   });
+   alert.show();
+   alert.clickBtn1(() => {
+      alert.hide();
+      callback(status);
+   });
+}
 
 function resetCreateUserForm() {
    I("#username")[0].value = "";
    I("#password")[0].value = "";
    I("#coPassword")[0].value = "";
 }
+
+createUserButton.click(() => {
+   createUserForm.removeClass("hide");
+});
+
+loginUserButton.click(() => {
+   loginUserForm.removeClass("hide");
+});
+
+closeButtons.click((__, _, ele) => {
+   ele.parentNode.parentNode.classList.add("hide");
+});
 
 createUserMainButton.click(() => {
    const username = I("#username")[0].value.toLowerCase();
@@ -59,15 +78,7 @@ createUserMainButton.click(() => {
             ? "Password must be at least 2 characters long"
             : "Password and Confirm Password do not match";
 
-      const alert = new AlertHTML({
-         title: "Alert",
-         message: message,
-         btnNm1: "Okay",
-         oneBtn: true,
-      });
-      alert.show();
-      alert.clickBtn1(() => {
-         alert.hide();
+      showAlertMessage("ERROR", message, () => {
          resetCreateUserForm();
       });
       return;
@@ -77,20 +88,11 @@ createUserMainButton.click(() => {
       "p_b_create_user",
       { username, password },
       ({ status, message }) => {
-         const alert = new AlertHTML({
-            title: status,
-            titleColor: status === "Success" ? "green" : "red",
-            titleIcon:
-               status === "Success" ? "sbi-checkmark" : "sbi-notification",
-            message: message,
-            btnNm1: "Okay",
-            oneBtn: true,
-         });
-         alert.show();
-         alert.clickBtn1(() => {
-            alert.hide();
-            resetCreateUserForm();
-            createUserForm.addClass("hide");
+         showAlertMessage(status, message, (STATUS) => {
+            if (STATUS === "SUCCESS") {
+               resetCreateUserForm();
+               createUserForm.addClass("hide");
+            }
          });
       }
    );
@@ -106,16 +108,7 @@ loginUserMainButton.click(() => {
             ? "Username must be at least 2 characters long"
             : "Password must be at least 2 characters long";
 
-      const alert = new AlertHTML({
-         title: "Alert",
-         message: message,
-         btnNm1: "Okay",
-         oneBtn: true,
-      });
-      alert.show();
-      alert.clickBtn1(() => {
-         alert.hide();
-      });
+      showAlertMessage("ERROR", message);
       return;
    }
 
@@ -123,253 +116,126 @@ loginUserMainButton.click(() => {
       "p_b_verify_user",
       { username, password },
       ({ status, message }) => {
-         const alert = new AlertHTML({
-            title: status,
-            titleColor: status === "SUCCESS" ? "green" : "red",
-            titleIcon:
-               status === "SUCCESS" ? "sbi-checkmark" : "sbi-notification",
-            message: message,
-            btnNm1: "Okay",
-            oneBtn: true,
-         });
-         alert.show();
-
          if (status === "SUCCESS") {
-            chromeStorageSetLocal(storageUserLoginKey, { username, password });
+            chromeStorageSetLocal(KEYS.STORAGE_USER_LOGIN, {
+               username,
+               password,
+            });
             loginUserButton.classList.add("hide");
             logoutUserButton.classList.remove("hide");
          }
-         alert.clickBtn1(() => {
-            alert.hide();
-            I("#usernameLogin")[0].value = "";
-            I("#passwordLogin")[0].value = "";
-            loginUserForm.addClass("hide");
+
+         showAlertMessage(status, message, (STATUS) => {
+            if (STATUS === "SUCCESS") {
+               I("#usernameLogin")[0].value = "";
+               I("#passwordLogin")[0].value = "";
+               loginUserForm.addClass("hide");
+            }
          });
       }
    );
 });
 
 logoutUserButton.click(() => {
-   chromeStorageRemoveLocal(storageUserLoginKey);
+   chromeStorageRemoveLocal(KEYS.STORAGE_USER_LOGIN);
    loginUserButton.classList.remove("hide");
    logoutUserButton.classList.add("hide");
 });
 
-exportButton.click(async () => {
-   const fileType = exportTypeSelector[0];
-   const type = fileType.value.toLowerCase();
-   const filename = exportFileName[0].value;
-   const username = exportUsername[0].value.toLowerCase();
-   const password = exportPassword[0].value;
+exportButtons.click(async (_, i) => {
+   const type = i === 1 ? exportTypes[1].textContent : exportTypes[i].value;
+   const username = exportUsernames[i].value;
+   const password = exportPasswords[i].value;
+   const filename = exportFileNames[i].value;
 
-   const all = [
-      fileType.selectedIndex < 1,
-      filename.length < 1,
-      username.length < 2,
-      password.length < 2,
-   ];
-
-   if (all.includes(true)) {
-      const message = all[0]
-         ? "Please select export type"
-         : all[1]
-         ? "Please enter file name"
-         : all[2]
-         ? "Please enter username"
-         : "Please enter password";
-
-      const alert = new AlertHTML({
-         title: "Alert",
-         message: message,
-         btnNm1: "Okay",
-         oneBtn: true,
-      });
-      alert.show();
-      alert.clickBtn1(() => {
-         alert.hide();
-      });
+   if (!type || !username || !password || !filename) {
+      showAlertMessage("ERROR", "Please fill all the fields");
       return;
    }
 
-   const getFile = await getLocalFile(exportTypeSelector[0].value);
+   if (username.length < 2 || password.length < 2) {
+      showAlertMessage(
+         "ERROR",
+         "Username and password must be at least 2 characters long"
+      );
+      return;
+   }
+
+   if (filename.length < 1) {
+      showAlertMessage("ERROR", "Filename must be at least 1 characters long");
+      return;
+   }
+
+   const getFile = await getLocalFile(type.toUpperCase());
 
    runtimeSendMessage(
       "p_b_export_file",
-      { data: getFile, typeType: type, filename, username, password },
+      { data: getFile, fileType: type, filename, username, password },
       ({ status, message }) => {
-         if (status === "Success") {
-            exportUsername[0].value = "";
-            exportPassword[0].value = "";
-            exportFileName[0].value = "";
-         }
-         const alert = new AlertHTML({
-            title: status,
-            titleColor: status === "Success" ? "green" : "red",
-            titleIcon:
-               status === "Success" ? "sbi-checkmark" : "sbi-notification",
-            message: message,
-            btnNm1: "Okay",
-            oneBtn: true,
-         });
-         alert.show();
-         alert.clickBtn1(() => {
-            alert.hide();
+         showAlertMessage(status, message, (STATUS) => {
+            if (STATUS === "SUCCESS") {
+               exportWindow.addClass("hide");
+            }
          });
       }
    );
 });
 
-function selectFile(ele, data, name) {
-   const files = I(".file", importSearchResult[0]);
-   files.forEach((e) => e.classList.remove("selected"));
-   ele.classList.add("selected");
-   selectedFile = { file: data, name };
-}
+exportButtonElement.click(async () => {
+   const type = I(".options .btn input:checked")[0]?.dataset.name;
+   if (!type) return;
 
-async function deleteFile(username, fileType, filename) {
-   const form = new FormHTML();
-   form.show();
+   exportWindow.removeClass("hide");
+   exportTypes[1].innerHTML = type.toUpperCase();
 
-   form.clickOutside(() => {
-      form.hide();
-   });
-
-   form.buttonClick((e, input) => {
-      const password = input.value;
-      if (password.length < 2) {
-         const alert = new AlertHTML({
-            title: "Alert",
-            message: "Please enter password",
-            btnNm1: "Okay",
-            oneBtn: true,
-         });
-         alert.show();
-         alert.clickBtn1(() => {
-            alert.hide();
-         });
-      } else {
-         form.hide();
-         runtimeSendMessage(
-            "p_b_delete_file",
-            { username, fileType, filename, password },
-            ({ status, message }) => {
-               searchFile();
-               const alert = new AlertHTML({
-                  title: status,
-                  titleColor: status === "Success" ? "green" : "red",
-                  titleIcon:
-                     status === "Success"
-                        ? "sbi-checkmark"
-                        : "sbi-notification",
-                  message: message,
-                  btnNm1: "Okay",
-                  oneBtn: true,
-               });
-               alert.show();
-               alert.clickBtn1(() => {
-                  alert.hide();
-               });
-            }
-         );
-      }
-   });
-}
-
-function searchFile() {
-   const all = [
-      importTypeSelector[0].selectedIndex < 1,
-      importUsername[0].value.length < 2,
-   ];
-   const elements = [importTypeSelector[0], importUsername[0]];
-
-   for (let i = 0; i < all.length; i++) {
-      if (all[i]) elements[i].classList.add("unfilled");
-      else elements[i].classList.remove("unfilled");
-   }
-
-   if (all.includes(true)) return;
-
-   const fileType = importTypeSelector[0];
-   const type = fileType.value.toLowerCase();
-   const username = importUsername[0].value.toLowerCase();
-   const search = importSearch[0].value;
-
-   runtimeSendMessage(
-      "p_b_search_file",
-      { fileType: type, username, search },
-      ({ status, message, data }) => {
-         selectedFile = null;
-
-         const files = data.map(([_, { filename, date }]) => ({
-            filename,
-            date,
-         }));
-
-         importSearchResult.html(
-            files
-               .map(
-                  ({ filename, date }) => `
-                  <div class="file">
-                     <div class="name">${filename}</div>
-                     <div class="date">${date}</div>
-                     <i class="sbi-bin"></i>
-                  </div>
-               `
-               )
-               .join("")
-         );
-
-         const filesElements = I(".file", importSearchResult[0]);
-         const deleteElements = I(".sbi-bin", importSearchResult[0]);
-
-         filesElements.forEach((e, i) => {
-            e.addEventListener("click", () => {
-               selectFile(e, data[i][1].data, data[i][0]);
-            });
-         });
-
-         deleteElements.forEach((e, i) => {
-            e.addEventListener("click", () => {
-               deleteFile(username, type, data[i][0]);
-            });
-         });
-      }
+   const { username, password } = await chromeStorageGetLocal(
+      KEYS.STORAGE_USER_LOGIN
    );
-}
+   exportUsernames[1].value = username || "";
+   exportPasswords[1].value = password || "";
+   exportFileNames[1].value = "";
+});
 
-importTypeSelector.on("input", debounce(searchFile, SEARCH_DELAY));
-importUsername.on("input", debounce(searchFile, SEARCH_DELAY));
-importSearch.on("input", debounce(searchFile, SEARCH_DELAY));
+importTypes.on("input", debounce(getFiles, SEARCH_DELAY));
+importUsernames.on("input", debounce(getFiles, SEARCH_DELAY));
+importSearches.on("input", searchFile);
 
-importButton.click(async () => {
-   const fileType = importTypeSelector[0].value;
-   if (selectedFile === null) {
-      const alert = new AlertHTML({
-         title: "Alert",
-         message: "Please select a file",
-         btnNm1: "Okay",
-         oneBtn: true,
-      });
-      alert.show();
-      alert.clickBtn1(() => {
-         alert.hide();
-      });
+importButtons.click(async (_, i) => {
+   const type = i === 1 ? importTypes[1].textContent : importTypes[i].value;
+   if (IMPORT_SELECTED_FILE === null) {
+      showAlertMessage("ERROR", "Please select a file");
       return;
    }
 
-   await setLocalFile(fileType, selectedFile.file);
+   await setLocalFile(type.toUpperCase(), IMPORT_SELECTED_FILE.file);
 
-   const alert = new AlertHTML({
-      title: "Success",
-      titleIcon: "sbi-checkmark",
-      titleColor: "green",
-      message: `File <b>${selectedFile.name}</b> is imported successfully`,
-      btnNm1: "Okay",
-      oneBtn: true,
-   });
+   showAlertMessage(
+      "SUCCESS",
+      `File <b>${IMPORT_SELECTED_FILE.name}</b> is imported successfully`,
+      () => {
+         importWindow.addClass("hide");
+      }
+   );
+});
 
-   alert.show();
-   alert.clickBtn1(() => {
-      alert.hide();
+importButtonElement.click(async () => {
+   const type = I(".options .btn input:checked")[0]?.dataset.name;
+   if (!type) return;
+   importWindow.removeClass("hide");
+   importTypes[1].innerHTML = type.toUpperCase();
+
+   const DATA = await chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN);
+   let { username } = DATA;
+   if (DATA) {
+      importUsernames[1].value = username;
+   } else {
+      username = importUsernames[1].value.toLowerCase();
+   }
+
+   dbSearchFile({
+      parent: importResults[1],
+      username,
+      type,
+      index: 1,
    });
 });

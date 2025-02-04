@@ -114,12 +114,12 @@ const updateAndReloadTab = (tabId, newUrl) => {
 
 const __create_new_listing__ = (quantity, count, thumbnailIndex) => {
    if (listing_run) {
-      chromeStorageGetLocal(storageListingKey, async (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_LISTING, async (val) => {
          if (!val) val = {};
          val.QUANTITY = quantity;
          val.COUNT = count;
          val.THUMBNAIL_INDEX = thumbnailIndex;
-         chromeStorageSetLocal(storageListingKey, val);
+         chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
 
          await updateTab(currentTabId, URLS.newListing);
          tabSendMessage(currentTabId, "b_c_create_single_listing", (r) => {
@@ -132,7 +132,7 @@ const __create_new_listing__ = (quantity, count, thumbnailIndex) => {
 function getImageFilesFromLocalStorage() {
    return new Promise(async (resolve) => {
       const { THUMBNAIL_INDEX } = await chromeStorageGetLocal(
-         storageListingKey
+         KEYS.STORAGE_LISTING
       );
       const DATA = await chromeStorageGetLocal(`storage-images-0`);
       const firstImg = DATA?.files[THUMBNAIL_INDEX];

@@ -11,18 +11,18 @@ console.log("background loaded");
 runtimeOnMessage("c_b_update_mapping", (values, _, sendResponse) => {
    console.log(values);
    sendResponse({ status: "ok" });
-   chromeStorageGetLocal(storageMappingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
       for (const key in val) {
          if (values[key]) {
             val[key] = values[key];
          }
       }
-      chromeStorageSetLocal(storageMappingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
    });
 });
 
 runtimeOnMessage("c_b_mapping_request", (__, _, sendResponse) => {
-   chromeStorageGetLocal(storageMappingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
       sendResponse(val);
    });
 });
@@ -50,14 +50,17 @@ runtimeOnMessage(
          // Process products in batches
          const verifiedProducts = [];
          for (let i = 0; i < products.length; i += BATCH_SIZE) {
-            const batchResults = await processBatchForVerification(products, sellerId, i);
+            const batchResults = await processBatchForVerification(
+               products,
+               sellerId,
+               i
+            );
             if (batchResults?.isError) {
                sendResponse({ isError: true, error: "Too many requests" });
                return;
             }
             verifiedProducts.push(...batchResults);
          }
-         
 
          // Send final filtered response
          sendResponse(verifiedProducts);
@@ -75,32 +78,29 @@ runtimeOnMessage(
          const newMappingData = getMixDataToNewMappingData(DATA);
          const BATCH_SIZE = 25;
          const allResults = [];
-         
+
          // Process data in batches of 25
          for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
             const batchData = {
                ...newMappingData,
-               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE)
+               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
             };
-            
+
             const batchResult = await createProductMappingBulk(batchData);
             allResults.push(...batchResult);
          }
          // Send final results
          sendResponse(allResults);
-
       } catch (error) {
          console.log("Error in product mapping:", error);
-         sendResponse({ 
+         sendResponse({
             status: "error",
             message: "Failed to map products",
-            error: error.message
+            error: error.message,
          });
       }
    }
 );
-
-
 
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));
@@ -108,27 +108,27 @@ runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
 
 runtimeOnMessage("c_b_listing_data_update", (values, _, sendResponse) => {
    sendResponse({ status: "ok" });
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       for (const key in val) {
          if (values[key]) {
             val[key] = values[key];
          }
       }
-      chromeStorageSetLocal(storageListingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
    });
 });
 
 runtimeOnMessage("c_b_listing_data_update", (__, _, sendResponse) => {
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       val.QUANTITY = val?.START_COUNT || 0;
       val.COUNT = 0;
-      chromeStorageSetLocal(storageListingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
       sendResponse({ status: "ok" });
    });
 });
 
 runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       getImageFilesFromLocalStorage().then((images) => {
          sendResponse({
             ...val,
@@ -139,7 +139,7 @@ runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
 });
 
 runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
-   chromeStorageGetLocal(storageOrdersKey, async (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, async (val) => {
       const productsJson = chrome.runtime.getURL(
          "./../assets/unique/products.json"
       );
@@ -159,13 +159,13 @@ runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
 
 runtimeOnMessage("c_b_order_data_update", (values, _, sendResponse) => {
    sendResponse({ status: "ok" });
-   chromeStorageGetLocal(storageOrdersKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
       for (const key in val) {
          if (values[key]) {
             val[key] = values[key];
          }
       }
-      chromeStorageSetLocal(storageOrdersKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, val);
    });
 });
 
@@ -174,7 +174,7 @@ let listing_run = false;
 let currentTabId = null;
 
 runtimeOnMessage("c_b_create_listing_complete", async (_, __, sendResponse) => {
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       const { TIME_DELAY } = val;
       setTimeout(() => {
          if (PROCESS_QUEUE.length > 0) {
@@ -187,7 +187,7 @@ runtimeOnMessage("c_b_create_listing_complete", async (_, __, sendResponse) => {
 });
 
 runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
-   chromeStorageGetLocal(storageListingKey, async (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, async (val) => {
       listing_run = true;
       currentTabId = (await getCurrentTab()).id;
 
@@ -199,7 +199,7 @@ runtimeOnMessage("p_b_start_listing", async (_, __, sendResponse) => {
          PROCESS_QUEUE = [];
 
          val.COUNT = 0;
-         chromeStorageSetLocal(storageListingKey, val);
+         chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
 
          const { START_COUNT, END_COUNT, STAPES_BY } = val;
 
@@ -259,18 +259,8 @@ runtimeOnMessage(
 
 runtimeOnMessage(
    "p_b_export_file",
-   async (
-      { data, typeType, filename, username, password },
-      __,
-      sendResponse
-   ) => {
-      const result = await exportFile(
-         username,
-         typeType,
-         filename,
-         data,
-         password
-      );
+   async ({ data, fileType, filename, username, password }, __, sendResponse) => {
+      const result = await exportFile(username, fileType, filename, data, password);
       sendResponse(result);
    }
 );

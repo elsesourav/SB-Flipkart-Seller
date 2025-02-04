@@ -22,9 +22,14 @@
 
    .take-inp.center,
    .show-output,
+   .small-center,
    .take-inp.images {
       grid-column: span 2;
       width: calc(var(--ww) - var(--s) * 2);
+
+      &.big {
+         width: calc(var(--ww) + var(--s) * 2);
+      }
    }
 
    &.no-flip {
@@ -97,7 +102,7 @@
 
       &.big-textarea {
          grid-template-columns: 1fr;
-         height: calc(var(--s) * 25);
+         height: calc(var(--s) * 40);
          grid-template-rows: calc(var(--s) * 2.5) 1fr;
 
          span#jsonEditorTitle {
@@ -175,7 +180,8 @@
    }
 
 
-   &.flip {
+   &.flip,
+   &.no-flip {
       position: relative;
       display: grid;
       width: 100%;
@@ -195,7 +201,7 @@
          align-items: center;
          cursor: pointer;
          gap: calc(var(--s));
-         z-index: 3;
+         z-index: 2;
          font-size: calc(var(--s) * 1.5);
          text-shadow: 2px 2px var(--bg), -2px -2px var(--bg), -2px 2px var(--bg), 2px -2px var(--bg);
    
@@ -249,6 +255,15 @@
                grid-template-rows: 3fr 10fr;
                row-gap: calc(var(--s) * 0.5);
                height: calc(var(--s) * 14);
+            }
+         }
+
+         &.imp-exp:not(.attach) {
+            grid-template-columns: 1fr;
+
+            .part {
+               place-items: center;
+               grid-template-columns: 1fr 1fr;
             }
          }
       }

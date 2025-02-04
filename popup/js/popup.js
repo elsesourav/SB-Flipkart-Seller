@@ -57,17 +57,17 @@ async function init() {
       Math.random() * 7
    )}.png`;
 
-   await chromeStorageGetLocal(storageInitKey, (val) => {
+   await chromeStorageGetLocal(KEYS.STORAGE_INIT, (val) => {
       if (!val) {
-         chromeStorageSetLocal(storageMappingKey, mappingData);
-         chromeStorageSetLocal(storageListingKey, listingData);
-         chromeStorageSetLocal(storageOrdersKey, ordersData);
-         chromeStorageSetLocal(storageSettingsKey, settings);
-         chromeStorageSetLocal(storageInitKey, true);
+         chromeStorageSetLocal(KEYS.STORAGE_MAPPING, mappingData);
+         chromeStorageSetLocal(KEYS.STORAGE_LISTING, listingData);
+         chromeStorageSetLocal(KEYS.STORAGE_ORDERS, ordersData);
+         chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
+         chromeStorageSetLocal(KEYS.STORAGE_INIT, true);
       }
    });
 
-   chromeStorageGetLocal(storageMappingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
       mappingData = val;
 
       // load input fields
@@ -86,7 +86,7 @@ async function init() {
       });
    });
 
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       listingData = val;
       // setupSavedImages();
 
@@ -119,7 +119,7 @@ async function init() {
       setTotalCount();
    });
 
-   chromeStorageGetLocal(storageOrdersKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
       ordersData = val;
       cInputs.forEach((inp) => {
          if (inp.type === "checkbox")
@@ -139,7 +139,7 @@ async function init() {
    });
 
    // load settings
-   chromeStorageGetLocal(storageSettingsKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_SETTINGS, (val) => {
       settings = val;
       settings.listingOpen.forEach(
          (is, i) => (I(".grid-flip")[i].checked = is)
@@ -147,7 +147,7 @@ async function init() {
       I("nav .options .btn input")[settings.currentMode].checked = true;
    });
 
-   chromeStorageGetLocal(storageUserLoginKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN, (val) => {
       if (val) {
          loginUserButton.classList.add("hide");
          logoutUserButton.classList.remove("hide");
@@ -198,7 +198,7 @@ function setupIncDecAction(inputElements, saveFunction) {
 function __clear_data_mapping__() {
    holdTimer = setTimeout(() => {
       clearMappingButton.addClass("complete");
-      chromeStorageGetLocal(storageMappingKey, (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
          for (const key in val) {
             if (typeof val[key] === "string") {
                val[key] = "";
@@ -207,7 +207,7 @@ function __clear_data_mapping__() {
             }
          }
 
-         chromeStorageSetLocal(storageMappingKey, val);
+         chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
          init();
       });
    }, 1000);
@@ -216,7 +216,7 @@ function __clear_data_mapping__() {
 function __clear_data_listing__() {
    holdTimer = setTimeout(() => {
       clearSingleListingButton.addClass("complete");
-      chromeStorageGetLocal(storageListingKey, (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
          for (const key in val) {
             if (typeof val[key] === "string") {
                val[key] = "";
@@ -228,7 +228,7 @@ function __clear_data_listing__() {
             chromeStorageSetLocal(`storage-image-${i}`, null);
          }
          val.COUNT = 0;
-         chromeStorageSetLocal(storageListingKey, val);
+         chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
          init();
       });
    }, 1000);
@@ -266,11 +266,11 @@ function setImageInInput(i, file) {
 }
 
 function saveListingData() {
-   chromeStorageSetLocal(storageListingKey, listingData);
+   chromeStorageSetLocal(KEYS.STORAGE_LISTING, listingData);
 }
 
 function saveDataA() {
-   chromeStorageGetLocal(storageMappingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
       if (!val) val = {};
 
       aInputs.forEach((inp) => {
@@ -286,12 +286,12 @@ function saveDataA() {
       });
 
       mappingData = val;
-      chromeStorageSetLocal(storageMappingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
    });
 }
 
 function saveDataB() {
-   chromeStorageGetLocal(storageListingKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       if (!val) val = {};
 
       bInputs.forEach((inp) => {
@@ -311,12 +311,12 @@ function saveDataB() {
       setTotalCount();
 
       listingData = val;
-      chromeStorageSetLocal(storageListingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
    });
 }
 
 function saveDataC() {
-   chromeStorageGetLocal(storageOrdersKey, (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
       if (!val)
          val = {
             nameInBengali: {},
@@ -329,7 +329,7 @@ function saveDataC() {
          )
             val[inp.name] = inp.value.replace(/,/g, "") || 0;
       });
-      chromeStorageSetLocal(storageOrdersKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, val);
    });
 }
 
@@ -353,12 +353,12 @@ async function stopAutoMationAction() {
    START_BTN.addClass("active");
    STOP_BTN.removeClass("active");
    PAUSE_BTN.removeClass("active");
-   await chromeStorageGetLocal(storageListingKey, (val) => {
+   await chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       if (!val) val = {};
       val.COUNT = 0;
       listingData = val;
       I("#COUNT")[0].textContent = 0;
-      chromeStorageSetLocal(storageListingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
    });
    saveDataB();
    runtimeSendMessage("p_b_stop_listing", ({ status }) => {
@@ -395,8 +395,8 @@ async function setTotalCount() {
 // chrome.storage.onChanged.addListener((changes, namespace) => {
 //    if (namespace === "local") {
 //       // Handle listing data changes
-//       if (changes[storageListingKey]) {
-//          listingData = changes[storageListingKey].newValue;
+//       if (changes[KEYS.STORAGE_LISTING]) {
+//          listingData = changes[KEYS.STORAGE_LISTING].newValue;
 //          const COUNT = listingData?.COUNT || 0;
 //          I("#COUNT")[0].textContent = COUNT;
 //       }
@@ -405,7 +405,7 @@ async function setTotalCount() {
 
 function getLocalMappingData() {
    return new Promise((resolve) => {
-      chromeStorageGetLocal(storageMappingKey, (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
          resolve(val);
       });
    });
@@ -413,7 +413,7 @@ function getLocalMappingData() {
 
 function getLocalListingData() {
    return new Promise((resolve) => {
-      chromeStorageGetLocal(storageListingKey, (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
          resolve(val);
       });
    });
@@ -421,7 +421,7 @@ function getLocalListingData() {
 
 function getLocalOrdersData() {
    return new Promise((resolve) => {
-      chromeStorageGetLocal(storageOrdersKey, (val) => {
+      chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
          resolve(val);
       });
    });
@@ -429,7 +429,7 @@ function getLocalOrdersData() {
 
 function setLocalMappingData(val) {
    return new Promise((resolve) => {
-      chromeStorageSetLocal(storageMappingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
       init();
       resolve();
    });
@@ -437,7 +437,7 @@ function setLocalMappingData(val) {
 
 function setLocalListingData(val) {
    return new Promise((resolve) => {
-      chromeStorageSetLocal(storageListingKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
       init();
       resolve();
    });
@@ -445,7 +445,7 @@ function setLocalListingData(val) {
 
 function setLocalOrdersData(val) {
    return new Promise((resolve) => {
-      chromeStorageSetLocal(storageOrdersKey, val);
+      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, val);
       init();
       resolve();
    });
