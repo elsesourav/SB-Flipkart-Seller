@@ -55,6 +55,9 @@ function ifMatchSingleListingLocation() {
 function ifMatchSingleOrderLocation() {
    return window.location.href.includes(URLS.singleOrder);
 }
+function isUrlContains(name) {
+   return window.location.href.includes(name);
+}
 
 function ifFlipkartSearchLocation() {
    return window.location.href.includes(URLS.flipkartSearch);

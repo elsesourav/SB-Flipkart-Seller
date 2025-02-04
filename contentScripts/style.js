@@ -1,20 +1,21 @@
 const style = `
    .__fw__ {
       position: fixed;
-      bottom: 10px;
-      right: 10px;
+      top: 6px;
+      right: 0;
+      width: 100%;
+      height: 40px;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 20px;
       z-index: 9999999;
-   
       .__btn__ {
          position: relative;
          width: auto;
          height: auto;
-         font-size: 25px;
+         font-size: 20px;
          color: #fff;
          font-weight: bold;
          padding: 8px 20px;
@@ -107,50 +108,96 @@ const tableStyle = `
       align-items: center;
       background: #000b;
       backdrop-filter: blur(2px);
-      overflow-y: scroll;
+      overflow: hidden;
       z-index: 100;
    }
-
-   ._-table {
+   ._-table-cover {
       position: relative;
-      box-sizing: border-box;
       width: 800px;
-      max-width: 1000px;
+      max-height: calc(100% - 120px);
+      display: flex;
+      justify-content: center;
+      background: #ffffff;
       border-radius: 10px;
       box-shadow: 0 0 10px #000;
-      background: #fff;
-      flex-direction: column;
-      color: #000
       padding: 10px;
-   }
-   ._-row {
-      position: relative;
-      width: 100%;
-      padding: 6px;
-      display: grid;
-      place-items: center;
-      grid-template-columns: repeat(4, 1fr);
-      border-bottom: 3px double #000;
-   }
+      overflow-y: scroll;
+      overflow-x: hidden;
+      
+      ._-table {
+         position: relative;
+         box-sizing: border-box;
+         width: 100%;
+         height: 100%;
+         margin: 5px;
+         display: grid;
+         grid-template-columns: 1fr 1fr;
+         gap: 10px;
+         color: #000
+      }
 
-   ._-cell {
-      width: 100%;
-      position: relative;
-      padding: 8px;
-      border-right: 1px solid #ddd;
-      border-left: 1px solid #ddd;
-   }
+      ._-row {
+         position: relative;
+         width: 100%;
+         padding: 6px;
+         border-bottom: 3px double #000;
+         border-radius: 8px;
 
-   ._-header {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px dashed #000;
-      font-weight: bold;
-   }
+         &:nth-child(4n + 1),
+         &:nth-child(4n) {
+            background: #eee;
+         }
+      }
 
-   ._-seed-type {
-      font-weight: bold;
-      background-color: #f8f8f8;
+      ._-cell {
+         width: 100%;
+         position: relative;
+         padding: 8px;
+         opacity: 1;
+         transition: opacity 300ms;
+         
+         ._-multi {
+            color: #ff7600;
+         }
+      }
+
+      ._-row ._-checkbox {
+         position: absolute;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         font-size: 1.2em;
+         font-weight: bold;
+         cursor: pointer;
+         opacity: 0;
+         z-index: 2;
+
+         &:checked ~ ._-cell {
+            opacity: 0.3;
+
+            &._-header {
+               background: transparent;
+            }
+         }
+      }
+
+      ._-header {
+         width: 100%;
+         border-radius: 10px;
+         border: 1px dashed #000;
+         font-weight: bold;
+         background: #00f9ff8a;
+         text-shadow: 1px 1px 0 #fff;
+      }
+
+      ._-seed-type {
+         font-weight: bold;
+         background-color: #f8f8f8;
+      }
    }
 `;
 

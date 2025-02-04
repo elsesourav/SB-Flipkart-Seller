@@ -54,6 +54,19 @@ async function setup_listing() {
    // });
 }
 
+onhashchange = function () {
+   if (ifMatchSingleOrderLocation()) {
+      setStyle();
+      setup_orders_print();
+   }
+   console.clear();
+   console.log("------------------------------------\n\n\n\n\n");
+   console.log("Hash changed! New hash:", location.hash);
+   console.log(ifMatchSingleOrderLocation());
+
+   console.log("\n\n\n\n\n ------------------------------------");
+};
+
 function setup_orders_print() {
    let openInputBtn, closeBtn, printBtn, downloadBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
@@ -64,17 +77,9 @@ function setup_orders_print() {
    document.body.appendChild(TABLE);
    setStyle(true);
 
-
-   `<div class="styles__TabTitle-sc-pm37sa-0 fcTnJe">Dispatched Orders</div>
-      <div class="styles__ActivePrimaryNavTabDiv-sc-5k1co9-0 styles__InactivePrimaryNavTabDiv-sc-5k1co9-1 BFknH">
-         <div class="styles__PrimaryTabContentWrapper-sc-pm37sa-4 gTelNg">
-         <div class="styles__PrimaryTabContentValue-sc-pm37sa-5 bimpXx"><span class="styles__PrimaryTabContentNumerator-sc-pm37sa-6 hhnmuk">232</span></div><div>In Transit</div></div></div><div class="styles__ActivePrimaryNavTabDiv-sc-5k1co9-0 styles__InactivePrimaryNavTabDiv-sc-5k1co9-1 BFknH"><div class="styles__PrimaryTabContentWrapper-sc-pm37sa-4 gTelNg"><div class="styles__PrimaryTabContentValue-sc-pm37sa-5 bimpXx"><span class="styles__PrimaryTabContentNumerator-sc-pm37sa-6 hhnmuk">0</span></div><div>Pending Services</div>
-      </div>
-   </div>`
-
    CE(
       { id: "__fwo__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "Orders")),
+      (openInputBtn = CE({ class: "__btn__" }, "OPEN ORDERS TABLE")),
       (printBtn = CE({ class: "__btn__" }, "Print")),
       (downloadBtn = CE({ class: "__btn__" }, "Download")),
       (closeBtn = CE({ class: "__btn__ __1__" }, "Close"))
@@ -86,12 +91,46 @@ function setup_orders_print() {
    TABLE.style.display = "none";
 
    openInputBtn.addEventListener("click", async () => {
-      closeBtn.style.display = "block";
-      printBtn.style.display = "block";
-      downloadBtn.style.display = "block";
-      openInputBtn.style.display = "none";
-      TABLE.style.display = "flex";
-      showOrders();
+      const IS = {
+         pack: isUrlContains("orderState=shipments_to_pack"),
+         dispatch: isUrlContains("orderState=shipments_to_dispatch"),
+         handover: isUrlContains("orderState=shipments_to_handover"),
+      }
+
+      if (IS.pack || IS.dispatch) {
+         const select = document.querySelector(`select[name="default"]`);
+         const value = select?.value;
+         if (select && value != "70") {
+            select.selectedIndex = 3;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            await wait(1000);
+         }
+      } else if (IS.handover) {
+         const element = [...document.querySelectorAll(`button[data-testid="button"]`)].find((e) => e.textContent == "Request OTC");
+
+         if (element) {
+            const parent = element?.parentNode?.parentNode?.parentNode?.parentNode?.firstChild;
+            parent.click();
+            parent.dispatchEvent(new Event("change", { bubbles: true }));
+         }
+
+         const select = document.querySelector(`select[name="default"]`);
+         const value = select?.value;
+         if (select && value != "70") {
+            select.selectedIndex = 3;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+            await wait(1500);
+         }
+      }
+
+      if (IS.pack || IS.dispatch || IS.handover) {
+         closeBtn.style.display = "block";
+         printBtn.style.display = "block";
+         downloadBtn.style.display = "block";
+         openInputBtn.style.display = "none";
+         TABLE.style.display = "flex";
+         showOrders();
+      }
    });
 
    closeBtn.addEventListener("click", () => {
@@ -191,10 +230,10 @@ onload = async () => {
       setup_orders_print();
    }
 
-   if (ifFlipkartSearchLocation()) {
-      setStyle();
-      setup_flipkart_product_url();
-   }
+   // if (ifFlipkartSearchLocation()) {
+   //    setStyle();
+   //    setup_flipkart_product_url();
+   // }
 
    // if (ifFlipkartMappingLocation()) {
    // const is = await startSellingClick();
@@ -246,19 +285,19 @@ addEventListener("mousedown", async (_) => {
       }
    }
 
-   const fw = I("#__fws__")[0];
-   const is = fw instanceof Node;
+   // const fw = I("#__fws__")[0];
+   // const is = fw instanceof Node;
 
-   if (ifFlipkartSearchLocation()) {
-      if (!is) {
-         setStyle();
-         setup_flipkart_product_url();
-      } else if (is) {
-         fw.style.display = "flex";
-      }
-   } else if (is) {
-      fw.style.display = "none";
-   }
+   // if (ifFlipkartSearchLocation()) {
+   //    if (!is) {
+   //       setStyle();
+   //       setup_flipkart_product_url();
+   //    } else if (is) {
+   //       fw.style.display = "flex";
+   //    }
+   // } else if (is) {
+   //    fw.style.display = "none";
+   // }
 });
 
 /* --------------- auto mate single listing create ----------- */
@@ -280,10 +319,13 @@ runtimeOnMessage("b_c_create_single_listing", async (__, _, sendResponse) => {
    }
 });
 
-runtimeOnMessage("b_c_filter_mapping_possible_skus", async ({vals}, _, sendResponse) => {
-   sendResponse({ status: "ok" });
-   console.log(vals);
-})
+runtimeOnMessage(
+   "b_c_filter_mapping_possible_skus",
+   async ({ vals }, _, sendResponse) => {
+      sendResponse({ status: "ok" });
+      console.log(vals);
+   }
+);
 
 runtimeOnMessage(
    "b_c_go_mapping_page_using_sku",
@@ -301,13 +343,14 @@ runtimeOnMessage(
    }
 );
 
-
 (() => {
    addEventListener("load", async (e) => {
       if (window.location.href.includes(URLS.addMapping)) {
          chromeStorageGetLocal(storageFilterSkusKey, async (vals) => {
             if (!vals || vals.skus.length === 0) return;
-            if (!document.querySelector(".addListingsProduct-default.play-arena")) {
+            if (
+               !document.querySelector(".addListingsProduct-default.play-arena")
+            ) {
                await wait(5000);
                window.location.reload();
                return;
@@ -336,4 +379,3 @@ runtimeOnMessage(
       }
    });
 })();
-

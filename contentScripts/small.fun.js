@@ -305,7 +305,7 @@ async function showOrders() {
 
    // if (WORD_IN_BENGALI) TABLE.style.fontSize = "18px";
    // else
-   TABLE.style.fontSize = "15px";
+   TABLE.style.fontSize = "18px";
 
    const SKU = [...sku_ids].map((el) => el.innerText);
    const UNIT = [...unit].map((el) => parseInt(el.innerText));
@@ -375,14 +375,19 @@ async function showOrders() {
 
    const tableRows = Object.entries(PRODUCTS)
       .map(([name, quantities]) => {
-         const header = `<div class="_-cell _-header">${name}</div>`;
+         const header = `
+            <input type="checkbox" class="_-checkbox" />
+            <div class="_-cell _-header">${name}</div>
+         `;
 
          const cells = Object.entries(quantities)
-            .map(([quantity, type]) => {
-               const TYPE = WORD_IN_BENGALI
-                  ? `${type} ${TYPES["TIMES"]}`
-                  : `(${type})`;
-               return `<div class="_-cell">${quantity} => ${TYPE}</div>`;
+            .map(([quantity, multi]) => {
+               const MULTI = WORD_IN_BENGALI
+                  ? `${multi} ${TYPES["TIMES"]}`
+                  : `(${multi})`;
+
+               const isMulti = multi > 1 ? ` => <span class="_-multi">${MULTI}</span>` : "";
+               return `<div class="_-cell">${quantity}${isMulti}</div>`;
             })
             .join("");
 
@@ -390,7 +395,7 @@ async function showOrders() {
       })
       .join("");
 
-   TABLE.innerHTML = `<div class="_-table">${tableRows}</div>`;
+   TABLE.innerHTML = `<div class="_-table-cover"><div class="_-table">${tableRows}</div></div>`;
 }
 
 function fillLintingInputs(DATA) {
