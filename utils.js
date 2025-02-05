@@ -24,7 +24,9 @@ const URLS = {
    flipkartAPIMapping:
       "https://seller.flipkart.com/napi/listing/create-update-listings",
    flipkartSellerIndexPage: "https://seller.flipkart.com/index.html",
-   flipkartFeaturesForSeller: "https://seller.flipkart.com/getFeaturesForSeller"
+   flipkartFeaturesForSeller: "https://seller.flipkart.com/getFeaturesForSeller",
+   listingsDataForStates:
+      "https://seller.flipkart.com/napi/listing/listingsDataForStates",
 };
 
 const FLIPKART_SEARCH_HEADER = {

@@ -155,7 +155,7 @@ function getMixDataToNewMappingData(DATA) {
    const PROFIT = N(MD?.PROFIT || 15);
    const PACKING_COST = N(MD?.PACKING_COST || 3);
    const FIXED_COST = N(MD?.FIXED_COST || 72);
-   const LISTING_STATUS = MD?.LISTING_STATUS || "ACTIVE";
+   const LISTING_STATUS_G = MD?.LISTING_STATUS || "ACTIVE";
    const PROCUREMENT_TYPE = MD?.PROCUREMENT_TYPE || "EXPRESS";
    const SHIPPING_DAYS = MD?.SHIPPING_DAYS || 1;
    const STOCK_SIZE = MD?.STOCK_SIZE || 1000;
@@ -183,7 +183,7 @@ function getMixDataToNewMappingData(DATA) {
    }
 
    const newData = products.map((product, i) => {
-      const { id, mrp, titles: t } = product;
+      const { id, mrp, titles: t, sku_id, alreadySelling, internal_state } = product;
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, t.subtitle, i);
       let _DL = DL;
       let _DN = DN;
@@ -207,9 +207,14 @@ function getMixDataToNewMappingData(DATA) {
          _DZ = Math.max(_DZ - DELTA_PRICE, 0);
       }
 
+
+      // if alreadySelling then don't change sku and listing status
+      const SKU = alreadySelling ? sku_id : sku;
+      const LISTING_STATUS = alreadySelling ? internal_state : LISTING_STATUS_G;
+
       return {
          ID: id,
-         SKU: sku,
+         SKU,
          SELLING_PRICE,
          MRP: mrp.value,
          LISTING_STATUS,

@@ -35,7 +35,8 @@ runtimeOnMessage("c_b_get_seller_info", async (__, _, sendResponse) => {
 runtimeOnMessage(
    "c_b_get_mapping_possible_product_data",
    async (data, _, sendResponse) => {
-      const { productName, startingPage, endingPage, sellerId } = data;
+      const { productName, startingPage, endingPage, sellerId, fkCsrfToken } =
+         data;
 
       try {
          // Fetch all products first
@@ -53,7 +54,8 @@ runtimeOnMessage(
             const batchResults = await processBatchForVerification(
                products,
                sellerId,
-               i
+               fkCsrfToken,
+               i,
             );
             if (batchResults?.isError) {
                sendResponse({ isError: true, error: "Too many requests" });
@@ -79,16 +81,16 @@ runtimeOnMessage(
          const BATCH_SIZE = 25;
          const allResults = [];
 
-         // Process data in batches of 25
-         for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
-            const batchData = {
-               ...newMappingData,
-               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
-            };
+         // Process data in batches of BATCH_SIZE eg:(25)
+         // for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
+         //    const batchData = {
+         //       ...newMappingData,
+         //       PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
+         //    };
 
-            const batchResult = await createProductMappingBulk(batchData);
-            allResults.push(...batchResult);
-         }
+         //    const batchResult = await createProductMappingBulk(batchData);
+         //    allResults.push(...batchResult);
+         // }
          // Send final results
          sendResponse(allResults);
       } catch (error) {

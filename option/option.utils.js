@@ -96,20 +96,23 @@ function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
 async function searchSubmitAction() {
    const productName = searchProduct.value;
    if (!productName) return;
-
+   
    const startingPage = N(startPage.value) || 1;
    const endingPage = N(endPage.value) || 1;
+   
+   const min = Math.min(startingPage, endingPage);
+   const max = Math.max(startingPage, endingPage);
+
+   if (!(await verifyUserMustLogin())) return;
+   showLoading();
 
    const data = {
       productName,
-      startingPage,
-      endingPage,
+      startingPage: min,
+      endingPage: max,
       sellerId: SELLER_ID,
+      fkCsrfToken: FK_CSRF_TOKEN,
    };
-
-   if (!(await verifyUserMustLogin())) return;
-
-   showLoading();
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data);

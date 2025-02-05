@@ -129,7 +129,7 @@ function deleteFile(username, fileType, filename, password) {
                status: "INCORRECT PASSWORD",
             });
          }
-         
+
          const fileRef = dbRef.child(`${fileType}/${filename}`);
          await fileRef.remove();
          resolve({ message: "File deleted successfully", status: "SUCCESS" });
@@ -148,7 +148,7 @@ function getFiles(username, fileType, search = "") {
             .orderByChild("filenameLower")
             .startAt(search)
             .endAt(search + "\uf8ff");
-            
+
          const snapshot = await query.once("value");
          if (!snapshot.exists()) {
             return resolve({
@@ -208,9 +208,9 @@ function getProductData(url) {
    });
 }
 
-function searchProduct(sku, sellerId) {
+function searchProduct(productId, sellerId) {
    return new Promise(async (resolve) => {
-      const url = `https://seller.flipkart.com/napi/listing/searchProduct?fsnSearch=${sku}&sellerId=${sellerId}`;
+      const url = `https://seller.flipkart.com/napi/listing/searchProduct?fsnSearch=${productId}&sellerId=${sellerId}`;
       const response = await fetch(url);
       resolve(response.json());
    });
@@ -232,44 +232,99 @@ function checkApprovalStatus(vertical, brand, sellerId) {
    });
 }
 
-function verifyProduct(sku, sellerId) {
+function getProductIdToSKUId(fkCsrfToken, productId) {
+   return new Promise(async (resolve) => {
+      try {
+         const response = await fetch(URLS.listingsDataForStates, {
+            method: "POST",
+            headers: {
+               Accept: "application/json",
+               "Content-Type": "application/json",
+               "fk-csrf-token": fkCsrfToken,
+            },
+            body: JSON.stringify({
+               search_text: productId,
+            }),
+         });
+
+         const data = await response.json();
+
+         if (data?.count > 0) {
+            const { listing_data_response } = data;
+            const { sku_id, imageUrl, internal_state } =
+               listing_data_response?.[0];
+            return resolve({
+               isError: false,
+               is: true,
+               sku_id,
+               imageUrl,
+               internal_state,
+            });
+         }
+
+         resolve({ isError: false, is: false });
+      } catch (error) {
+         resolve({ isError: true, is: false });
+      }
+   });
+}
+
+function verifyProduct(productId, sellerId, fkCsrfToken) {
    return new Promise(async (resolve) => {
       try {
          // Search for product details
-         const searchResult = await searchProduct(sku, sellerId);
-         const productInfo = searchResult?.result?.productList?.[0];
 
-         if (!productInfo) {
-            resolve({ isError: false, is: false, error: "Product not found" });
-         }
+         const { is, sku_id, imageUrl, internal_state } =
+            await getProductIdToSKUId(fkCsrfToken, productId);
 
-         const { detail, alreadySelling, vertical, imagePaths } = productInfo;
-         const imageUrl = Object.values(imagePaths)?.[0];
-
-         // Check approval status
-
-         if (alreadySelling) {
-
+         if (is) {
+            resolve({
+               isError: false,
+               is: true,
+               internal_state,
+               sku_id,
+               alreadySelling: true,
+               imageUrl: imageUrl,
+               error: null,
+            });
          } else {
-         }
-         
-         const result = await checkApprovalStatus(
-            vertical,
-            detail.Brand,
-            sellerId
-         );
+            const searchResult = await searchProduct(productId, sellerId);
+            const productInfo = searchResult?.result?.productList?.[0];
 
-         if (result?.isError) {
-            resolve({ isError: true });
-         }
+            if (!productInfo) {
+               resolve({
+                  isError: false,
+                  is: false,
+                  error: "Product not found",
+               });
+               return;
+            }
 
-         resolve({
-            isError: false,
-            is: result?.result,
-            alreadySelling: alreadySelling,
-            imageUrl: result?.result ? imageUrl : null,
-            error: result?.result ? null : "Not approved",
-         });
+            const { detail, alreadySelling, vertical, imagePaths } =
+               productInfo;
+            const imageUrl = Object.values(imagePaths)?.[0];
+
+            const result = await checkApprovalStatus(
+               vertical,
+               detail.Brand,
+               sellerId
+            );
+
+            if (result?.isError) {
+               resolve({ isError: true, is: false, error: "Server error" });
+               return;
+            }
+
+            resolve({
+               isError: false,
+               is: result?.result,
+               sku_id: null,
+               internal_state: null,
+               alreadySelling: alreadySelling,
+               imageUrl: result?.result ? imageUrl : null,
+               error: result?.result ? null : "Not approved",
+            });
+         }
       } catch (error) {
          resolve({ isError: false, error: error.message });
          console.log("Error verifying product:", error);
@@ -277,7 +332,12 @@ function verifyProduct(sku, sellerId) {
    });
 }
 
-function processBatchForVerification(products, sellerId, startIdx) {
+function processBatchForVerification(
+   products,
+   sellerId,
+   fkCsrfToken,
+   startIdx
+) {
    return new Promise(async (resolve) => {
       const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
 
@@ -289,19 +349,25 @@ function processBatchForVerification(products, sellerId, startIdx) {
       try {
          const batchPromises = batch.map(async (product) => {
             try {
-               const result = await verifyProduct(product.id, sellerId);
-
-               // console.log(result);
+               const result = await verifyProduct(
+                  product.id,
+                  sellerId,
+                  fkCsrfToken
+               );
 
                if (result?.isError) {
                   throw new Error("Too many requests");
                }
 
                if (result?.is) {
+                  const { alreadySelling, imageUrl, sku_id, internal_state } =
+                     result;
                   return {
                      ...product,
-                     alreadySelling: result.alreadySelling,
-                     imageUrl: result.imageUrl,
+                     alreadySelling,
+                     imageUrl,
+                     sku_id,
+                     internal_state,
                   };
                }
                return null;
@@ -341,7 +407,7 @@ function GET_SELLER_INFO() {
             sellerId: json?.sellerId,
             userId: json?.userId,
             csrfToken: json?.csrfToken,
-         }
+         };
          resolve(info);
       } catch (error) {
          console.log(error);
@@ -362,8 +428,6 @@ function GET_SELLER_INFO() {
 // .then(response => response.json()) // Convert response to JSON
 // .then(data => console.log(data)) // Handle the response data
 // .catch(error => console.error("Error fetching data:", error));
-
-
 
 const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
    return new Promise(async (resolve) => {
@@ -411,38 +475,6 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
    });
 };
 
-// function processBatchForMapping(products, startIdx) {
-//    return new Promise(async (resolve) => {
-//       const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
-
-//       if (batch.length === 0) {
-//          resolve([]);
-//          return;
-//       }
-
-//       try {
-//          const batchPromises = batch.map(async (product) => {
-//             try {
-//                const result = await createProductMapping(product);
-//                if (result.is) return product;
-//                return null;
-//             } catch (error) {
-//                console.log(`Error mapping product ${product.ID}:`, error);
-//                return null;
-//             }
-//          });
-
-//          const results = await Promise.all(batchPromises);
-//          console.log(results);
-
-//          resolve(results);
-//       } catch (error) {
-//          console.error("Error processing mapping batch:", error);
-//          resolve([]);
-//       }
-//    });
-// }
-
 function createProductMappingBulk(DATA) {
    return new Promise(async (resolve) => {
       const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS } = DATA;
@@ -470,7 +502,7 @@ function createProductMappingBulk(DATA) {
             PACKAGING_LENGTH,
             PACKAGING_BREADTH,
             PACKAGING_HEIGHT,
-            ALREADY_LISTING
+            ALREADY_LISTING,
          } = product;
 
          const PRODUCT_DATA = {
@@ -564,118 +596,3 @@ function createProductMappingBulk(DATA) {
       }
    });
 }
-
-// function createProductMapping(DATA) {
-//    return new Promise(async (resolve) => {
-//       const {
-//          ID,
-//          SELLER_ID,
-//          FK_CSRF_TOKEN,
-//          SKU,
-//          SELLING_PRICE,
-//          MRP,
-//          LISTING_STATUS,
-//          PROCUREMENT_TYPE,
-//          SHIPPING_DAYS,
-//          STOCK_SIZE,
-//          HSN,
-//          MINIMUM_ORDER_QUANTITY,
-//          DELIVERY_LOCAL,
-//          DELIVERY_NATIONAL,
-//          DELIVERY_ZONAL,
-//          EARLIEST_MFG_DATE,
-//          SHELF_LIFE,
-//          MANUFACTURER_DETAILS,
-//          PACKER_DETAILS,
-//          TOTAL_WEIGHT,
-//          PACKAGING_LENGTH,
-//          PACKAGING_BREADTH,
-//          PACKAGING_HEIGHT,
-//       } = DATA;
-
-//       const HEADER = {
-//          accept: "*/*",
-//          "content-type": "application/json",
-//          "fk-csrf-token": FK_CSRF_TOKEN,
-//       };
-
-//       const PRODUCT_DATA = {
-//          sku_id: [{ value: SKU, qualifier: "" }],
-//          country_of_origin: [{ value: "IN", qualifier: "" }],
-//          earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
-//          flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
-//          hsn: [{ value: HSN, qualifier: "" }],
-//          listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
-//          local_shipping_fee_from_buyer: [
-//             { value: DELIVERY_LOCAL, qualifier: "INR" },
-//          ],
-//          luxury_cess: [{ qualifier: "Percentage" }],
-//          manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
-//          minimum_order_quantity: [
-//             { value: MINIMUM_ORDER_QUANTITY, qualifier: "" },
-//          ],
-//          mrp: [{ value: MRP, qualifier: "INR" }],
-//          national_shipping_fee_from_buyer: [
-//             { value: DELIVERY_NATIONAL, qualifier: "INR" },
-//          ],
-//          packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
-//          procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
-//          service_profile: [{ value: "NON_FBF", qualifier: "" }],
-//          shelf_life: [{ value: SHELF_LIFE, qualifier: "Months" }],
-//          shipping_days: [{ value: SHIPPING_DAYS, qualifier: "HR" }],
-//          shipping_provider: [{ value: "FLIPKART", qualifier: "" }],
-//          stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
-//          tax_code: [{ value: "GST_5", qualifier: "" }],
-//          zonal_shipping_fee_from_buyer: [
-//             { value: DELIVERY_ZONAL, qualifier: "INR" },
-//          ],
-//       };
-
-//       const PACKAGE_DATA = {
-//          id: { value: "packages-0" },
-//          length: { value: PACKAGING_LENGTH, qualifier: "CM" },
-//          breadth: { value: PACKAGING_BREADTH, qualifier: "CM" },
-//          height: { value: PACKAGING_HEIGHT, qualifier: "CM" },
-//          weight: { value: TOTAL_WEIGHT, qualifier: "KG" },
-//          sku_id: { value: SKU, qualifier: "" },
-//       };
-
-//       const REQUEST_BODY = {
-//          sellerId: SELLER_ID,
-//          bulkRequests: [
-//             {
-//                attributeValues: PRODUCT_DATA,
-//                context: { ignore_warnings: true },
-//                packages: [PACKAGE_DATA],
-//                productId: ID,
-//                skuId: SKU,
-//             },
-//          ],
-//       };
-
-//       const REQUEST_OPTIONS = {
-//          method: "POST",
-//          headers: HEADER,
-//          body: JSON.stringify(REQUEST_BODY),
-//          credentials: "include",
-//       };
-
-//       try {
-//          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
-//          console.log(response);
-
-//          if (!response.ok) {
-//             console.log("Mapping failed:", await response.text());
-//             resolve({ status: "error", is: false, id: ID });
-//             return;
-//          }
-
-//          const data = await response.json();
-
-//          resolve({ status: "ok", is: true, id: ID, data });
-//       } catch (error) {
-//          console.log("Error mapping product:", error);
-//          resolve({ status: "error", is: false, id: ID });
-//       }
-//    });
-// }
