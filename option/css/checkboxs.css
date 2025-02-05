@@ -1,0 +1,50 @@
+input[type="checkbox"].toggle {
+   --S: calc(var(--s) * 2);
+   height: calc(var(--S) + var(--S) / 5);
+   width: auto;
+   aspect-ratio: 2.25;
+   border-radius: var(--S);
+   outline: solid 1px #7773;
+   margin: calc(var(--S) / 2);
+   display: grid;
+   cursor: pointer;
+   background-color: #282a38;
+   box-sizing: content-box;
+   overflow: hidden;
+   transition: 300ms 100ms;
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   transition: background-color 300ms ease-in-out;
+
+   &:hover {
+      background-color: #ffffff;
+   }
+}
+
+input[type="checkbox"].toggle:before {
+   content: "";
+   padding: calc(var(--S) / 10);
+   --_g: radial-gradient(circle closest-side at calc(100% - var(--S) / 2) 50%,
+         #000 96%,
+         #0000);
+   background: var(--_g) 0 / var(--_p, var(--S)) 100% no-repeat content-box,
+      var(--_g) var(--_p, 0) / var(--S) 100% no-repeat content-box, #fff;
+   mix-blend-mode: darken;
+   filter: blur(calc(var(--S) / 12)) contrast(11);
+   transition: 400ms, background-position 400ms 100ms,
+      padding cubic-bezier(0,
+         calc(var(--_i, -1) * 200),
+         1,
+         calc(var(--_i, -1) * 200)) 250ms 100s;
+}
+
+input[type="checkbox"].toggle:checked {
+   background-color: var(--switch-color-on);
+}
+
+input[type="checkbox"].toggle:checked:before {
+   padding: calc(var(--S) / 10 + 0.05px) calc(var(--S) / 10);
+   --_p: 100%;
+   --_i: 1;
+}

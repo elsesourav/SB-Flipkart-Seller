@@ -130,12 +130,12 @@ nav::before {
    height: auto;
    display: grid;
    place-items: center;
-   grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
-   gap: calc(var(--s) * 1);
+   grid-template-columns: repeat(auto-fit, minmax(min(100%, 550px), 1fr));
+   gap: calc(var(--s) * 2);
    padding: calc(var(--s) * 0.8);
 }
 
-.search-inputs input,
+.search-inputs input:not(.toggle),
 .search-inputs select {
    position: relative;
    width: 100%;
@@ -168,6 +168,8 @@ nav::before {
 
 .search-inputs button {
    position: relative;
+   display: grid;
+   place-items: center;
    height: calc(var(--s) * 3);
    padding: 0 calc(var(--s) * 1.5);
    background: linear-gradient(45deg, #2ecc71, #27ae60);
@@ -193,33 +195,52 @@ nav::before {
    height: auto;
    display: flex;
    align-items: center;
-   gap: calc(var(--s) * 0.8);
+   gap: calc(var(--s) * 1);
 }
 
-.search-inputs .outer._3-1-1-1-1 {
+.search-inputs .outer.first {
    display: grid;
-   grid-template-columns: 2fr 0.5fr 1fr 0.5fr 1fr;
-   gap: calc(var(--s) * 0.8);
+   grid-template-columns: 240px 1fr;
 
-   p {
-      color: #fff;
-      font-family: f7b;
-      font-size: 1.2em;
-      text-align: center;
-      margin: 0;
+   .page-select {
+      position: relative;
+      width: 100%;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: calc(var(--s) * 0.5);
+
+      p {
+         color: #fff;
+         font-family: f7b;
+         font-size: 1.2em;
+         text-align: center;
+         margin: 0;
+      }
+   }
+
+   .search-field {
+      position: relative;
+      width: 100%;
+      height: auto;
+      display: grid;
+      align-items: center;
+      grid-template-columns: 1fr 50px;
+      gap: calc(var(--s) * 0.5);
    }
 }
 
-.search-inputs .outer._4-1 {
+.search-inputs .outer.second {
    display: grid;
-   grid-template-columns: 4fr 1fr;
-   gap: calc(var(--s) * 0.8);
-}
+   grid-template-columns: calc(var(--s) * 6) min-content auto calc(var(--s) * 10);
+   gap: calc(var(--s) * 0.5); 
 
-.search-inputs .outer._2_5 {
-   display: grid;
-   grid-template-columns: 1fr 2.5fr;
-   gap: calc(var(--s) * 0.8);
+   label {
+      color: #fff;
+      font-family: f7b;
+      font-size: 1.2em;
+   }
 }
 
 .features {

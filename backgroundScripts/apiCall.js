@@ -232,6 +232,51 @@ function checkApprovalStatus(vertical, brand, sellerId) {
    });
 }
 
+function verifyProduct(sku, sellerId) {
+   return new Promise(async (resolve) => {
+      try {
+         // Search for product details
+         const searchResult = await searchProduct(sku, sellerId);
+         const productInfo = searchResult?.result?.productList?.[0];
+
+         if (!productInfo) {
+            resolve({ isError: false, is: false, error: "Product not found" });
+         }
+
+         const { detail, alreadySelling, vertical, imagePaths } = productInfo;
+         const imageUrl = Object.values(imagePaths)?.[0];
+
+         // Check approval status
+
+         if (alreadySelling) {
+
+         } else {
+         }
+         
+         const result = await checkApprovalStatus(
+            vertical,
+            detail.Brand,
+            sellerId
+         );
+
+         if (result?.isError) {
+            resolve({ isError: true });
+         }
+
+         resolve({
+            isError: false,
+            is: result?.result,
+            alreadySelling: alreadySelling,
+            imageUrl: result?.result ? imageUrl : null,
+            error: result?.result ? null : "Not approved",
+         });
+      } catch (error) {
+         resolve({ isError: false, error: error.message });
+         console.log("Error verifying product:", error);
+      }
+   });
+}
+
 function processBatchForVerification(products, sellerId, startIdx) {
    return new Promise(async (resolve) => {
       const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
@@ -287,21 +332,38 @@ function processBatchForVerification(products, sellerId, startIdx) {
    });
 }
 
-function GET_FK_CSRF_TOKEN() {
+function GET_SELLER_INFO() {
    return new Promise(async (resolve) => {
       try {
-         const res = await fetch(URLS.flipkartSellerIndexPage);
-         const text = await res?.text();
-         const regex = /id="seller_session_unique_token" value="([^"]+)"/;
-         const match = text?.match(regex)?.[1];
-         const token = match === "undefined" ? null : match;
-         resolve(token);
+         const res = await fetch(URLS.flipkartFeaturesForSeller);
+         const json = await res.json();
+         const info = {
+            sellerId: json?.sellerId,
+            userId: json?.userId,
+            csrfToken: json?.csrfToken,
+         }
+         resolve(info);
       } catch (error) {
          console.log(error);
          resolve(null);
       }
    });
 }
+
+// fetch("", {
+//    method: "GET",
+//    headers: {
+//        "Accept": "application/json, text/javascript, */*; q=0.01",
+//        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+//        "X-Requested-With": "XMLHttpRequest"
+//    },
+//    credentials: "include" // If authentication is required
+// })
+// .then(response => response.json()) // Convert response to JSON
+// .then(data => console.log(data)) // Handle the response data
+// .catch(error => console.error("Error fetching data:", error));
+
+
 
 const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
    return new Promise(async (resolve) => {

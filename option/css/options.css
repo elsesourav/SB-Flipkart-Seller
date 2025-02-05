@@ -120,3 +120,38 @@ body {
       color: #2ecc71;
    }
 } */
+
+.gap {
+   --gap: 5px;
+   position: relative;
+   width: 100%;
+   height: var(--gap);
+
+   &.x2 {
+      --gap: 10px;
+   }
+   &.x3 {
+      --gap: 15px;
+   }
+   &.x4 {
+      --gap: 20px;
+   }
+   &.x5 {
+      --gap: 25px;
+   }
+   &.x6 {
+      --gap: 30px;
+   }
+   &.x7 {
+      --gap: 35px;
+   }
+   &.x8 {
+      --gap: 40px;
+   }
+   &.x9 {
+      --gap: 45px;
+   }
+   &.x10 {
+      --gap: 50px;
+   }
+}

@@ -54,19 +54,6 @@ async function setup_listing() {
    // });
 }
 
-onhashchange = function () {
-   if (ifMatchSingleOrderLocation()) {
-      setStyle();
-      setup_orders_print();
-   }
-   console.clear();
-   console.log("------------------------------------\n\n\n\n\n");
-   console.log("Hash changed! New hash:", location.hash);
-   console.log(ifMatchSingleOrderLocation());
-
-   console.log("\n\n\n\n\n ------------------------------------");
-};
-
 function setup_orders_print() {
    let openInputBtn, closeBtn, printBtn, downloadBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");

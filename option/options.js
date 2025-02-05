@@ -24,19 +24,40 @@ searchProduct.addEventListener("keydown", (e) => {
    }
 });
 
-// Select all products
-selectAllProducts.addEventListener("click", () => {
-   const checkboxes = document.querySelectorAll(".select-product");
+function removeSelectAll() {
+   selectAllProducts.classList.remove("active");
+   selectAllUnMappedProducts.classList.remove("active");
+   selectAllMappedProducts.classList.remove("active");
+   selectNameMatchProducts.classList.remove("active");
+}
+
+function selectProducts(element, parent = document) {
+   const checkboxes = parent.querySelectorAll(".select-product");
    const allChecked = Array.from(checkboxes).every((cb) => cb.checked);
 
    checkboxes.forEach((checkbox) => {
       checkbox.checked = !allChecked;
    });
 
-   selectAllProducts.classList.toggle("active", !allChecked);
-   selectNameMatchProducts.classList.remove("active");
+   removeSelectAll();
+   element.classList.toggle("active", !allChecked);
    updateSelectedCount();
+}
+
+// Select all products
+selectAllProducts.addEventListener("click", () => {
+   selectProducts(selectAllProducts);
 });
+
+// Select all unmapped products
+selectAllUnMappedProducts.addEventListener("click", () => {
+   selectProducts(selectAllUnMappedProducts, showNewMappingProducts);
+})
+
+// Select all mapped products
+selectAllMappedProducts.addEventListener("click", () => {
+   selectProducts(selectAllMappedProducts, showOldMappingProducts);
+})
 
 // Select products with matching names
 selectNameMatchProducts.addEventListener("click", () => {
@@ -51,14 +72,10 @@ selectNameMatchProducts.addEventListener("click", () => {
       }
    });
 
+   removeSelectAll();
    selectNameMatchProducts.classList.toggle("active", !allMatchingSelected);
-   selectAllProducts.classList.remove("active");
    updateSelectedCount();
 });
-
-// Event listeners for preview window
-// closePreview.addEventListener("click", hidePreviewWindow);
-// cancelPreview.addEventListener("click", hidePreviewWindow);
 
 // Start mapping process
 startMapping.addEventListener("click", async () => {
@@ -144,10 +161,21 @@ closeSuccess.addEventListener("click", () => {
    hideSuccessWindow();
 });
 
-
 // Handle Enter key in confirmation input
 confirmationInput.addEventListener("keyup", (e) => {
    if (e.key === "Enter" && !startFinalMapping.disabled) {
       startFinalMapping.click();
    }
 });
+
+function toggleSection(header, cardsSection) {
+   const arrow = header.classList.toggle("collapsed");
+   cardsSection.classList.toggle("collapsed");
+}
+
+newMappingHeader.addEventListener("click", () =>
+   toggleSection(newMappingHeader, showNewMappingProducts)
+);
+oldMappingHeader.addEventListener("click", () =>
+   toggleSection(oldMappingHeader, showOldMappingProducts)
+);

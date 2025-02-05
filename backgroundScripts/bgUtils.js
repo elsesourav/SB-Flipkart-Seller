@@ -148,50 +148,6 @@ function getImageFilesFromLocalStorage() {
    });
 }
 
-function verifyProduct(sku, sellerId) {
-   return new Promise(async (resolve) => {
-      try {
-         // Search for product details
-         const searchResult = await searchProduct(sku, sellerId);
-         const productInfo = searchResult?.result?.productList?.[0];
-
-         if (!productInfo) {
-            resolve({ isError: false, is: false, error: "Product not found" });
-         }
-
-         const { detail, alreadySelling, vertical, imagePaths } = productInfo;
-         const imageUrl = Object.values(imagePaths)?.[0];
-
-         // If already selling, no need to check further
-         // if (alreadySelling) {
-         //    resolve({ isError: false, error: "Already selling" });
-         // }
-
-         // Check approval status
-         const result = await checkApprovalStatus(
-            vertical,
-            detail.Brand,
-            sellerId
-         );
-         
-         if (result?.isError) {
-            resolve({ isError: true });
-         }
-
-         resolve({
-            isError: false,
-            is: result?.result,
-            alreadySelling: alreadySelling,
-            imageUrl: result?.result ? imageUrl : null,
-            error: result?.result ? null : "Not approved",
-         });
-      } catch (error) {
-         resolve({ isError: false, error: error.message });
-         console.log("Error verifying product:", error);
-      }
-   });
-}
-
 function getMixDataToNewMappingData(DATA) {
    const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
 

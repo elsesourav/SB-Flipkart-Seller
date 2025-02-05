@@ -27,9 +27,9 @@ runtimeOnMessage("c_b_mapping_request", (__, _, sendResponse) => {
    });
 });
 
-runtimeOnMessage("c_b_get_fk_csrf_token", async (__, _, sendResponse) => {
-   const token = await GET_FK_CSRF_TOKEN();
-   sendResponse({ token });
+runtimeOnMessage("c_b_get_seller_info", async (__, _, sendResponse) => {
+   const info = await GET_SELLER_INFO();
+   sendResponse(info);
 });
 
 runtimeOnMessage(

@@ -8,7 +8,7 @@ function getMappingData() {
 
 function getFkCsrfToken() {
    return new Promise((resolve) => {
-      runtimeSendMessage("c_b_get_fk_csrf_token", (r) => {
+      runtimeSendMessage("c_b_get_seller_info", (r) => {
          resolve(r);
       });
    });
@@ -71,10 +71,19 @@ function updateSelectedCount() {
    startMapping.classList.toggle("active", len > 0);
 }
 
-showPossibleMappingProducts.addEventListener("change", (e) => {
+showNewMappingProducts.addEventListener("change", (e) => {
    if (e.target.classList.contains("select-product")) {
       updateSelectedCount();
    }
+});
+showOldMappingProducts.addEventListener("change", (e) => {
+   if (e.target.classList.contains("select-product")) {
+      updateSelectedCount();
+   }
+});
+
+showMyProducts.addEventListener("change", (e) => {
+   createProductCard();
 });
 
 function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
@@ -90,7 +99,6 @@ async function searchSubmitAction() {
 
    const startingPage = N(startPage.value) || 1;
    const endingPage = N(endPage.value) || 1;
-   SELLER_ID = sellerId.value;
 
    const data = {
       productName,
@@ -168,10 +176,19 @@ function createProductCard() {
            .map((n) => n.trim())
       : [];
 
-   showPossibleMappingProducts.innerHTML = getHTMLProductCards(
-      PRODUCTS,
+   showNewMappingProducts.innerHTML = getHTMLProductCards(
+      PRODUCTS.filter((p) => !p.alreadySelling),
       searchNames
    );
+
+   if (showMyProducts.checked) {
+      showOldMappingProducts.innerHTML = getHTMLProductCards(
+         PRODUCTS.filter((p) => p.alreadySelling),
+         searchNames
+      );
+   } else {
+      showOldMappingProducts.innerHTML = "";
+   }
 }
 
 function highlightMatches(title, searchNames = []) {
@@ -249,8 +266,9 @@ function filterProducts() {
 
 async function verifyUserMustLogin() {
    if (!FK_CSRF_TOKEN) {
-      const { token } = await getFkCsrfToken();
-      FK_CSRF_TOKEN = token;
+      const { sellerId, csrfToken } = await getFkCsrfToken();
+      FK_CSRF_TOKEN = csrfToken;
+      SELLER_ID = sellerId;
    }
 
    if (!FK_CSRF_TOKEN) {

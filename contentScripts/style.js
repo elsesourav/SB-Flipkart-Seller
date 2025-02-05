@@ -117,7 +117,7 @@ const tableStyle = `
       max-height: calc(100% - 120px);
       display: flex;
       justify-content: center;
-      background: #ffffff;
+      background: #dddddd;
       border-radius: 10px;
       box-shadow: 0 0 10px #000;
       padding: 10px;
@@ -142,10 +142,11 @@ const tableStyle = `
          padding: 6px;
          border-bottom: 3px double #000;
          border-radius: 8px;
-
+         background: #eeeeee;
+         
          &:nth-child(4n + 1),
          &:nth-child(4n) {
-            background: #eee;
+            background: #ffffff;
          }
       }
 
@@ -177,7 +178,7 @@ const tableStyle = `
          z-index: 2;
 
          &:checked ~ ._-cell {
-            opacity: 0.3;
+            opacity: 0.1;
 
             &._-header {
                background: transparent;
