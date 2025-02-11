@@ -54,6 +54,7 @@ body {
    overflow: hidden;
    padding: calc(var(--s) * 1.5);
 }
+
 .container {
    position: relative;
    width: 100%;
@@ -90,36 +91,6 @@ body {
 .cards.preview-products {
    --nh: calc(var(--product-width) + 100px);
 }
-
-
-/* .preview-card {
-   position: relative;
-   background: #282a38;
-   border-radius: calc(var(--s) / 2);
-   padding: calc(var(--s));
-   display: grid;
-   gap: calc(var(--s) / 2);
-
-   img {
-      width: 100%;
-      aspect-ratio: 1;
-      object-fit: contain;
-      border-radius: calc(var(--s) / 4);
-      background: #1a1b24;
-   }
-
-   .title {
-      font-family: f3;
-      font-size: 1.2em;
-      color: #fff;
-   }
-
-   .price {
-      font-family: f7b;
-      font-size: 1.2em;
-      color: #2ecc71;
-   }
-} */
 
 .gap {
    --gap: 5px;

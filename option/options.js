@@ -111,6 +111,8 @@ cancelPreview.addEventListener("click", hidePreviewWindow);
 startMappingBtn.addEventListener("click", async () => {
    EXTENSION_MAPPING_DATA = await getMappingData();
 
+   console.log(EXTENSION_MAPPING_DATA);
+
    hidePreviewWindow();
    showConfirmationWindow();
 });
@@ -169,7 +171,7 @@ confirmationInput.addEventListener("keyup", (e) => {
 });
 
 function toggleSection(header, cardsSection) {
-   const arrow = header.classList.toggle("collapsed");
+   header.classList.toggle("collapsed");
    cardsSection.classList.toggle("collapsed");
 }
 

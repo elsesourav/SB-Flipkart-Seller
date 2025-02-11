@@ -7,7 +7,9 @@
    background: rgba(0, 0, 0, 0.8);
    display: none;
    justify-content: center;
+   gap: calc(var(--s));
    align-items: center;
+   flex-direction: column;
    z-index: 9999;
 }
 
@@ -16,13 +18,14 @@
 }
 
 .loader {
+   position: relative;
    display: flex;
-   gap: 8px;
+   gap: calc(var(--s));
 }
 
 .loader span {
-   width: 20px;
-   height: 20px;
+   width: calc(var(--s) * 2);
+   height: calc(var(--s) * 2);
    border-radius: 50%;
    background: #fff;
    animation: bounce 0.5s alternate infinite;
@@ -41,6 +44,47 @@
       transform: translateY(0);
    }
    to {
-      transform: translateY(-20px);
+      transform: translateY(calc(var(--s) * -2));
    }
+}
+
+.loading-status {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: calc(var(--s));
+}
+
+.line-progress {
+   width: 300px;
+   height: calc(var(--s) * 0.5);
+   background: rgba(255, 255, 255, 0.1);
+   border-radius: calc(var(--s) * 0.5);
+   overflow: hidden;
+   position: relative;
+}
+
+.line-progress .line {
+   position: absolute;
+   left: 0;
+   top: 0;
+   height: 100%;
+   width: 0%;
+   background: #fff;
+   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+   transition: width 0.3s ease-in-out;
+}
+
+.progress-text {
+   color: #fff;
+   font-size: 14px;
+   font-weight: bold;
+   min-width: 40px;
+   text-align: center;
+}
+
+/* Remove old progress styles */
+.progress-container,
+.progress-bar {
+   display: none;
 }

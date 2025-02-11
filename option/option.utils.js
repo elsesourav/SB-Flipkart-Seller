@@ -22,6 +22,11 @@ function getMappingPossibleProductData(data) {
    });
 }
 
+runtimeOnMessage("b_c_update_loading_percentage", async ({ percentage }, _, sendResponse) => {
+   sendResponse({ status: "ok" });
+   updateLoadingProgress(percentage);
+});
+
 function createMappingSendRequest() {
    return new Promise((resolve) => {
       runtimeSendMessage(
@@ -41,10 +46,23 @@ function createMappingSendRequest() {
 
 function showLoading() {
    loadingWindow.classList.add("show");
+   resetLoadingProgress();
 }
 
-function hideLoading() {
+async function hideLoading() {
+   await wait(300);
    loadingWindow.classList.remove("show");
+   resetLoadingProgress();
+}
+
+function updateLoadingProgress(percent) {
+   percent = Math.min(100, Math.max(0, percent)); // Ensure percent is between 0 and 100
+   lineProgress.style.width = `${percent}%`;
+   progressText.textContent = `${Math.round(percent)}%`;
+}
+
+function resetLoadingProgress() {
+   updateLoadingProgress(0);
 }
 
 function showPreviewWindow() {
@@ -96,10 +114,10 @@ function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
 async function searchSubmitAction() {
    const productName = searchProduct.value;
    if (!productName) return;
-   
+
    const startingPage = N(startPage.value) || 1;
    const endingPage = N(endPage.value) || 1;
-   
+
    const min = Math.min(startingPage, endingPage);
    const max = Math.max(startingPage, endingPage);
 
@@ -269,14 +287,14 @@ function filterProducts() {
 
 async function verifyUserMustLogin() {
    if (!FK_CSRF_TOKEN) {
-      const { sellerId, csrfToken } = await getFkCsrfToken();
-      FK_CSRF_TOKEN = csrfToken;
-      SELLER_ID = sellerId;
-   }
-
-   if (!FK_CSRF_TOKEN) {
-      alert("You don't login to Flipkart Seller Page, please login first");
-      return false;
+      const data = await getFkCsrfToken();
+      if (data) {
+         FK_CSRF_TOKEN = data.csrfToken;
+         SELLER_ID = data.sellerId;
+      } else {
+         alert("You don't login to Flipkart Seller Page, please login first");
+         return false;
+      }
    }
    return true;
 }
@@ -319,7 +337,10 @@ function getOldAndNewProductSize(DATA) {
    let newSize = 0;
 
    DATA.forEach((p) => {
-      if (SELECTED_PRODUCTS_DATA.filter((e) => e.id === p.productID)?.[0]?.alreadySelling) {
+      if (
+         SELECTED_PRODUCTS_DATA.filter((e) => e.id === p.productID)?.[0]
+            ?.alreadySelling
+      ) {
          oldSize++;
       } else {
          newSize++;

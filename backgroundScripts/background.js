@@ -32,36 +32,52 @@ runtimeOnMessage("c_b_get_seller_info", async (__, _, sendResponse) => {
    sendResponse(info);
 });
 
+let optionsTabId;
+function sendUpdateLoadingPercentage(percentage) {
+   if (!optionsTabId) return;
+   tabSendMessage(optionsTabId, "b_c_update_loading_percentage", {
+      percentage,
+   });
+}
+
 runtimeOnMessage(
    "c_b_get_mapping_possible_product_data",
-   async (data, _, sendResponse) => {
+   async (data, sender, sendResponse) => {
       const { productName, startingPage, endingPage, sellerId, fkCsrfToken } =
          data;
 
+      optionsTabId = sender.tab.id;
+
       try {
          // Fetch all products first
-         const products = [];
-         for (let i = startingPage; i <= endingPage; i++) {
+         const verifiedProducts = [];
+         const MAX_PAGE_IN_ONE_TIME = 6;
+         for (let i = startingPage, j = 0; i <= endingPage; i++, j++) {
+            const products = [];
             const productData = await fetchFlipkartSearchData(productName, i);
             if (productData) {
                products.push(...productData);
             }
-         }
 
-         // Process products in batches
-         const verifiedProducts = [];
-         for (let i = 0; i < products.length; i += BATCH_SIZE) {
-            const batchResults = await processBatchForVerification(
-               products,
-               sellerId,
-               fkCsrfToken,
-               i,
-            );
-            if (batchResults?.isError) {
-               sendResponse({ isError: true, error: "Too many requests" });
-               return;
+            // Process products in batches
+            for (let i = 0; i < products.length; i += BATCH_SIZE) {
+               const batchResults = await processBatchForVerification(
+                  products,
+                  sellerId,
+                  fkCsrfToken,
+                  i
+               );
+               if (batchResults?.isError) {
+                  sendResponse({ isError: true, error: "Too many requests" });
+                  return;
+               }
+               verifiedProducts.push(...batchResults);
             }
-            verifiedProducts.push(...batchResults);
+            sendUpdateLoadingPercentage(
+               Math.round((i / (endingPage - startingPage + 1)) * 100)
+            );
+            // if ((j + 1) % MAX_PAGE_IN_ONE_TIME === 0 && i !== endingPage)
+            //    await wait(40000);
          }
 
          // Send final filtered response
@@ -82,15 +98,15 @@ runtimeOnMessage(
          const allResults = [];
 
          // Process data in batches of BATCH_SIZE eg:(25)
-         // for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
-         //    const batchData = {
-         //       ...newMappingData,
-         //       PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
-         //    };
+         for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
+            const batchData = {
+               ...newMappingData,
+               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
+            };
 
-         //    const batchResult = await createProductMappingBulk(batchData);
-         //    allResults.push(...batchResult);
-         // }
+            const batchResult = await createProductMappingBulk(batchData);
+            allResults.push(...batchResult);
+         }
          // Send final results
          sendResponse(allResults);
       } catch (error) {
@@ -261,8 +277,18 @@ runtimeOnMessage(
 
 runtimeOnMessage(
    "p_b_export_file",
-   async ({ data, fileType, filename, username, password }, __, sendResponse) => {
-      const result = await exportFile(username, fileType, filename, data, password);
+   async (
+      { data, fileType, filename, username, password },
+      __,
+      sendResponse
+   ) => {
+      const result = await exportFile(
+         username,
+         fileType,
+         filename,
+         data,
+         password
+      );
       sendResponse(result);
    }
 );
@@ -282,3 +308,198 @@ runtimeOnMessage(
       sendResponse(result);
    }
 );
+
+function fetchListingSellerData(i, fkCsrfToken, state = "ACTIVE") {
+   return new Promise(async (resolve) => {
+      const body = JSON.stringify({
+         search_text: "",
+         search_filters: {
+            internal_state: state,
+         },
+         column: {
+            pagination: {
+               batch_no: i,
+               batch_size: 100,
+            },
+            sort: {
+               column_name: "demand_weight",
+               sort_by: "DESC",
+            },
+         },
+      });
+      const headers = {
+         Accept: "*/*",
+         "Accept-Encoding": "gzip, deflate, br, zstd",
+         "Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7",
+         Connection: "keep-alive",
+         "Content-Type": "application/json",
+         "fk-csrf-token": fkCsrfToken,
+      };
+
+      try {
+         const response = await fetch(URLS.listingsDataForStates, {
+            method: "POST",
+            headers,
+            body,
+         });
+   
+         const { count, listing_data_response } = await response.json();
+   
+         if (!count) {
+            resolve({ count: 0, data: [] });
+         } else {
+            resolve({ count, data: listing_data_response });
+         }
+      } catch (error) {
+         console.log(error);
+         resolve({ count: 0, data: [] });
+      }
+   });
+}
+
+function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
+   return new Promise(async (resolve) => {
+      const listingData = {};
+      console.time();
+      const firstData = await fetchListingSellerData(0, fkCsrfToken, state);
+      const { count, data } = firstData;
+      
+      const len = Math.floor(count / 100);
+      console.log(count, len);
+
+      // Process first batch
+      data.map(({ product_id, imageUrl, internal_state, sku_id }) => {
+         listingData[product_id] = {
+            imageUrl,
+            internal_state,
+            sku_id,
+         };
+      });
+
+      // Create array of promises for remaining batches
+      const promises = Array.from({ length: len }, (_, i) =>
+         fetchListingSellerData(i + 1, fkCsrfToken, state)
+      );
+
+      // Execute all promises in parallel
+      const results = await Promise.all(promises);
+
+      // Process all results
+      results.forEach(({ data }, i) => {
+         console.log(i);
+         console.log(data);
+         
+         data.map(({ product_id, imageUrl, internal_state, sku_id }) => {
+            listingData[product_id] = {
+               imageUrl,
+               internal_state,
+               sku_id,
+            };
+         });
+      });
+
+      console.timeEnd();
+      console.log(listingData);
+      resolve({ count, data: listingData });
+   });
+}
+
+function getAllListingSellerData(fkCsrfToken) {
+   return new Promise(async (resolve) => {
+      const activeData = await fetchListingSellerData(0, fkCsrfToken, "ACTIVE");
+      const inactiveData = await fetchListingSellerData(0, fkCsrfToken, "INACTIVE");
+      const archivedData = await fetchListingSellerData(0, fkCsrfToken, "ARCHIVED");
+      console.table({ ...activeData, ...inactiveData, ...archivedData });
+      
+      resolve({ ...activeData, ...inactiveData, ...archivedData });
+   });
+}
+
+// getAllListingSellerData("sgsvRI3P-19Xu76vVO3YtNQd-LE2Ak5-4Z9A");
+
+// function fetchProductSellerDetails(productId, fkCsrfToken) {
+//    const url = "https://seller.flipkart.com/napi/listing/listingsDataForStates";
+
+//    // Define the request payload
+
+//    // Define the headers
+
+//    console.log("starting test");
+//    console.time();
+
+//    for (let i = 0; i < 97; i++) {
+//       // Make the fetch request
+//       fetch(url, {
+//          method: "POST",
+//          headers: headers,
+//          body: JSON.stringify(data),
+//       })
+//          .then((response) => {
+//             if (!response.ok) {
+//                throw new Error("Network response was not ok");
+//             }
+//             return response.json();
+//          })
+//          .then((data) => {
+//             console.log("Success:", data);
+//             if (i === 96) {
+//                console.log("ending test");
+//                console.timeEnd();
+//             }
+//          })
+//          .catch((error) => {
+//             console.error("Error:", error);
+//          });
+//    }
+// }
+
+// fetchProductSellerDetails();
+
+// fetch("https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers", {
+//    method: "POST",
+//    headers: {
+//       "X-User-Agent":
+//          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop",
+//    },
+//    body: JSON.stringify({ requestContext: { productId: "PAEGGREHZTG9CNTQ" } }),
+// })
+//    .then((response) => response.json())
+//    .then((DATA) => {
+//       const { data } = DATA?.RESPONSE?.data?.product_seller_detail_1;
+
+//       const nData = data.map((e) => e.value);
+//       const newData = nData.map((e) => {
+//          // seller info
+//          const { id, name } = e?.sellerInfo?.value;
+
+//          // price info
+//          const { FKFP, MRP } = e?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints;
+
+//          // shipping fees
+//          const {
+//             local_shipping_fee,
+//             national_shipping_fee,
+//             zonal_shipping_fee,
+//          } = e?.npsListing?.shipping_fees;
+
+//          const is_fAssured = e?.npsListing?.listing_tier === "FASSURED";
+
+//          return {
+//             id,
+//             name,
+//             is_fAssured,
+//             final_price: FKFP?.value,
+//             mrp: MRP?.value,
+//             local_shipping_fee: local_shipping_fee?.amount,
+//             zonal_shipping_fee: zonal_shipping_fee?.amount,
+//             national_shipping_fee: national_shipping_fee?.amount,
+//          };
+//       });
+
+//       const sortedData = newData.sort((a, b) => (a.final_price + a.local_shipping_fee) - (b.final_price + b.local_shipping_fee));
+
+//       console.table(sortedData);
+//    })
+//    .catch((error) => console.error("Fetch Error:", error));
+
+// Define the URL

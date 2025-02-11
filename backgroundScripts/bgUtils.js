@@ -152,7 +152,8 @@ function getMixDataToNewMappingData(DATA) {
    const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
 
    const SKU_NAME = MD?.SKU_NAME;
-   const PROFIT = N(MD?.PROFIT || 15);
+   const MAX_PROFIT = N(MD?.MAX_PROFIT || 15);
+   const MIN_PROFIT = N(MD?.MIN_PROFIT || 10);
    const PACKING_COST = N(MD?.PACKING_COST || 3);
    const FIXED_COST = N(MD?.FIXED_COST || 72);
    const LISTING_STATUS_G = MD?.LISTING_STATUS || "ACTIVE";
@@ -193,7 +194,7 @@ function getMixDataToNewMappingData(DATA) {
       const PRODUCT_COST = getProductCost(MD, quantity, type);
       const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
       const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
-      const TOTAL = PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
+      const TOTAL = MAX_PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
       let SELLING_PRICE = calculateProductPrice(FIXED_COST, TOTAL);
 
       if (MD?.IS_INCLUDED) SELLING_PRICE -= DELIVERY_CHARGE_MIN;

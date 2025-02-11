@@ -22,7 +22,7 @@ main {
       transform: translate(-50%, -50%); /* Adjust centering */
       background-size: cover;
       background-position: center;
-      opacity: 0.2;
+      opacity: 0.15;
       animation: opacity linear 4s infinite;
       pointer-events: none;
       user-select: none;
@@ -302,6 +302,10 @@ body:has(.btn:nth-child(4) input:checked) {
    
    &.imp-exp {
       height: calc(var(--s) * 18) !important;
+   }
+
+   &.one-label {
+      grid-template-columns: 1fr !important;
    }
 
    &.show-output {

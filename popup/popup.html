@@ -107,7 +107,8 @@
       ------------------------------------------------------------------>
       <div class="container" id="mappingContainer">
          <div class="basic-grid no-flip">
-            <div class="take-inp">
+
+            <div class="take-inp center">
                <span class="inp-span">Name</span>
                <section>
                   <div class="take-value">
@@ -119,14 +120,31 @@
             </div>
 
             <div class="take-inp">
-               <span class="inp-span">Profit <i class="sbi-inr"></i></span>
+               <span class="inp-span">MinProfit <i class="sbi-inr"></i></span>
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input autocomplete="off" name="PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="MIN_PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <button class="inc">
+                           <i class="sbi-plus-square"></i>
+                        </button>
+                     </div>
+                  </div>
+               </section>
+            </div>
+
+            <div class="take-inp">
+               <span class="inp-span">MaxProfit <i class="sbi-inr"></i></span>
+               <section>
+                  <div class="take-value">
+                     <div class="inp num" step="1">
+                        <button class="dec">
+                           <i class="sbi-minus-square"></i>
+                        </button>
+                        <input autocomplete="off" name="MAX_PROFIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -172,12 +190,12 @@
             <div class="take-inp full-width three-input">
                <section>
                   <div class="take-value">
-                     <div class="inp num" step="1">
-                        <label>Unit</label>
+                     <div class="inp num" step="0.05">
+                        <label>Weight in KG</label>
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input autocomplete="off" name="UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -200,12 +218,12 @@
                </section>
                <section>
                   <div class="take-value">
-                     <div class="inp num" step="0.05">
-                        <label>Weight</label>
+                     <div class="inp num" step="1">
+                        <label>Unit</label>
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
-                        <input autocomplete="off" name="UNIT_WEIGHT" type="number" inputmode="numeric" class="input-a inp-limit" />
+                        <input autocomplete="off" name="UNIT" type="text" inputmode="numeric" class="input-a inp-limit" />
                         <button class="inc">
                            <i class="sbi-plus-square"></i>
                         </button>
@@ -239,8 +257,11 @@
                </section>
             </div>
 
-            <div class="take-inp full-width one-label-three-input">
-               <span class="inp-span">Delivery</span>
+            <div class="show-output one-label">
+               <span class="out-span">Delivery Charges in Min Profit</span>
+            </div>
+
+            <div class="take-inp full-width three-input">
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -285,8 +306,11 @@
                </section>
             </div>
 
-            <div class="take-inp full-width one-label-three-input">
-               <span class="inp-span">Packaging</span>
+            <div class="show-output one-label">
+               <span class="out-span">Packaging Sizes</span>
+            </div>
+
+            <div class="take-inp full-width three-input">
                <section>
                   <div class="take-value">
                      <div class="inp num" step="1">
@@ -866,7 +890,7 @@
                <section>
                   <div class="take-value">
                      <div class="inp num" step="0.05">
-                        <label>Weight</label>
+                        <label>Weight in KG</label>
                         <button class="dec">
                            <i class="sbi-minus-square"></i>
                         </button>
@@ -1995,6 +2019,7 @@
             </div>
          </div>
       </div>
+      
    </main>
    </div>
    <canvas id="testCanvas"></canvas>

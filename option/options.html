@@ -47,7 +47,7 @@
                   <div class="page-select">
                      <p>Page</p>
                      <select name="startPage" id="startPage">
-                        <option value="1">1</option>
+                        <option selected value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                         <option value="4">4</option>
@@ -99,7 +99,7 @@
                         <option value="22">22</option>
                         <option value="23">23</option>
                         <option value="24">24</option>
-                        <option value="25">25</option>
+                        <option selected value="25">25</option>
                      </select>
                   </div>
                   <div class="search-field">
@@ -116,7 +116,13 @@
                </div>
                <div class="outer second">
                   <label>Show Old</label>
-                  <input autocomplete="off" type="checkbox" id="showMyProducts" class="toggle" />
+                  <input
+                     autocomplete="off"
+                     type="checkbox"
+                     id="showMyProducts"
+                     class="toggle"
+                     checked
+                  />
                   <input
                      type="text"
                      name="names"
@@ -173,14 +179,12 @@
               </div> -->
             </div>
             <div class="gap x3"></div>
-            <div class="section-header" id="oldMappingHeader">
+            <div class="section-header collapsed" id="oldMappingHeader">
                <span class="toggle-arrow">▲</span>
                <h3>Already Mapped Products</h3>
                <span class="toggle-arrow">▲</span>
             </div>
-            <div id="showOldMappingProducts" class="cards">
-   
-            </div>
+            <div id="showOldMappingProducts" class="cards collapsed"></div>
          </div>
       </div>
 
@@ -335,6 +339,12 @@
             <span></span>
             <span></span>
             <span></span>
+         </div>
+         <div class="loading-status">
+            <div class="line-progress">
+               <div class="line" id="lineProgress"></div>
+            </div>
+            <div id="progressText" class="progress-text">0%</div>
          </div>
       </div>
    </body>

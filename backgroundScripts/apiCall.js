@@ -216,10 +216,10 @@ function searchProduct(productId, sellerId) {
    });
 }
 
-function checkApprovalStatus(vertical, brand, sellerId) {
+function checkApprovalStatus(vertical, brand) {
    return new Promise(async (resolve) => {
       try {
-         const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}&sellerId=${sellerId}`;
+         const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=${vertical}&brand=${brand}`;
          const response = await fetch(url);
          const result = await response.json();
          resolve({
@@ -269,7 +269,7 @@ function getProductIdToSKUId(fkCsrfToken, productId) {
    });
 }
 
-function verifyProduct(productId, sellerId, fkCsrfToken) {
+function verifyProductUsingUserData(productId, sellerId, fkCsrfToken) {
    return new Promise(async (resolve) => {
       try {
          // Search for product details
@@ -304,11 +304,7 @@ function verifyProduct(productId, sellerId, fkCsrfToken) {
                productInfo;
             const imageUrl = Object.values(imagePaths)?.[0];
 
-            const result = await checkApprovalStatus(
-               vertical,
-               detail.Brand,
-               sellerId
-            );
+            const result = await checkApprovalStatus(vertical, detail.Brand);
 
             if (result?.isError) {
                resolve({ isError: true, is: false, error: "Server error" });
@@ -349,7 +345,7 @@ function processBatchForVerification(
       try {
          const batchPromises = batch.map(async (product) => {
             try {
-               const result = await verifyProduct(
+               const result = await verifyProductUsingUserData(
                   product.id,
                   sellerId,
                   fkCsrfToken
@@ -402,7 +398,7 @@ function GET_SELLER_INFO() {
    return new Promise(async (resolve) => {
       try {
          const res = await fetch(URLS.flipkartFeaturesForSeller);
-         const json = await res.json();
+         const json = await res?.json();
          const info = {
             sellerId: json?.sellerId,
             userId: json?.userId,
@@ -596,3 +592,24 @@ function createProductMappingBulk(DATA) {
       }
    });
 }
+
+// async function test(i) {
+//    try {
+//       const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=plant_seed&brand=ibains`;
+//       const response = await fetch(url);
+//       const result = await response.json();
+//       console.log("test: ", i);
+//       console.log(result);
+//    } catch (error) {
+//       resolve({ isError: true, result: null });
+//    }
+// }
+
+// (async () => {
+//    console.log("starting test");
+
+//    for (let i = 0; i < 1000; i++) {
+//       test(i);
+//    }
+//    console.log("ending test");
+// })();

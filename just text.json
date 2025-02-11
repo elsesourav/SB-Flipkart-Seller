@@ -1,0 +1,2196 @@
+[
+   {
+      "type": "ListingDetailValue",
+      "actions": {
+         "BUY_NOW": {
+            "type": "PRODUCT_ACTION",
+            "data": [
+               {
+                  "action": {
+                     "constraints": [
+                        {
+                           "metaInfo": {
+                              "openInBottomSheet": "true",
+                              "url": "/login?type=mobile&sourceContext=buy_now"
+                           },
+                           "type": "LOGIN"
+                        }
+                     ],
+                     "customTrackingEvents": null,
+                     "fallback": null,
+                     "loginType": "LOGIN_NOT_REQUIRED",
+                     "nonWidgetizeRedirection": null,
+                     "omnitureData": null,
+                     "omnitureTracking": null,
+                     "originalUrl": null,
+                     "params": {
+                        "valid": true,
+                        "saalListings": [],
+                        "defaultChildListings": null,
+                        "quantity": 1,
+                        "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                        "productId": "PAEGGREHZTG9CNTQ"
+                     },
+                     "requiredPermissionType": null,
+                     "screenType": "multiWidgetPage",
+                     "storeValue": {},
+                     "subType": null,
+                     "tracking": {},
+                     "triggerExtraStandardEvents": null,
+                     "type": "BUY_NOW",
+                     "url": null,
+                     "validationMeta": null,
+                     "widgetTracking": null,
+                     "widgetizedActions": null
+                  },
+                  "metaData": null,
+                  "rcType": null,
+                  "tracking": null,
+                  "trackingData": null,
+                  "value": {
+                     "type": "ProductActionValue",
+                     "actionType": "BUY_NOW",
+                     "enabled": true,
+                     "text": "Buy Now"
+                  }
+               }
+            ],
+            "dataId": -1127925478,
+            "params": {},
+            "tracking": null,
+            "trackingData": null,
+            "ttl": 60,
+            "viewType": null,
+            "widgetLayout": null
+         },
+         "ADD_TO_CART": {
+            "type": "PRODUCT_ACTION",
+            "data": [
+               {
+                  "action": {
+                     "constraints": null,
+                     "customTrackingEvents": null,
+                     "fallback": null,
+                     "loginType": "LOGIN_NOT_REQUIRED",
+                     "nonWidgetizeRedirection": null,
+                     "omnitureData": null,
+                     "omnitureTracking": null,
+                     "originalUrl": null,
+                     "params": {
+                        "valid": true,
+                        "defaultChildListings": null,
+                        "quantity": 1,
+                        "productId": "PAEGGREHZTG9CNTQ",
+                        "saalListings": [],
+                        "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                        "widgetType": null
+                     },
+                     "requiredPermissionType": null,
+                     "screenType": "multiWidgetPage",
+                     "storeValue": {},
+                     "subType": null,
+                     "tracking": {},
+                     "triggerExtraStandardEvents": null,
+                     "type": "CART_ADD",
+                     "url": null,
+                     "validationMeta": null,
+                     "widgetTracking": null,
+                     "widgetizedActions": null
+                  },
+                  "metaData": null,
+                  "rcType": null,
+                  "tracking": null,
+                  "trackingData": null,
+                  "value": {
+                     "type": "ProductActionValue",
+                     "actionType": "ADD_TO_CART",
+                     "enabled": true,
+                     "quantityMetaData": {
+                        "action": null,
+                        "calloutAfterMinQuantitySelection": null,
+                        "calloutBeforeMinQuantitySelection": null,
+                        "discountText": null,
+                        "hurdleQuantity": null,
+                        "maxQuantity": null,
+                        "minQuantity": 1,
+                        "quantitySelectorCallout": null,
+                        "restrictQuantityUpdate": false,
+                        "toggleAction": null
+                     },
+                     "text": "Add to cart"
+                  }
+               }
+            ],
+            "dataId": -1602111834,
+            "params": {},
+            "tracking": null,
+            "trackingData": null,
+            "ttl": 60,
+            "viewType": null,
+            "widgetLayout": null
+         }
+      },
+      "callOuts": [
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 0,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "OFFER"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQHXGUJY&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "OfferCallout",
+               "count": 6,
+               "icon": "NORMAL_OFFER",
+               "tabType": "OFFER"
+            }
+         },
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 1,
+                  "screenName": "INTERNAL_PAYMENTS_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "COD"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/payments-callout/itemId?pageKey=payments-callout&tab=COD&lid=LSTPAEGGREHZTG9CNTQHXGUJY&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": { "type": "CODCallout", "icon": "COD", "tabType": "COD" }
+         },
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 2,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "REPLACEMENT"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQHXGUJY&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "ReturnsCallout",
+               "calloutId": "no_returns",
+               "count": 0,
+               "displayText": "No Returns Applicable",
+               "icon": "REPLACEMENT",
+               "pageLink": "https://www.flipkart.com/pages/no_returns",
+               "tabType": "REPLACEMENT"
+            }
+         }
+      ],
+      "callOutsV2": null,
+      "codInfo": [
+         "Available. Select Cash on Delivery (CoD) payment option while placing the order and later, pay in cash at the time of actual delivery of product. No advance payment needed."
+      ],
+      "deliveryInfo": {
+         "primaryOption": {
+            "charge": {
+               "additionalText": null,
+               "currency": "INR",
+               "decimalValue": "0.00",
+               "discount": null,
+               "downpaymentRate": 0,
+               "downpaymentRequired": false,
+               "name": "",
+               "priceType": null,
+               "strikeOff": false,
+               "textStyle": null,
+               "value": 0
+            },
+            "deliveryDate": "9 Feb, Sunday",
+            "deliveryTimeStamp": 1739125799000,
+            "fasterDelivery": false,
+            "serverTime": 1738825636832,
+            "speed": "Delivery",
+            "text": "Delivery by 9 Feb, Sunday"
+         },
+         "regularOptions": [
+            {
+               "charge": {
+                  "additionalText": null,
+                  "currency": "INR",
+                  "decimalValue": "0.00",
+                  "discount": null,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "",
+                  "priceType": null,
+                  "strikeOff": false,
+                  "textStyle": null,
+                  "value": 0
+               },
+               "deliveryDate": "9 Feb, Sunday",
+               "deliveryTimeStamp": 1739125799000,
+               "fasterDelivery": false,
+               "serverTime": 1738825636832,
+               "speed": "Standard Delivery",
+               "text": "Delivery by 9 Feb, Sunday"
+            }
+         ]
+      },
+      "deliveryMessages": [
+         {
+            "fasterDelivery": false,
+            "freeDelivery": false,
+            "text": "Usually delivered in 3 days Enter pincode for exact delivery dates/charges"
+         }
+      ],
+      "emiInfo": null,
+      "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+      "listingMessage": null,
+      "metadata": {
+         "averageRating": 3.6,
+         "codAvailable": true,
+         "deliveryTime": 1739125799000,
+         "enabled": true,
+         "faAvailable": false,
+         "freeDeliveryAvailable": true,
+         "nbfcAvailable": false,
+         "paeEmiAvailable": false,
+         "prexoAvailable": false,
+         "price": 127,
+         "selected": true
+      },
+      "nbfcEmi": null,
+      "npsListing": {
+         "active_service_profiles": ["NON_FBF"],
+         "asm_controlled": false,
+         "asm_user_state": "BAU",
+         "associations": null,
+         "attributes": {
+            "flipkart_release_date": null,
+            "independent_sellable": true,
+            "is_free": false,
+            "is_large": false,
+            "is_live": true,
+            "is_seller_chat_enabled": false,
+            "lmi_title_text": null,
+            "offer_know_more": null,
+            "offers_description": null,
+            "release_date_type": null,
+            "return_policy": "no_returns",
+            "selection_source": null
+         },
+         "business_zone": null,
+         "buyable": true,
+         "country_of_origin": ["IN"],
+         "currency": "INR",
+         "discount_percentage": null,
+         "earliest_expiry_date": 1885055400000,
+         "expiry_date": 1885055400000,
+         "fpgservice_listing_info": null,
+         "gst_sellable": false,
+         "importer_details": null,
+         "is_available": true,
+         "is_gst_sellable": false,
+         "lazy_promise": null,
+         "lazy_promise_v2": null,
+         "listing_coin_info": null,
+         "listing_id": "LSTPAEGGREHZTG9CNTQHXGUJY",
+         "listing_state": "current",
+         "listing_status": "ACTIVE",
+         "listing_tier": "NONE",
+         "manufacturer_details": ["KHUSHI PROVA"],
+         "marketplace": { "context": "FLIPKART", "domain": "FLIPKART" },
+         "marketplace_id": "FLIPKART",
+         "max_order_quantity_allowed": 10,
+         "max_quantity": 0,
+         "mfg_date": 1729535400000,
+         "minimum_order_quantity": null,
+         "packer_details": ["KHUSHI PROVA"],
+         "part_payment": {
+            "enabled": "false",
+            "value": "50",
+            "value_type": "ABSOLUTE"
+         },
+         "pnp_detail_listing_info": null,
+         "pnp_detail_listing_info_v2": {
+            "associationInfo": null,
+            "basketOfferBenefits": null,
+            "childAssociations": null,
+            "eaData": null,
+            "fees": null,
+            "listingD2RMessage": null,
+            "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+            "nepContext": "{\"l\":\"LSTPAEGGREHZTG9CNTQHXGUJY\",\"lp\":127.0,\"mrp\":599.0,\"fkfp\":127.0,\"fktp\":127.0,\"ex\":{\"md\":null,\"dt\":null,\"st\":null,\"msg\":null,\"in\":null,\"va\":null,\"exmd\":null,\"eed\":[]},\"ana\":{\"mp\":\"FLIPKART\",\"bu\":\"Home\",\"supc\":\"HomeImprovementTool\",\"cat\":\"LawnAndGardening\",\"subc\":\"LawnAndGardening\",\"ver\":\"PlantSeed\"},\"co\":{\"ao\":[\"nb:mp:0137762705\",\"nb:mp:11d93cf817\",\"nb:mp:0139db4b05\",\"nb:mp:01a7a36c05\",\"nb:mp:01ccb3bd05\",\"nb:mp:00ed3da030\"],\"edo\":null,\"po\":[]},\"cid\":null,\"om\":{},\"nep\":120.0}",
+            "offerBasedCharges": {},
+            "offerDetails": null,
+            "potentialOfferData": null,
+            "potentialTds": [],
+            "priceInfo": {
+               "type": "DETAILED_PRICE_INFO",
+               "accountingEntity": "FLIPKART",
+               "potentialPrice": null,
+               "metadata": {
+                  "refType": "SYSTEM",
+                  "referenceIds": ["SR_SSP"],
+                  "timePoint": 1737557924913,
+                  "version": "5"
+               },
+               "ppuAttributes": null,
+               "pricePoints": {
+                  "FKFP": {
+                     "type": "Price",
+                     "label": "Final Price",
+                     "ppuAttributes": null,
+                     "value": 127
+                  },
+                  "FKTP": {
+                     "type": "Price",
+                     "label": "Targeted Price",
+                     "ppuAttributes": null,
+                     "value": 127
+                  },
+                  "FKAP": {
+                     "type": "Price",
+                     "label": "Anchor Price",
+                     "ppuAttributes": null,
+                     "value": 99
+                  },
+                  "MRP": {
+                     "type": "Price",
+                     "label": "M.R.P",
+                     "ppuAttributes": null,
+                     "value": 599
+                  }
+               }
+            },
+            "ruleMessageMap": {
+               "nb:mp:11d93cf817": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:11d93cf817",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+                           "medium": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+                           "small": "5% Unlimited Cashback on Flipkart Axis Bank"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:0139db4b05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:0139db4b05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+                           "medium": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+                           "small": "10% off on BOBCARD Transactions, up to ₹1,000"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:01a7a36c05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:01a7a36c05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+                           "medium": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+                           "small": "10% off on BOBCARD EMI Transactions,"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:0137762705": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:0137762705",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+                           "medium": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+                           "small": "10% off up to ₹1000 on Canara Bank CC and EMI"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:01ccb3bd05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:01ccb3bd05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+                           "medium": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+                           "small": "10% off up to ₹1,000 on DBS Bank Debit Card"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:00ed3da030": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:00ed3da030",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+                           "medium": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+                           "small": "5% off up to ₹750 on IDFC FIRST Power Women"
+                        }
+                     }
+                  ]
+               }
+            },
+            "serviceCharges": {},
+            "shippingInfo": {
+               "REGULAR": {
+                  "intra_city": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "intra_city",
+                     "tier": "REGULAR"
+                  },
+                  "intra_zone": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "intra_zone",
+                     "tier": "REGULAR"
+                  },
+                  "inter_zone": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "inter_zone",
+                     "tier": "REGULAR"
+                  }
+               }
+            },
+            "shippingPriceEligibility": "ELIGIBLE",
+            "topOffer": null,
+            "valueTags": [],
+            "viewData": {
+               "priceCallout": null,
+               "sellingPricePivot": "FKTP",
+               "basePrice": "MRP",
+               "discountAmount": 472,
+               "discountPercentage": 78,
+               "effectivePrice": "FKTP",
+               "groupBuyDetails": null
+            },
+            "offerBucketOverrides": null
+         },
+         "pnp_lite_call_successful": true,
+         "pnp_lite_listing_info": {
+            "type": "PNP_LITE_LISTING_INFO",
+            "associationInfo": null,
+            "fees": null,
+            "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+            "listingInfoType": "RULE",
+            "nepData": null,
+            "offerIds": [],
+            "payzippyIds": [
+               "FPO2501291933359S52F",
+               "FPO241217173634K846J",
+               "FPO2502041624079XFX4",
+               "FPO250204162327SXQFO",
+               "FPO250204160926BUJUY",
+               "FPO2502041603202K542"
+            ],
+            "pnpDetailedContext": null,
+            "potentialOfferData": null,
+            "priceInfo": {
+               "type": "LITE_PRICE_INFO",
+               "metadata": {
+                  "refType": "SYSTEM",
+                  "referenceIds": ["SR_SSP"],
+                  "timePoint": 1737557924913,
+                  "version": "5"
+               },
+               "ppuAttributes": null,
+               "pricePoints": {
+                  "MRP": {
+                     "type": "Price",
+                     "label": "M.R.P",
+                     "ppuAttributes": null,
+                     "value": 599
+                  },
+                  "FKTP": {
+                     "type": "Price",
+                     "label": "Targeted Price",
+                     "ppuAttributes": null,
+                     "value": 127
+                  },
+                  "FKAP": {
+                     "type": "Price",
+                     "label": "Anchor Price",
+                     "ppuAttributes": null,
+                     "value": 99
+                  },
+                  "FKFP": {
+                     "type": "Price",
+                     "label": "Final Price",
+                     "ppuAttributes": null,
+                     "value": 127
+                  }
+               }
+            },
+            "ruleIdentifierInfo": {
+               "BASKETPRICE_PAYMENT_DISCOUNT": {
+                  "type": "RULE_LITE_INFO",
+                  "count": 6
+               }
+            },
+            "useValueRanking": false,
+            "valueCalloutData": null,
+            "valueTags": [
+               {
+                  "rank": 1,
+                  "tag": "FS_OTHER",
+                  "templateData": null,
+                  "type": "FREESHIP",
+                  "valueMetadata": null
+               }
+            ],
+            "viewData": {
+               "basePrice": "MRP",
+               "discountAmount": 472,
+               "discountPercentage": 78,
+               "effectivePrice": "FKTP",
+               "groupBuyDetails": null
+            },
+            "warnings": {}
+         },
+         "prebook_info": null,
+         "preorder_listing": false,
+         "procurement_type": "EXPRESS",
+         "product_id": "PAEGGREHZTG9CNTQ",
+         "promise": {
+            "availability": {
+               "isAvailable": { "value": true },
+               "maxQuantity": 20,
+               "state": "AVAILABLE",
+               "waitlistQuantity": 0
+            },
+            "defaultPromiseIndex": 0,
+            "id": "LSTPAEGGREHZTG9CNTQHXGUJY",
+            "promiseGroups": [],
+            "serviceabilityOptions": [
+               {
+                  "invalidAfter": 1738826940656,
+                  "isServiceable": { "value": true },
+                  "maxQuantity": 20,
+                  "obd": false,
+                  "programResponses": [],
+                  "promiseTime": {
+                     "value": {
+                        "from": 1739125799000,
+                        "slaInSeconds": 300000,
+                        "to": 1739125799000,
+                        "type": "DATE"
+                     }
+                  },
+                  "promiseType": "UN_SLOTTED",
+                  "service": {
+                     "type": "FORWARD",
+                     "payment": "PREPAID",
+                     "speed": "REGULAR"
+                  },
+                  "shipmentMovementType": "inter_zone",
+                  "slotAvailable": false,
+                  "slots": [],
+                  "waitlistQuantity": 0
+               },
+               {
+                  "invalidAfter": 1738826940656,
+                  "isServiceable": { "value": true },
+                  "maxQuantity": 20,
+                  "obd": false,
+                  "programResponses": [],
+                  "promiseTime": {
+                     "value": {
+                        "from": 1739125799000,
+                        "slaInSeconds": 300000,
+                        "to": 1739125799000,
+                        "type": "DATE"
+                     }
+                  },
+                  "promiseType": "UN_SLOTTED",
+                  "service": {
+                     "type": "FORWARD",
+                     "payment": "COD",
+                     "speed": "REGULAR"
+                  },
+                  "shipmentMovementType": "inter_zone",
+                  "slotAvailable": false,
+                  "slots": [],
+                  "waitlistQuantity": 0
+               }
+            ]
+         },
+         "reservation_info": null,
+         "reverse_listing": false,
+         "sale_lite_info": null,
+         "santa_listings": null,
+         "sdz": null,
+         "seller_id": "81756ae1240e4e73",
+         "seller_info": {
+            "chatInfo": {
+               "argos_id": null,
+               "chat_listing_scope": null,
+               "enabled": false
+            },
+            "fssai": {
+               "seller_id": "81756ae1240e4e73",
+               "document_type": "FSSAI",
+               "document_details": []
+            },
+            "metrics": {
+               "delivered_units_30d": 0,
+               "delivered_units_365d": 0,
+               "delivered_units_7d": 0,
+               "revenue_30d": 0,
+               "revenue_365d": 0,
+               "revenue_7d": 0,
+               "units_30d": 0,
+               "units_365d": 0,
+               "units_7d": 0,
+               "version": null
+            },
+            "pharmaLicense": {},
+            "ratingDetails": {
+               "is_dormant_seller": false,
+               "is_new_seller": false,
+               "no_of_units_listed": 92652,
+               "pqs_percent": 64,
+               "product_quality_score": 3.2,
+               "rating": 3.6,
+               "seller_cohort_keys": [
+                  "total_quantity",
+                  "pqs_percent",
+                  "sqs_percent"
+               ],
+               "seller_id": "81756ae1240e4e73",
+               "seller_product_rating": {
+                  "overall_product_rating": 3.0643,
+                  "tag": "Bad"
+               },
+               "seller_tag": [],
+               "speed_and_reliablity_score": 4.8,
+               "sqs_percent": 96,
+               "total_quantity": 21844
+            },
+            "sellerMetadata": {
+               "instance_list": [
+                  { "key": "FIRST_LIVE_DATE", "value": "2024-03-08 18:34:51" }
+               ]
+            },
+            "sellerPickupAddresses": {
+               "address_line1": "Faridkati , East Bishnupur, Faridkai Rice Mill",
+               "address_line2": "Faridkati Primary School, Faridkati SoniMondir , Faridkati Rice Mill  , ",
+               "city": "GAIGHATA",
+               "country": null,
+               "landmark": null,
+               "pincode": "743287",
+               "state": "WEST BENGAL"
+            },
+            "sellerProfileInfo": {
+               "business_name": "KHUSHI",
+               "city": "GAIGHATA",
+               "description": "Khushi Prova",
+               "display_name": "KhushiProva",
+               "pincode": 743287,
+               "seller_name": "Mani Bhushan Bhowmick",
+               "state": "ACTIVE"
+            }
+         },
+         "seller_reviews": null,
+         "service_profile": "NON_FBF",
+         "serviceable": null,
+         "services_fulfilled_by": null,
+         "shipping_fees": {
+            "local_shipping_fee": { "amount": 0 },
+            "national_shipping_fee": { "amount": 0 },
+            "zonal_shipping_fee": { "amount": 0 }
+         },
+         "shipping_provider": "FLIPKART",
+         "show_mrp": true,
+         "subsidized_shipping": false,
+         "tags": null
+      },
+      "offerInfo": {
+         "abb": null,
+         "bnpl": null,
+         "exchanges": null,
+         "nbfc": null,
+         "offers": [
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+               "id": "nb:mp:11d93cf817",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+               "id": "nb:mp:0139db4b05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+               "id": "nb:mp:01a7a36c05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+               "id": "nb:mp:0137762705",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+               "id": "nb:mp:01ccb3bd05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+               "id": "nb:mp:00ed3da030",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            }
+         ],
+         "primaryTag": null,
+         "tags": ["Country of Origin: India; Bank Offer"]
+      },
+      "offerTags": [
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": -1,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "OFFER"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQHXGUJY&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "TitleValue",
+               "image": null,
+               "style": null,
+               "text": "Country of Origin: India; Bank Offer"
+            }
+         }
+      ],
+      "paeEmi": null,
+      "paymentInfo": {
+         "paymentModes": ["Debit/Credit Card", "Net banking", "COD"]
+      },
+      "pricing": {
+         "action": {
+            "constraints": null,
+            "customTrackingEvents": null,
+            "fallback": null,
+            "loginType": "LOGIN_NOT_REQUIRED",
+            "nonWidgetizeRedirection": null,
+            "omnitureData": null,
+            "omnitureTracking": null,
+            "originalUrl": null,
+            "params": {
+               "valid": true,
+               "screenName": "LISTING_PRICE_DETAIL_PAGE",
+               "listingId": "LSTPAEGGREHZTG9CNTQHXGUJY"
+            },
+            "requiredPermissionType": null,
+            "screenType": "multiWidgetPage",
+            "storeValue": {},
+            "subType": null,
+            "tracking": {},
+            "triggerExtraStandardEvents": null,
+            "type": "NAVIGATION",
+            "url": null,
+            "validationMeta": null,
+            "widgetTracking": null,
+            "widgetizedActions": null
+         },
+         "metaData": null,
+         "rcType": null,
+         "tracking": null,
+         "trackingData": null,
+         "value": {
+            "type": "ListingPriceValue",
+            "couponApplied": null,
+            "deliveryCharge": null,
+            "discountAmount": 472,
+            "emiPrice": null,
+            "extraDiscount": null,
+            "finalPrice": {
+               "additionalText": null,
+               "currency": "INR",
+               "decimalValue": "127.00",
+               "discount": null,
+               "downpaymentRate": 0,
+               "downpaymentRequired": false,
+               "name": "Total",
+               "priceType": null,
+               "strikeOff": false,
+               "textStyle": null,
+               "value": 127
+            },
+            "finalSavingsText": "Overall you save ₹472 (78%) on this product",
+            "insuredPrice": null,
+            "knowMore": null,
+            "listingPriceType": "REGULAR",
+            "mrp": null,
+            "partPriceInfo": null,
+            "plusPriceInfo": null,
+            "priceDescriptions": null,
+            "pricePerUnit": null,
+            "priceTags": null,
+            "prices": [
+               {
+                  "additionalText": "(incl. of all taxes)",
+                  "currency": "INR",
+                  "decimalValue": "599.00",
+                  "discount": 78,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "Maximum Retail Price",
+                  "priceType": "MRP",
+                  "strikeOff": true,
+                  "textStyle": null,
+                  "value": 599
+               },
+               {
+                  "additionalText": null,
+                  "currency": "INR",
+                  "decimalValue": "127.00",
+                  "discount": null,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "Selling Price",
+                  "priceType": "FSP",
+                  "strikeOff": false,
+                  "textStyle": null,
+                  "value": 127
+               }
+            ],
+            "selected": null,
+            "showDiscountAsAmount": false,
+            "title": null,
+            "totalDiscount": 78,
+            "upiPriceCallout": null,
+            "upiRegularPriceTitle": null
+         }
+      },
+      "selected": true,
+      "sellerInfo": {
+         "action": {
+            "constraints": null,
+            "customTrackingEvents": null,
+            "fallback": null,
+            "loginType": "LOGIN_NOT_REQUIRED",
+            "nonWidgetizeRedirection": null,
+            "omnitureData": null,
+            "omnitureTracking": null,
+            "originalUrl": null,
+            "params": {
+               "valid": true,
+               "sellerId": "81756ae1240e4e73",
+               "openInBottomSheet": true,
+               "screenName": "SELLER_DETAIL_PAGE",
+               "marketplace": "FLIPKART"
+            },
+            "requiredPermissionType": null,
+            "screenType": "multiWidgetPage",
+            "storeValue": {},
+            "subType": null,
+            "tracking": {},
+            "triggerExtraStandardEvents": null,
+            "type": "NAVIGATION",
+            "url": "/seller-details?sellerId=81756ae1240e4e73&pid=PAEGGREHZTG9CNTQ&marketplace=FLIPKART",
+            "validationMeta": null,
+            "widgetTracking": null,
+            "widgetizedActions": null
+         },
+         "metaData": null,
+         "rcType": null,
+         "tracking": null,
+         "trackingData": null,
+         "value": {
+            "type": "SellerInfoValue",
+            "dormantSeller": false,
+            "id": "81756ae1240e4e73",
+            "name": "KhushiProva",
+            "newSeller": false,
+            "rating": { "type": "RatingValue", "average": 3.6, "base": 5 }
+         }
+      }
+   },
+   {
+      "type": "ListingDetailValue",
+      "actions": {
+         "BUY_NOW": {
+            "type": "PRODUCT_ACTION",
+            "data": [
+               {
+                  "action": {
+                     "constraints": [
+                        {
+                           "metaInfo": {
+                              "openInBottomSheet": "true",
+                              "url": "/login?type=mobile&sourceContext=buy_now"
+                           },
+                           "type": "LOGIN"
+                        }
+                     ],
+                     "customTrackingEvents": null,
+                     "fallback": null,
+                     "loginType": "LOGIN_NOT_REQUIRED",
+                     "nonWidgetizeRedirection": null,
+                     "omnitureData": null,
+                     "omnitureTracking": null,
+                     "originalUrl": null,
+                     "params": {
+                        "valid": true,
+                        "saalListings": [],
+                        "defaultChildListings": null,
+                        "quantity": 1,
+                        "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                        "productId": "PAEGGREHZTG9CNTQ"
+                     },
+                     "requiredPermissionType": null,
+                     "screenType": "multiWidgetPage",
+                     "storeValue": {},
+                     "subType": null,
+                     "tracking": {},
+                     "triggerExtraStandardEvents": null,
+                     "type": "BUY_NOW",
+                     "url": null,
+                     "validationMeta": null,
+                     "widgetTracking": null,
+                     "widgetizedActions": null
+                  },
+                  "metaData": null,
+                  "rcType": null,
+                  "tracking": null,
+                  "trackingData": null,
+                  "value": {
+                     "type": "ProductActionValue",
+                     "actionType": "BUY_NOW",
+                     "enabled": true,
+                     "text": "Buy Now"
+                  }
+               }
+            ],
+            "dataId": 820937921,
+            "params": {},
+            "tracking": null,
+            "trackingData": null,
+            "ttl": 60,
+            "viewType": null,
+            "widgetLayout": null
+         },
+         "ADD_TO_CART": {
+            "type": "PRODUCT_ACTION",
+            "data": [
+               {
+                  "action": {
+                     "constraints": null,
+                     "customTrackingEvents": null,
+                     "fallback": null,
+                     "loginType": "LOGIN_NOT_REQUIRED",
+                     "nonWidgetizeRedirection": null,
+                     "omnitureData": null,
+                     "omnitureTracking": null,
+                     "originalUrl": null,
+                     "params": {
+                        "valid": true,
+                        "defaultChildListings": null,
+                        "quantity": 1,
+                        "productId": "PAEGGREHZTG9CNTQ",
+                        "saalListings": [],
+                        "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                        "widgetType": null
+                     },
+                     "requiredPermissionType": null,
+                     "screenType": "multiWidgetPage",
+                     "storeValue": {},
+                     "subType": null,
+                     "tracking": {},
+                     "triggerExtraStandardEvents": null,
+                     "type": "CART_ADD",
+                     "url": null,
+                     "validationMeta": null,
+                     "widgetTracking": null,
+                     "widgetizedActions": null
+                  },
+                  "metaData": null,
+                  "rcType": null,
+                  "tracking": null,
+                  "trackingData": null,
+                  "value": {
+                     "type": "ProductActionValue",
+                     "actionType": "ADD_TO_CART",
+                     "enabled": true,
+                     "quantityMetaData": {
+                        "action": null,
+                        "calloutAfterMinQuantitySelection": null,
+                        "calloutBeforeMinQuantitySelection": null,
+                        "discountText": null,
+                        "hurdleQuantity": null,
+                        "maxQuantity": null,
+                        "minQuantity": 1,
+                        "quantitySelectorCallout": null,
+                        "restrictQuantityUpdate": false,
+                        "toggleAction": null
+                     },
+                     "text": "Add to cart"
+                  }
+               }
+            ],
+            "dataId": 1190445618,
+            "params": {},
+            "tracking": null,
+            "trackingData": null,
+            "ttl": 60,
+            "viewType": null,
+            "widgetLayout": null
+         }
+      },
+      "callOuts": [
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 0,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "OFFER"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQMB8WF5&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "OfferCallout",
+               "count": 6,
+               "icon": "NORMAL_OFFER",
+               "tabType": "OFFER"
+            }
+         },
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 1,
+                  "screenName": "INTERNAL_PAYMENTS_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "COD"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/payments-callout/itemId?pageKey=payments-callout&tab=COD&lid=LSTPAEGGREHZTG9CNTQMB8WF5&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": { "type": "CODCallout", "icon": "COD", "tabType": "COD" }
+         },
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": 2,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "REPLACEMENT"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQMB8WF5&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "ReturnsCallout",
+               "calloutId": "no_returns",
+               "count": 0,
+               "displayText": "No Returns Applicable",
+               "icon": "REPLACEMENT",
+               "pageLink": "https://www.flipkart.com/pages/no_returns",
+               "tabType": "REPLACEMENT"
+            }
+         }
+      ],
+      "callOutsV2": null,
+      "codInfo": [
+         "Available. Select Cash on Delivery (CoD) payment option while placing the order and later, pay in cash at the time of actual delivery of product. No advance payment needed."
+      ],
+      "deliveryInfo": {
+         "primaryOption": {
+            "charge": {
+               "additionalText": null,
+               "currency": "INR",
+               "decimalValue": "0.00",
+               "discount": null,
+               "downpaymentRate": 0,
+               "downpaymentRequired": false,
+               "name": "",
+               "priceType": null,
+               "strikeOff": false,
+               "textStyle": null,
+               "value": 0
+            },
+            "deliveryDate": "9 Feb, Sunday",
+            "deliveryTimeStamp": 1739125799000,
+            "fasterDelivery": false,
+            "serverTime": 1738825636832,
+            "speed": "Delivery",
+            "text": "Delivery by 9 Feb, Sunday"
+         },
+         "regularOptions": [
+            {
+               "charge": {
+                  "additionalText": null,
+                  "currency": "INR",
+                  "decimalValue": "0.00",
+                  "discount": null,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "",
+                  "priceType": null,
+                  "strikeOff": false,
+                  "textStyle": null,
+                  "value": 0
+               },
+               "deliveryDate": "9 Feb, Sunday",
+               "deliveryTimeStamp": 1739125799000,
+               "fasterDelivery": false,
+               "serverTime": 1738825636832,
+               "speed": "Standard Delivery",
+               "text": "Delivery by 9 Feb, Sunday"
+            }
+         ]
+      },
+      "deliveryMessages": [
+         {
+            "fasterDelivery": false,
+            "freeDelivery": false,
+            "text": "Usually delivered in 3 days Enter pincode for exact delivery dates/charges"
+         }
+      ],
+      "emiInfo": null,
+      "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+      "listingMessage": null,
+      "metadata": {
+         "averageRating": 3.6,
+         "codAvailable": true,
+         "deliveryTime": 1739125799000,
+         "enabled": true,
+         "faAvailable": false,
+         "freeDeliveryAvailable": true,
+         "nbfcAvailable": false,
+         "paeEmiAvailable": false,
+         "prexoAvailable": false,
+         "price": 130,
+         "selected": false
+      },
+      "nbfcEmi": null,
+      "npsListing": {
+         "active_service_profiles": ["NON_FBF"],
+         "asm_controlled": false,
+         "asm_user_state": "BAU",
+         "associations": null,
+         "attributes": {
+            "flipkart_release_date": null,
+            "independent_sellable": true,
+            "is_free": false,
+            "is_large": false,
+            "is_live": true,
+            "is_seller_chat_enabled": false,
+            "lmi_title_text": null,
+            "offer_know_more": null,
+            "offers_description": null,
+            "release_date_type": null,
+            "return_policy": "no_returns",
+            "selection_source": null
+         },
+         "business_zone": null,
+         "buyable": true,
+         "country_of_origin": ["IN"],
+         "currency": "INR",
+         "discount_percentage": null,
+         "earliest_expiry_date": 1885055400000,
+         "expiry_date": 1885055400000,
+         "fpgservice_listing_info": null,
+         "gst_sellable": false,
+         "importer_details": null,
+         "is_available": true,
+         "is_gst_sellable": false,
+         "lazy_promise": null,
+         "lazy_promise_v2": null,
+         "listing_coin_info": null,
+         "listing_id": "LSTPAEGGREHZTG9CNTQMB8WF5",
+         "listing_state": "current",
+         "listing_status": "ACTIVE",
+         "listing_tier": "NONE",
+         "manufacturer_details": ["BULA PLANT HOUSE"],
+         "marketplace": { "context": "FLIPKART", "domain": "FLIPKART" },
+         "marketplace_id": "FLIPKART",
+         "max_order_quantity_allowed": 10,
+         "max_quantity": 0,
+         "mfg_date": 1729535400000,
+         "minimum_order_quantity": null,
+         "packer_details": ["BULA PLANT HOUSE"],
+         "part_payment": {
+            "enabled": "false",
+            "value": "50",
+            "value_type": "ABSOLUTE"
+         },
+         "pnp_detail_listing_info": null,
+         "pnp_detail_listing_info_v2": {
+            "associationInfo": null,
+            "basketOfferBenefits": null,
+            "childAssociations": null,
+            "eaData": null,
+            "fees": null,
+            "listingD2RMessage": null,
+            "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+            "nepContext": "{\"l\":\"LSTPAEGGREHZTG9CNTQMB8WF5\",\"lp\":130.0,\"mrp\":599.0,\"fkfp\":130.0,\"fktp\":130.0,\"ex\":{\"md\":null,\"dt\":null,\"st\":null,\"msg\":null,\"in\":null,\"va\":null,\"exmd\":null,\"eed\":[]},\"ana\":{\"mp\":\"FLIPKART\",\"bu\":\"Home\",\"supc\":\"HomeImprovementTool\",\"cat\":\"LawnAndGardening\",\"subc\":\"LawnAndGardening\",\"ver\":\"PlantSeed\"},\"co\":{\"ao\":[\"nb:mp:0137762705\",\"nb:mp:11d93cf817\",\"nb:mp:0139db4b05\",\"nb:mp:01a7a36c05\",\"nb:mp:01ccb3bd05\",\"nb:mp:00ed3da030\"],\"edo\":null,\"po\":[]},\"cid\":null,\"om\":{},\"nep\":123.0}",
+            "offerBasedCharges": {},
+            "offerDetails": null,
+            "potentialOfferData": null,
+            "potentialTds": [],
+            "priceInfo": {
+               "type": "DETAILED_PRICE_INFO",
+               "accountingEntity": "FLIPKART",
+               "potentialPrice": null,
+               "metadata": {
+                  "refType": "SYSTEM",
+                  "referenceIds": ["SR_SSP"],
+                  "timePoint": 1736517639495,
+                  "version": "3"
+               },
+               "ppuAttributes": null,
+               "pricePoints": {
+                  "FKFP": {
+                     "type": "Price",
+                     "label": "Final Price",
+                     "ppuAttributes": null,
+                     "value": 130
+                  },
+                  "FKTP": {
+                     "type": "Price",
+                     "label": "Targeted Price",
+                     "ppuAttributes": null,
+                     "value": 130
+                  },
+                  "FKAP": {
+                     "type": "Price",
+                     "label": "Anchor Price",
+                     "ppuAttributes": null,
+                     "value": 99
+                  },
+                  "MRP": {
+                     "type": "Price",
+                     "label": "M.R.P",
+                     "ppuAttributes": null,
+                     "value": 599
+                  }
+               }
+            },
+            "ruleMessageMap": {
+               "nb:mp:11d93cf817": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:11d93cf817",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+                           "medium": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+                           "small": "5% Unlimited Cashback on Flipkart Axis Bank"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:0139db4b05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:0139db4b05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+                           "medium": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+                           "small": "10% off on BOBCARD Transactions, up to ₹1,000"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:01a7a36c05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:01a7a36c05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+                           "medium": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+                           "small": "10% off on BOBCARD EMI Transactions,"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:0137762705": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:0137762705",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+                           "medium": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+                           "small": "10% off up to ₹1000 on Canara Bank CC and EMI"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:01ccb3bd05": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:01ccb3bd05",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+                           "medium": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+                           "small": "10% off up to ₹1,000 on DBS Bank Debit Card"
+                        }
+                     }
+                  ]
+               },
+               "nb:mp:00ed3da030": {
+                  "type": "DEFAULT_RESPONSE",
+                  "id": "nb:mp:00ed3da030",
+                  "messageList": [
+                     {
+                        "type": "DEFAULT_MESSAGE",
+                        "status": "NONE",
+                        "text": {
+                           "large": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+                           "medium": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+                           "small": "5% off up to ₹750 on IDFC FIRST Power Women"
+                        }
+                     }
+                  ]
+               }
+            },
+            "serviceCharges": {},
+            "shippingInfo": {
+               "REGULAR": {
+                  "intra_city": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "intra_city",
+                     "tier": "REGULAR"
+                  },
+                  "intra_zone": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "intra_zone",
+                     "tier": "REGULAR"
+                  },
+                  "inter_zone": {
+                     "benefitInfo": {
+                        "discountAmount": 0,
+                        "discountPercentage": 0,
+                        "message": "FREE Delivery",
+                        "reason": "BAU_RULE",
+                        "ruleId": null
+                     },
+                     "potentialBenefitInfo": null,
+                     "price": 0,
+                     "shipmentMovementType": "inter_zone",
+                     "tier": "REGULAR"
+                  }
+               }
+            },
+            "shippingPriceEligibility": "ELIGIBLE",
+            "topOffer": null,
+            "valueTags": [],
+            "viewData": {
+               "priceCallout": null,
+               "sellingPricePivot": "FKTP",
+               "basePrice": "MRP",
+               "discountAmount": 469,
+               "discountPercentage": 78,
+               "effectivePrice": "FKTP",
+               "groupBuyDetails": null
+            },
+            "offerBucketOverrides": null
+         },
+         "pnp_lite_call_successful": true,
+         "pnp_lite_listing_info": {
+            "type": "PNP_LITE_LISTING_INFO",
+            "associationInfo": null,
+            "fees": null,
+            "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+            "listingInfoType": "RULE",
+            "nepData": null,
+            "offerIds": [],
+            "payzippyIds": [
+               "FPO2501291933359S52F",
+               "FPO241217173634K846J",
+               "FPO2502041624079XFX4",
+               "FPO250204162327SXQFO",
+               "FPO250204160926BUJUY",
+               "FPO2502041603202K542"
+            ],
+            "pnpDetailedContext": null,
+            "potentialOfferData": null,
+            "priceInfo": {
+               "type": "LITE_PRICE_INFO",
+               "metadata": {
+                  "refType": "SYSTEM",
+                  "referenceIds": ["SR_SSP"],
+                  "timePoint": 1736517639495,
+                  "version": "3"
+               },
+               "ppuAttributes": null,
+               "pricePoints": {
+                  "MRP": {
+                     "type": "Price",
+                     "label": "M.R.P",
+                     "ppuAttributes": null,
+                     "value": 599
+                  },
+                  "FKTP": {
+                     "type": "Price",
+                     "label": "Targeted Price",
+                     "ppuAttributes": null,
+                     "value": 130
+                  },
+                  "FKAP": {
+                     "type": "Price",
+                     "label": "Anchor Price",
+                     "ppuAttributes": null,
+                     "value": 99
+                  },
+                  "FKFP": {
+                     "type": "Price",
+                     "label": "Final Price",
+                     "ppuAttributes": null,
+                     "value": 130
+                  }
+               }
+            },
+            "ruleIdentifierInfo": {
+               "BASKETPRICE_PAYMENT_DISCOUNT": {
+                  "type": "RULE_LITE_INFO",
+                  "count": 6
+               }
+            },
+            "useValueRanking": false,
+            "valueCalloutData": null,
+            "valueTags": [
+               {
+                  "rank": 1,
+                  "tag": "FS_OTHER",
+                  "templateData": null,
+                  "type": "FREESHIP",
+                  "valueMetadata": null
+               }
+            ],
+            "viewData": {
+               "basePrice": "MRP",
+               "discountAmount": 469,
+               "discountPercentage": 78,
+               "effectivePrice": "FKTP",
+               "groupBuyDetails": null
+            },
+            "warnings": {}
+         },
+         "prebook_info": null,
+         "preorder_listing": false,
+         "procurement_type": "EXPRESS",
+         "product_id": "PAEGGREHZTG9CNTQ",
+         "promise": {
+            "availability": {
+               "isAvailable": { "value": true },
+               "maxQuantity": 20,
+               "state": "AVAILABLE",
+               "waitlistQuantity": 0
+            },
+            "defaultPromiseIndex": 0,
+            "id": "LSTPAEGGREHZTG9CNTQMB8WF5",
+            "promiseGroups": [],
+            "serviceabilityOptions": [
+               {
+                  "invalidAfter": 1738826940656,
+                  "isServiceable": { "value": true },
+                  "maxQuantity": 20,
+                  "obd": false,
+                  "programResponses": [],
+                  "promiseTime": {
+                     "value": {
+                        "from": 1739125799000,
+                        "slaInSeconds": 300000,
+                        "to": 1739125799000,
+                        "type": "DATE"
+                     }
+                  },
+                  "promiseType": "UN_SLOTTED",
+                  "service": {
+                     "type": "FORWARD",
+                     "payment": "PREPAID",
+                     "speed": "REGULAR"
+                  },
+                  "shipmentMovementType": "inter_zone",
+                  "slotAvailable": false,
+                  "slots": [],
+                  "waitlistQuantity": 0
+               },
+               {
+                  "invalidAfter": 1738826940656,
+                  "isServiceable": { "value": true },
+                  "maxQuantity": 20,
+                  "obd": false,
+                  "programResponses": [],
+                  "promiseTime": {
+                     "value": {
+                        "from": 1739125799000,
+                        "slaInSeconds": 300000,
+                        "to": 1739125799000,
+                        "type": "DATE"
+                     }
+                  },
+                  "promiseType": "UN_SLOTTED",
+                  "service": {
+                     "type": "FORWARD",
+                     "payment": "COD",
+                     "speed": "REGULAR"
+                  },
+                  "shipmentMovementType": "inter_zone",
+                  "slotAvailable": false,
+                  "slots": [],
+                  "waitlistQuantity": 0
+               }
+            ]
+         },
+         "reservation_info": null,
+         "reverse_listing": false,
+         "sale_lite_info": null,
+         "santa_listings": null,
+         "sdz": null,
+         "seller_id": "026a6aab1cb24932",
+         "seller_info": {
+            "chatInfo": {
+               "argos_id": null,
+               "chat_listing_scope": null,
+               "enabled": false
+            },
+            "fssai": {
+               "seller_id": "026a6aab1cb24932",
+               "document_type": "FSSAI",
+               "document_details": []
+            },
+            "metrics": {
+               "delivered_units_30d": 0,
+               "delivered_units_365d": 0,
+               "delivered_units_7d": 0,
+               "revenue_30d": 0,
+               "revenue_365d": 0,
+               "revenue_7d": 0,
+               "units_30d": 0,
+               "units_365d": 0,
+               "units_7d": 0,
+               "version": null
+            },
+            "pharmaLicense": {},
+            "ratingDetails": {
+               "is_dormant_seller": false,
+               "is_new_seller": false,
+               "no_of_units_listed": 80396,
+               "pqs_percent": 64,
+               "product_quality_score": 3.2,
+               "rating": 3.6,
+               "seller_cohort_keys": [
+                  "total_quantity",
+                  "pqs_percent",
+                  "sqs_percent"
+               ],
+               "seller_id": "026a6aab1cb24932",
+               "seller_product_rating": {
+                  "overall_product_rating": 3.0128,
+                  "tag": "Bad"
+               },
+               "seller_tag": [],
+               "speed_and_reliablity_score": 4.632,
+               "sqs_percent": 92,
+               "total_quantity": 18637
+            },
+            "sellerMetadata": {
+               "instance_list": [
+                  { "key": "FIRST_LIVE_DATE", "value": "2024-08-14 12:56:29" }
+               ]
+            },
+            "sellerPickupAddresses": {
+               "address_line1": "FARIDKATI",
+               "address_line2": "Faridkati Soni Mondir , Faridkati Soni Mondir",
+               "city": "GAIGHATA",
+               "country": null,
+               "landmark": null,
+               "pincode": "743287",
+               "state": "WEST BENGAL"
+            },
+            "sellerProfileInfo": {
+               "business_name": "BULA PLANT HOUSE",
+               "city": "GAIGHATA",
+               "description": "BULA PLANT HOUSE",
+               "display_name": "BULAPLANTHOUSE",
+               "pincode": 743287,
+               "seller_name": "Bula Plant House",
+               "state": "ACTIVE"
+            }
+         },
+         "seller_reviews": null,
+         "service_profile": "NON_FBF",
+         "serviceable": null,
+         "services_fulfilled_by": null,
+         "shipping_fees": {
+            "local_shipping_fee": { "amount": 0 },
+            "national_shipping_fee": { "amount": 0 },
+            "zonal_shipping_fee": { "amount": 0 }
+         },
+         "shipping_provider": "FLIPKART",
+         "show_mrp": true,
+         "subsidized_shipping": false,
+         "tags": null
+      },
+      "offerInfo": {
+         "abb": null,
+         "bnpl": null,
+         "exchanges": null,
+         "nbfc": null,
+         "offers": [
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+               "id": "nb:mp:11d93cf817",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "5% Unlimited Cashback on Flipkart Axis Bank Credit Card",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+               "id": "nb:mp:0139db4b05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off on BOBCARD Transactions, up to ₹1,000 on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+               "id": "nb:mp:01a7a36c05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off on BOBCARD EMI Transactions, up to ₹1,250 on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+               "id": "nb:mp:0137762705",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off up to ₹1000 on Canara Bank Credit and Credit EMI Transactions, on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+               "id": "nb:mp:01ccb3bd05",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "10% off up to ₹1,000 on DBS Bank Debit Card Transactions, on orders of ₹5,000 and above",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            },
+            {
+               "type": "ProductOfferValue",
+               "availed": false,
+               "ctaInfo": { "type": "CtaInfo", "ctaAvailable": false },
+               "description": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+               "id": "nb:mp:00ed3da030",
+               "identifier": "BASKETPRICE_PAYMENT_DISCOUNT",
+               "inEligible": false,
+               "showAsTargeted": false,
+               "tags": ["Bank Offer"],
+               "title": "5% off up to ₹750 on IDFC FIRST Power Women Platinum and Signature Debit Card. Min Txn Value: ₹5,000",
+               "tncAvailable": true,
+               "tncDisplayName": "T&C"
+            }
+         ],
+         "primaryTag": null,
+         "tags": ["Country of Origin: India; Bank Offer"]
+      },
+      "offerTags": [
+         {
+            "action": {
+               "constraints": null,
+               "customTrackingEvents": null,
+               "fallback": null,
+               "loginType": "LOGIN_NOT_REQUIRED",
+               "nonWidgetizeRedirection": null,
+               "omnitureData": null,
+               "omnitureTracking": null,
+               "originalUrl": null,
+               "params": {
+                  "tabIndex": -1,
+                  "screenName": "LISTING_DETAIL_PAGE",
+                  "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5",
+                  "productId": "PAEGGREHZTG9CNTQ",
+                  "listingCalloutType": "OFFER"
+               },
+               "requiredPermissionType": null,
+               "screenType": "multiWidgetPage",
+               "storeValue": {},
+               "subType": null,
+               "tracking": {},
+               "triggerExtraStandardEvents": null,
+               "type": "NAVIGATION",
+               "url": "https://www.flipkart.com/item/seller-callout/itemId?pageKey=seller-callout&marketplace=FLIPKART&lid=LSTPAEGGREHZTG9CNTQMB8WF5&pid=PAEGGREHZTG9CNTQ",
+               "validationMeta": null,
+               "widgetTracking": null,
+               "widgetizedActions": null
+            },
+            "metaData": null,
+            "rcType": null,
+            "tracking": null,
+            "trackingData": null,
+            "value": {
+               "type": "TitleValue",
+               "image": null,
+               "style": null,
+               "text": "Country of Origin: India; Bank Offer"
+            }
+         }
+      ],
+      "paeEmi": null,
+      "paymentInfo": {
+         "paymentModes": ["Debit/Credit Card", "Net banking", "COD"]
+      },
+      "pricing": {
+         "action": {
+            "constraints": null,
+            "customTrackingEvents": null,
+            "fallback": null,
+            "loginType": "LOGIN_NOT_REQUIRED",
+            "nonWidgetizeRedirection": null,
+            "omnitureData": null,
+            "omnitureTracking": null,
+            "originalUrl": null,
+            "params": {
+               "valid": true,
+               "screenName": "LISTING_PRICE_DETAIL_PAGE",
+               "listingId": "LSTPAEGGREHZTG9CNTQMB8WF5"
+            },
+            "requiredPermissionType": null,
+            "screenType": "multiWidgetPage",
+            "storeValue": {},
+            "subType": null,
+            "tracking": {},
+            "triggerExtraStandardEvents": null,
+            "type": "NAVIGATION",
+            "url": null,
+            "validationMeta": null,
+            "widgetTracking": null,
+            "widgetizedActions": null
+         },
+         "metaData": null,
+         "rcType": null,
+         "tracking": null,
+         "trackingData": null,
+         "value": {
+            "type": "ListingPriceValue",
+            "couponApplied": null,
+            "deliveryCharge": null,
+            "discountAmount": 469,
+            "emiPrice": null,
+            "extraDiscount": null,
+            "finalPrice": {
+               "additionalText": null,
+               "currency": "INR",
+               "decimalValue": "130.00",
+               "discount": null,
+               "downpaymentRate": 0,
+               "downpaymentRequired": false,
+               "name": "Total",
+               "priceType": null,
+               "strikeOff": false,
+               "textStyle": null,
+               "value": 130
+            },
+            "finalSavingsText": "Overall you save ₹469 (78%) on this product",
+            "insuredPrice": null,
+            "knowMore": null,
+            "listingPriceType": "REGULAR",
+            "mrp": null,
+            "partPriceInfo": null,
+            "plusPriceInfo": null,
+            "priceDescriptions": null,
+            "pricePerUnit": null,
+            "priceTags": null,
+            "prices": [
+               {
+                  "additionalText": "(incl. of all taxes)",
+                  "currency": "INR",
+                  "decimalValue": "599.00",
+                  "discount": 78,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "Maximum Retail Price",
+                  "priceType": "MRP",
+                  "strikeOff": true,
+                  "textStyle": null,
+                  "value": 599
+               },
+               {
+                  "additionalText": null,
+                  "currency": "INR",
+                  "decimalValue": "130.00",
+                  "discount": null,
+                  "downpaymentRate": 0,
+                  "downpaymentRequired": false,
+                  "name": "Selling Price",
+                  "priceType": "FSP",
+                  "strikeOff": false,
+                  "textStyle": null,
+                  "value": 130
+               }
+            ],
+            "selected": null,
+            "showDiscountAsAmount": false,
+            "title": null,
+            "totalDiscount": 78,
+            "upiPriceCallout": null,
+            "upiRegularPriceTitle": null
+         }
+      },
+      "selected": false,
+      "sellerInfo": {
+         "action": {
+            "constraints": null,
+            "customTrackingEvents": null,
+            "fallback": null,
+            "loginType": "LOGIN_NOT_REQUIRED",
+            "nonWidgetizeRedirection": null,
+            "omnitureData": null,
+            "omnitureTracking": null,
+            "originalUrl": null,
+            "params": {
+               "valid": true,
+               "sellerId": "026a6aab1cb24932",
+               "openInBottomSheet": true,
+               "screenName": "SELLER_DETAIL_PAGE",
+               "marketplace": "FLIPKART"
+            },
+            "requiredPermissionType": null,
+            "screenType": "multiWidgetPage",
+            "storeValue": {},
+            "subType": null,
+            "tracking": {},
+            "triggerExtraStandardEvents": null,
+            "type": "NAVIGATION",
+            "url": "/seller-details?sellerId=026a6aab1cb24932&pid=PAEGGREHZTG9CNTQ&marketplace=FLIPKART",
+            "validationMeta": null,
+            "widgetTracking": null,
+            "widgetizedActions": null
+         },
+         "metaData": null,
+         "rcType": null,
+         "tracking": null,
+         "trackingData": null,
+         "value": {
+            "type": "SellerInfoValue",
+            "dormantSeller": false,
+            "id": "026a6aab1cb24932",
+            "name": "BULAPLANTHOUSE",
+            "newSeller": false,
+            "rating": { "type": "RatingValue", "average": 3.6, "base": 5 }
+         }
+      }
+   }
+]
