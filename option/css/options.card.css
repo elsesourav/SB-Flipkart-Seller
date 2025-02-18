@@ -15,6 +15,11 @@
    );
    gap: calc(var(--s) * 1);
    padding: calc(var(--s) * 0.8);
+
+   /* -ms-overflow-style: scrollbar; */
+   /* IE and Edge */
+   /* scrollbar-width: thin; */
+   /* Firefox */
 }
 
 .card {
@@ -38,6 +43,9 @@
 }
 .card.listed {
    border: solid 1px #ffcc00;
+}
+.card.listed.hidden {
+   border: solid 1px #ff0000;
 }
 
 .card.hide {
@@ -89,13 +97,13 @@
    place-items: center;
    overflow: hidden;
    border-radius: calc(var(--s) / 3);
-   background: #f5f5f5;
+   /* background: #f5f5f5; */
 }
 
 .card .show-img img {
    width: 100%;
    height: 100%;
-   object-fit: cover;
+   object-fit: scale-down;
    transition: transform 0.3s ease;
 }
 
@@ -132,24 +140,80 @@
    color: #0095ff;
 }
 
-.card .quantity {
+.card .quantity-signal {
+   position: relative;
+   width: 100%;
+   height: 100%;
+   display: flex;
+   justify-content: space-between;
+   gap: calc(var(--s) * 1);
+}
+
+.card .quantity-signal .quantity {
    font-size: 1.1em;
    color: light-dark(#666, #aaa);
    width: 100%;
    text-align: left;
 }
 
-.card .quantity.color {
+.card .quantity-signal .quantity.color {
    color: #15c4ff;
+}
+
+.card .quantity-signal .signal {
+   position: relative;
+   width: 50%;
+   height: 100%;
+   border-radius: calc(var(--s) / 4);
+   background: var(--s-color);
 }
 
 .card .prices {
    width: 100%;
-   display: flex;
-   align-items: center;
+   display: grid;
+   grid-template-columns: 2fr 3fr;
    gap: calc(var(--s) * 1);
    font-family: f7b;
 }
+.card .prices .list {
+   position: relative;
+   display: flex;
+   width: 100%;
+   justify-content: space-between;
+   align-items: center;
+   gap: calc(var(--s) * 1);
+}
+
+.card .prices .list.current {
+   justify-content: flex-start;
+}
+.card .prices .list.new {
+   justify-content: flex-end;
+}
+
+.card .prices .rs {
+   font-size: 1.2em;
+}
+
+.card .prices .selling-price {
+   color: #2ecc71;
+}
+
+.card .prices .rs::before {
+   content: "₹";
+   margin-right: 2px;
+}
+
+.card .prices .original-price {
+   color: light-dark(#999, #666);
+   text-decoration: line-through;
+}
+
+.card .prices .original-price::before {
+   content: "₹";
+   margin-right: 2px;
+}
+
 .card .rating {
    position: absolute;
    width: 35px;
@@ -169,27 +233,6 @@
 
 .card .rating.hidden {
    display: none;
-}
-
-.card .prices .selling-price {
-   font-size: 1.2em;
-   color: #2ecc71;
-}
-
-.card .prices .selling-price::before {
-   content: "₹";
-   margin-right: 2px;
-}
-
-.card .prices .original-price {
-   font-size: 1.2em;
-   color: light-dark(#999, #666);
-   text-decoration: line-through;
-}
-
-.card .prices .original-price::before {
-   content: "₹";
-   margin-right: 2px;
 }
 
 .selected-count {

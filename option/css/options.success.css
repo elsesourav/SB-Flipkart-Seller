@@ -121,6 +121,7 @@
 }
 
 .stat-item {
+   --highlight-color: #030b2d38;
    position: relative;
    width: 100%;
    height: 100%;
@@ -143,7 +144,6 @@
 }
 
 .stat-item i {
-   --highlight-color: #191b2455;
    position: relative;
    width: 100%;
    height: 100%;
@@ -182,7 +182,7 @@
    padding: 0 0.5rem;
    color: var(--text-secondary);
    font-size: 0.9rem;
-   background: var(--highlight-color);
+   /* background: var(--highlight-color); */
    border-top-right-radius: 6px;
    border-bottom-right-radius: 6px;
 }

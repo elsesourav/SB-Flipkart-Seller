@@ -224,10 +224,10 @@ function checkApprovalStatus(vertical, brand) {
          const result = await response.json();
          resolve({
             isError: false,
-            result: result.approvalStatus === "APPROVED",
+            is: result.approvalStatus === "APPROVED",
          });
       } catch (error) {
-         resolve({ isError: true, result: null });
+         resolve({ isError: true, is: null });
       }
    });
 }
@@ -269,57 +269,100 @@ function getProductIdToSKUId(fkCsrfToken, productId) {
    });
 }
 
-function verifyProductUsingUserData(productId, sellerId, fkCsrfToken) {
+function getOrganizeListing(data, fkCsrfToken, productId) {
+   return new Promise(async (resolve) => {
+      const listingDataLength = Object.keys(data).length;
+      const { is, sku_id, imageUrl, internal_state } =
+         listingDataLength > 0
+            ? data?.[productId] || {}
+            : await getProductIdToSKUId(fkCsrfToken, productId);
+      resolve({ isError: false, is, sku_id, imageUrl, internal_state });
+   });
+}
+
+function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
    return new Promise(async (resolve) => {
       try {
          // Search for product details
-
          const { is, sku_id, imageUrl, internal_state } =
-            await getProductIdToSKUId(fkCsrfToken, productId);
+            await getOrganizeListing(listingData, fkCsrfToken, product.id);
 
          if (is) {
+            const data = await getMinSellerPrice(product.id);
+
             resolve({
                isError: false,
+               alreadySelling: true,
+               error: null,
                is: true,
                internal_state,
                sku_id,
-               alreadySelling: true,
-               imageUrl: imageUrl,
-               error: null,
+               imageUrl,
+               sellersInfo: data,
             });
          } else {
-            const searchResult = await searchProduct(productId, sellerId);
-            const productInfo = searchResult?.result?.productList?.[0];
+            const { brand, vertical, media } = product;
 
-            if (!productInfo) {
-               resolve({
-                  isError: false,
-                  is: false,
-                  error: "Product not found",
-               });
-               return;
-            }
+            // Construct image URL
+            const imageWidth = 600;
+            const imageHeight = 600;
+            const imageQuality = 70;
+            const imageUrl = media.images?.[0]?.url
+               ?.replace("{@width}", imageWidth)
+               ?.replace("{@height}", imageHeight)
+               ?.replace("{@quality}", imageQuality);
 
-            const { detail, alreadySelling, vertical, imagePaths } =
-               productInfo;
-            const imageUrl = Object.values(imagePaths)?.[0];
-
-            const result = await checkApprovalStatus(vertical, detail.Brand);
+            const result = await checkApprovalStatus(vertical, brand);
 
             if (result?.isError) {
                resolve({ isError: true, is: false, error: "Server error" });
                return;
             }
 
-            resolve({
-               isError: false,
-               is: result?.result,
-               sku_id: null,
-               internal_state: null,
-               alreadySelling: alreadySelling,
-               imageUrl: result?.result ? imageUrl : null,
-               error: result?.result ? null : "Not approved",
-            });
+            if (result.is) {
+               const data = await getMinSellerPrice(product.id);
+
+               resolve({
+                  isError: false,
+                  is: true,
+                  sku_id: null,
+                  internal_state: null,
+                  alreadySelling: false,
+                  imageUrl,
+                  error: null,
+                  sellersInfo: data,
+               });
+            } else {
+               resolve({
+                  isError: false,
+                  is: false,
+                  error: "Not approved",
+               });
+            }
+
+            // console.log(searchResult);
+
+            // const productInfo = searchResult?.result?.productList?.[0];
+
+            // const { detail, alreadySelling, vertical, imagePaths } = data;
+            // const imageUrl = Object.values(imagePaths)?.[0];
+
+            // const result = await checkApprovalStatus(vertical, detail.Brand);
+
+            // if (result?.isError) {
+            //    resolve({ isError: true, is: false, error: "Server error" });
+            //    return;
+            // }
+
+            // resolve({
+            //    isError: false,
+            //    is: result?.is,
+            //    sku_id: null,
+            //    internal_state: null,
+            //    alreadySelling: alreadySelling,
+            //    imageUrl: result?.is ? imageUrl : null,
+            //    error: result?.is ? null : "Not approved",
+            // });
          }
       } catch (error) {
          resolve({ isError: false, error: error.message });
@@ -330,9 +373,9 @@ function verifyProductUsingUserData(productId, sellerId, fkCsrfToken) {
 
 function processBatchForVerification(
    products,
-   sellerId,
    fkCsrfToken,
-   startIdx
+   startIdx,
+   sellerListingData
 ) {
    return new Promise(async (resolve) => {
       const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
@@ -346,9 +389,9 @@ function processBatchForVerification(
          const batchPromises = batch.map(async (product) => {
             try {
                const result = await verifyProductUsingUserData(
-                  product.id,
-                  sellerId,
-                  fkCsrfToken
+                  product,
+                  fkCsrfToken,
+                  sellerListingData
                );
 
                if (result?.isError) {
@@ -356,7 +399,7 @@ function processBatchForVerification(
                }
 
                if (result?.is) {
-                  const { alreadySelling, imageUrl, sku_id, internal_state } =
+                  const { alreadySelling, imageUrl, sku_id, internal_state, sellersInfo } =
                      result;
                   return {
                      ...product,
@@ -364,6 +407,7 @@ function processBatchForVerification(
                      imageUrl,
                      sku_id,
                      internal_state,
+                     sellersInfo,
                   };
                }
                return null;
@@ -453,13 +497,39 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
             ?.filter((x) => x)
             ?.flat()
             ?.map((product) => {
-               const { id, titles, rating, pricing } =
-                  product?.productInfo?.value;
+               const {
+                  id,
+                  titles,
+                  rating,
+                  pricing,
+                  vertical,
+                  productBrand: brand,
+                  media,
+               } = product?.productInfo?.value;
+
                if (pricing) {
                   const { mrp, finalPrice } = pricing;
-                  return { id, titles, rating, mrp, finalPrice };
+                  return {
+                     id,
+                     titles,
+                     rating,
+                     mrp,
+                     media,
+                     finalPrice,
+                     vertical,
+                     brand,
+                  };
                } else {
-                  return { id, titles, rating, mrp: 0, finalPrice: 0 };
+                  return {
+                     id,
+                     titles,
+                     rating,
+                     mrp: 0,
+                     finalPrice: 0,
+                     vertical,
+                     media,
+                     brand,
+                  };
                }
             });
 
@@ -576,7 +646,7 @@ function createProductMappingBulk(DATA) {
       try {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
 
-         console.log(response);
+         // console.log(response);
 
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
@@ -592,6 +662,119 @@ function createProductMappingBulk(DATA) {
       }
    });
 }
+
+function fetchListingSellerData(i, fkCsrfToken, state = "ACTIVE") {
+   return new Promise(async (resolve) => {
+      const body = JSON.stringify({
+         search_text: "",
+         search_filters: {
+            internal_state: state,
+         },
+         column: {
+            pagination: {
+               batch_no: i,
+               batch_size: 100,
+            },
+            sort: {
+               column_name: "demand_weight",
+               sort_by: "DESC",
+            },
+         },
+      });
+      const headers = {
+         Accept: "*/*",
+         "Accept-Encoding": "gzip, deflate, br, zstd",
+         "Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7",
+         Connection: "keep-alive",
+         "Content-Type": "application/json",
+         "fk-csrf-token": fkCsrfToken,
+      };
+
+      try {
+         const response = await fetch(URLS.listingsDataForStates, {
+            method: "POST",
+            headers,
+            body,
+         });
+
+         const { count, listing_data_response } = await response.json();
+
+         if (!count) {
+            resolve({ count: 0, data: [] });
+         } else {
+            resolve({ count, data: listing_data_response });
+         }
+      } catch (error) {
+         console.log(error);
+         resolve({ count: 0, data: [] });
+      }
+   });
+}
+
+function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
+   return new Promise(async (resolve) => {
+      const listingData = {};
+      // console.time();
+      const firstData = await fetchListingSellerData(0, fkCsrfToken, state);
+      const { count, data } = firstData;
+
+      const len = Math.floor(count / 100);
+      // console.log(count, len);
+
+      // Process first batch
+      data.map(({ product_id, imageUrl, internal_state, sku_id }) => {
+         listingData[product_id] = {
+            imageUrl,
+            internal_state,
+            sku_id,
+            is: true,
+         };
+      });
+
+      // Create array of promises for remaining batches
+      const promises = Array.from({ length: len }, (_, i) =>
+         fetchListingSellerData(i + 1, fkCsrfToken, state)
+      );
+
+      // Execute all promises in parallel
+      const results = await Promise.all(promises);
+
+      // Process all results
+      results.forEach(({ data }) => {
+         data.map(({ product_id, imageUrl, internal_state, sku_id }) => {
+            listingData[product_id] = {
+               imageUrl,
+               internal_state,
+               sku_id,
+            };
+         });
+      });
+
+      // console.timeEnd();
+      resolve({ count, data: listingData });
+   });
+}
+
+function getAllListingSellerData(fkCsrfToken) {
+   return new Promise(async (resolve) => {
+      const { count: c1, data: d1 } = await getListingSellerData(
+         fkCsrfToken,
+         "ACTIVE"
+      );
+      const { count: c2, data: d2 } = await getListingSellerData(
+         fkCsrfToken,
+         "INACTIVE"
+      );
+      const { count: c3, data: d3 } = await getListingSellerData(
+         fkCsrfToken,
+         "ARCHIVED"
+      );
+
+      resolve({ count: c1 + c2 + c3, data: { ...d1, ...d2, ...d3 } });
+   });
+}
+
+// getAllListingSellerData("cGtvbSEB-adbOkA4pDbQaKH5zcO5w33Bl1OM");
 
 // async function test(i) {
 //    try {
@@ -613,3 +796,77 @@ function createProductMappingBulk(DATA) {
 //    }
 //    console.log("ending test");
 // })();
+
+function getMinSellerPrice(productId) {
+   return new Promise(async (resolve) => {
+      if (!productId) return resolve(null);
+      const header = {
+         "X-User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop",
+      };
+
+      try {
+         const body = JSON.stringify({ requestContext: { productId } });
+         const response = await fetch(URLS.productSellers, {
+            method: "POST",
+            headers: header,
+            body,
+         });
+         const { RESPONSE } = await response.json();
+
+         const { data } = RESPONSE?.data?.product_seller_detail_1;
+         const [productSummary] = RESPONSE?.data?.product_summary_1?.data;
+         const { vertical, productBrand, subTitle, title } =
+            productSummary?.value;
+
+         const newData = data.map(({ value }) => {
+            // seller info
+            const { id, name } = value?.sellerInfo?.value;
+
+            // price info
+            const { FKFP, MRP } =
+               value?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints;
+
+            // shipping fees
+            const {
+               local_shipping_fee,
+               national_shipping_fee,
+               zonal_shipping_fee,
+            } = value?.npsListing?.shipping_fees;
+
+            const isFAssured = value?.npsListing?.listing_tier === "FASSURED";
+
+            return {
+               productId,
+               sellerId: id,
+               sellerName: name,
+               isFAssured,
+               finalPrice: FKFP?.value,
+               totalPrice: (FKFP?.value || 0) + Math.min(local_shipping_fee?.amount, national_shipping_fee?.amount, zonal_shipping_fee?.amount),
+               mrp: MRP?.value,
+               localFee: local_shipping_fee?.amount,
+               zonalFee: zonal_shipping_fee?.amount,
+               nationalFee: national_shipping_fee?.amount,
+            };
+         });
+
+         const sellers = newData.sort(
+            (a, b) => a.finalPrice + a.localFee - (b.finalPrice + b.localFee)
+         );
+
+         resolve({
+            sellers,
+            brand: productBrand,
+            subTitle,
+            title,
+            vertical,
+            newTitle: title.substring(productBrand.length + 1),
+         });
+      } catch (error) {
+         console.log(error);
+         resolve(null);
+      }
+   });
+}
+
+// getMinSellerPrice("PAEGGREHZTG9CNTQ");

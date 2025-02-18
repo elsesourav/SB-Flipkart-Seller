@@ -14,9 +14,9 @@ function getFkCsrfToken() {
    });
 }
 
-function getMappingPossibleProductData(data) {
+function getMappingPossibleProductData(data, sellerId) {
    return new Promise((resolve) => {
-      runtimeSendMessage("c_b_get_mapping_possible_product_data", data, (r) => {
+      runtimeSendMessage("c_b_get_mapping_product_data", { ...data, sellerId }, (r) => {
          resolve(r);
       });
    });
@@ -133,7 +133,7 @@ async function searchSubmitAction() {
    };
 
    try {
-      PRODUCTS = await getMappingPossibleProductData(data);
+      PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
       if (PRODUCTS?.isError) {
          PRODUCTS = [];
          alert("Too many requests");
@@ -159,15 +159,35 @@ function getHTMLProductCards(ps, searchNames = []) {
             rating,
             titles,
             alreadySelling,
+            PRICE,
+            PROFIT,
+            SIGNAL,
+            NATIONAL_FEE,
+            internal_state,
          } = p;
+
+         console.log(p);
+         
          const classRating = rating.count <= 0 ? "hidden" : "";
 
          const { highlightedTitle, isFind } = highlightMatches(
             titles.title,
             searchNames
          );
-         let className = alreadySelling ? "listed " : " ";
-         className += isFind ? "glow" : "";
+
+         const getListingStatus = () => {
+            if (alreadySelling && internal_state === "ACTIVE") {
+               return "listed";
+            }
+            if (internal_state === "INACTIVE" || internal_state === "ARCHIVED") {
+               return "listed hidden";
+            }
+            return "";
+         };
+
+         let className = getListingStatus();
+         className += isFind ? " glow" : "";
+
          const classQuantity =
             titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
 
@@ -179,10 +199,20 @@ function getHTMLProductCards(ps, searchNames = []) {
             </div>
             <div class="rating ${classRating}">${rating.average}</div>
             <div class="name">${highlightedTitle}</div>
-            <div class="quantity${classQuantity}">${titles.subtitle}</div>
+            <div class="quantity-signal">
+               <div class="quantity${classQuantity}">${titles.subtitle}</div>
+               <div class="signal" style="--s-color: ${SIGNAL};"></div>
+            </div>
             <div class="prices">
-               <div class="selling-price">${finalPrice.value}</div>
-               <div class="original-price">${mrp.value}</div>
+               <div class="list current">
+                  <div class="rs selling-price">${finalPrice.value}</div>
+                  <div class="rs original-price">${mrp.value}</div>
+               </div>
+               <div class="list new">
+                  <div class="rs price-new">${PRICE}</div>
+                  <div class="rs profit">${PROFIT}</div>
+                  <div class="rs national-fee">${NATIONAL_FEE}</div>
+               </div>
             </div>
          </div>`;
       })
@@ -365,8 +395,19 @@ async function createAllSelectedProductMapping() {
 function getHTMLPreviewProductCards(ps) {
    return ps
       .map((p) => {
-         const { finalPrice, id, imageUrl, mrp, titles, alreadySelling } = p;
-         const className = alreadySelling ? "listed" : "";
+         const { finalPrice, id, imageUrl, mrp, titles, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
+         
+         const getListingStatus = () => {
+            if (alreadySelling && internal_state === "ACTIVE") {
+               return "listed";
+            }
+            if (internal_state === "INACTIVE" || internal_state === "ARCHIVED") {
+               return "listed hidden";
+            }
+            return "";
+         };
+
+         const className = getListingStatus();
          const { highlightedTitle } = highlightMatches(titles.title);
          const classQuantity =
             titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
@@ -375,11 +416,24 @@ function getHTMLPreviewProductCards(ps) {
          <div class="card preview-product ${className}" data-product-id="${id}">
             <div class="show-img"><img src="${imageUrl}" alt="image-${titles.title}"></div>
             <div class="name bright">${highlightedTitle}</div>
-            <div class="quantity${classQuantity}">${titles.subtitle}</div>
-            <div class="prices">
-               <div class="selling-price">${finalPrice.value}</div>
-               <div class="original-price">${mrp.value}</div>
+            <div class="quantity-signal">
+               <div class="quantity${classQuantity}">${titles.subtitle}</div>
+               <div class="signal" style="--s-color: ${SIGNAL};"></div>
             </div>
+            <div class="prices">
+               <div class="list current">
+                  <div class="rs selling-price">${finalPrice.value}</div>
+                  <div class="rs original-price">${mrp.value}</div>
+               </div>
+               <div class="list new">
+                  <div class="rs price-new">${PRICE}</div>
+                  <div class="rs profit">${PROFIT}</div>
+                  <div class="rs national-fee">${NATIONAL_FEE}</div>
+               </div>
+            </div>
+            <div class="remove-product-btn">
+                  <i class="sbi-bin"></i>
+               </div>
          </div> 
       `;
       })

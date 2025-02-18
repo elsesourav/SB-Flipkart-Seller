@@ -27,6 +27,7 @@ const URLS = {
    flipkartFeaturesForSeller: "https://seller.flipkart.com/getFeaturesForSeller",
    listingsDataForStates:
       "https://seller.flipkart.com/napi/listing/listingsDataForStates",
+   productSellers: "https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
 };
 
 const FLIPKART_SEARCH_HEADER = {
@@ -376,8 +377,7 @@ function selectRandomImage(images) {
 
 function getSecondsForMonths(months) {
    // Average days in a month
-   const averageDaysInMonth = 30.44;
-   return Math.round(months * averageDaysInMonth * 24 * 60 * 60);
+   return Math.round(months * 60 * 60 * 30 * 24);
 }
 
 

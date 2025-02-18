@@ -149,13 +149,15 @@ function getImageFilesFromLocalStorage() {
 }
 
 function getMixDataToNewMappingData(DATA) {
-   const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
+   const { products, fkCsrfToken, mappingData: MD, sellerId, PRICE,  } = DATA;
+   // console.log(DATA);
+
 
    const SKU_NAME = MD?.SKU_NAME;
-   const MAX_PROFIT = N(MD?.MAX_PROFIT || 15);
-   const MIN_PROFIT = N(MD?.MIN_PROFIT || 10);
-   const PACKING_COST = N(MD?.PACKING_COST || 3);
-   const FIXED_COST = N(MD?.FIXED_COST || 72);
+   // const MAX_PROFIT = N(MD?.MAX_PROFIT || 15);
+   // const MIN_PROFIT = N(MD?.MIN_PROFIT || 10);
+   // const PACKING_COST = N(MD?.PACKING_COST || 3);
+   // const FIXED_COST = N(MD?.FIXED_COST || 72);
    const LISTING_STATUS_G = MD?.LISTING_STATUS || "ACTIVE";
    const PROCUREMENT_TYPE = MD?.PROCUREMENT_TYPE || "EXPRESS";
    const SHIPPING_DAYS = MD?.SHIPPING_DAYS || 1;
@@ -172,42 +174,52 @@ function getMixDataToNewMappingData(DATA) {
    const PACKAGING_BREADTH = MD?.PACKAGING_BREADTH || 17;
    const PACKAGING_HEIGHT = MD?.PACKAGING_HEIGHT || 3;
 
-   let DL = N(MD?.DELIVERY_LOCAL || 0);
-   let DN = N(MD?.DELIVERY_NATIONAL || 0);
-   let DZ = N(MD?.DELIVERY_ZONAL || 19);
-   const DELIVERY_CHARGE_MIN = Math.min(DL, DN, DZ);
+   // let DL = N(MD?.DELIVERY_LOCAL || 0);
+   // let DN = N(MD?.DELIVERY_NATIONAL || 0);
+   // let DZ = N(MD?.DELIVERY_ZONAL || 19);
+   // const DELIVERY_CHARGE_MIN = Math.min(DL, DN, DZ);
 
-   if (!MD?.IS_INCLUDED) {
-      DL -= DELIVERY_CHARGE_MIN;
-      DN -= DELIVERY_CHARGE_MIN;
-      DZ -= DELIVERY_CHARGE_MIN;
-   }
+   // if (!MD?.IS_INCLUDED) {
+   //    DL -= DELIVERY_CHARGE_MIN;
+   //    DN -= DELIVERY_CHARGE_MIN;
+   //    DZ -= DELIVERY_CHARGE_MIN;
+   // }
 
    const newData = products.map((product, i) => {
-      const { id, mrp, titles: t, sku_id, alreadySelling, internal_state } = product;
+      const {
+         id,
+         mrp,
+         titles: t,
+         sku_id,
+         alreadySelling,
+         internal_state,
+         PRICE,
+         NATIONAL_FEE
+      } = product;
+
+
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, t.subtitle, i);
-      let _DL = DL;
-      let _DN = DN;
-      let _DZ = DZ;
+      // let _DL = DL;
+      // let _DN = DN;
+      // let _DZ = DZ;
 
       const TOTAL_WEIGHT = getTotalWeight(MD, quantity, type);
-      const PRODUCT_COST = getProductCost(MD, quantity, type);
-      const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
-      const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
-      const TOTAL = MAX_PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
-      let SELLING_PRICE = calculateProductPrice(FIXED_COST, TOTAL);
+      // const PRODUCT_COST = getProductCost(MD, quantity, type);
+      // const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
+      // const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
+      // const TOTAL = MAX_PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
+      // let SELLING_PRICE = calculateProductPrice(FIXED_COST, TOTAL);
 
-      if (MD?.IS_INCLUDED) SELLING_PRICE -= DELIVERY_CHARGE_MIN;
-      const PERCENTAGE_90 = Math.ceil(mrp.value * 0.1);
-      const DELTA_PRICE = PERCENTAGE_90 - SELLING_PRICE;
+      // if (MD?.IS_INCLUDED) SELLING_PRICE -= DELIVERY_CHARGE_MIN;
+      // const PERCENTAGE_90 = Math.ceil(mrp.value * 0.1);
+      // const DELTA_PRICE = PERCENTAGE_90 - SELLING_PRICE;
 
-      if (SELLING_PRICE < PERCENTAGE_90) {
-         SELLING_PRICE = PERCENTAGE_90;
-         _DL = Math.max(_DL - DELTA_PRICE, 0);
-         _DN = Math.max(_DN - DELTA_PRICE, 0);
-         _DZ = Math.max(_DZ - DELTA_PRICE, 0);
-      }
-
+      // if (SELLING_PRICE < PERCENTAGE_90) {
+      //    SELLING_PRICE = PERCENTAGE_90;
+      //    _DL = Math.max(_DL - DELTA_PRICE, 0);
+      //    _DN = Math.max(_DN - DELTA_PRICE, 0);
+      //    _DZ = Math.max(_DZ - DELTA_PRICE, 0);
+      // }
 
       // if alreadySelling then don't change sku and listing status
       const SKU = alreadySelling ? sku_id : sku;
@@ -216,7 +228,7 @@ function getMixDataToNewMappingData(DATA) {
       return {
          ID: id,
          SKU,
-         SELLING_PRICE,
+         SELLING_PRICE: PRICE,
          MRP: mrp.value,
          LISTING_STATUS,
          PROCUREMENT_TYPE,
@@ -224,9 +236,9 @@ function getMixDataToNewMappingData(DATA) {
          STOCK_SIZE,
          HSN,
          MINIMUM_ORDER_QUANTITY,
-         DELIVERY_LOCAL: _DL,
-         DELIVERY_NATIONAL: _DN,
-         DELIVERY_ZONAL: _DZ,
+         DELIVERY_LOCAL: 0,
+         DELIVERY_NATIONAL: NATIONAL_FEE,
+         DELIVERY_ZONAL: 0,
          EARLIEST_MFG_DATE,
          SHELF_LIFE,
          MANUFACTURER_DETAILS,
@@ -239,7 +251,11 @@ function getMixDataToNewMappingData(DATA) {
       };
    });
 
-   return { SELLER_ID: sellerId, FK_CSRF_TOKEN: fkCsrfToken, PRODUCTS: newData };
+   return {
+      SELLER_ID: sellerId,
+      FK_CSRF_TOKEN: fkCsrfToken,
+      PRODUCTS: newData,
+   };
 }
 
 function getTotalWeight(data, quantity, value) {
@@ -251,31 +267,143 @@ function getTotalWeight(data, quantity, value) {
    ).toFixed(3);
 }
 
-function calculateProductPrice(fixedCost, desiredProfit) {
+function calculateProductPrice(totalCost, desiredProfit) {
    const commissionRate = [0.14, 0.16, 0.18];
    const isRound = true;
    const tax = 1.18; // 18% tax
 
    // Using mathematical formula to calculate price directly
-   // P = (desiredProfit + (fixedCost * tax)) / (1 - (commissionRate * tax))
+   // P = (desiredProfit + (totalCost * tax)) / (1 - (commissionRate * tax))
    let price;
 
    // Try with 14% commission rate first (for price <= 300)
-   price = (desiredProfit + fixedCost * tax) / (1 - commissionRate[0] * tax);
+   price = (desiredProfit + totalCost * tax) / (1 - commissionRate[0] * tax);
 
    if (price > 300) {
       // Try with 16% commission rate (for price <= 500)
-      price = (desiredProfit + fixedCost * tax) / (1 - commissionRate[1] * tax);
+      price = (desiredProfit + totalCost * tax) / (1 - commissionRate[1] * tax);
 
       if (price > 500) {
          // Use 18% commission rate
          price =
-            (desiredProfit + fixedCost * tax) / (1 - commissionRate[2] * tax);
+            (desiredProfit + totalCost * tax) / (1 - commissionRate[2] * tax);
       }
    }
 
    const PP = Math.round(price * 100) / 100;
    return isRound ? Math.round(PP) : PP;
+}
+
+function calculateBankSettlement({
+   price,
+   fixedCost = 71,
+   shippingCharge = 0,
+   isNational = false,
+   isRound = true,
+}) {
+   const PRICE = price + shippingCharge;
+   const TAX = 0.18; // 18% tax
+   const MP_TAX = PRICE <= 300 ? 0.14 : PRICE <= 500 ? 0.16 : 0.18;
+   const SHIPPING_CHARGES = isNational ? 16 : 0;
+
+   const MP_FEES = {
+      commission: PRICE * MP_TAX,
+      fixedCost,
+      shippingFee: SHIPPING_CHARGES,
+   };
+
+   const TAXES = {
+      commission: MP_FEES.commission * TAX,
+      fixedCost: MP_FEES.fixedCost * TAX,
+      shippingFee: MP_FEES.shippingFee * TAX,
+   };
+
+   const TCS_TDS = PRICE * 0.0055;
+
+   const TOTAL =
+      MP_FEES.commission +
+      MP_FEES.fixedCost +
+      MP_FEES.shippingFee +
+      TAXES.commission +
+      TAXES.fixedCost +
+      TAXES.shippingFee +
+      TCS_TDS;
+
+   const BANK_SETTLEMENT = PRICE - TOTAL;
+
+   return isRound ? Math.round(BANK_SETTLEMENT) : BANK_SETTLEMENT;
+}
+
+function getProfitUsingBankSettlement({
+   price,
+   cost = 0,
+   fixedCost = 71,
+   shippingCharge = 0,
+   isNational = false,
+   isRound = true,
+}) {
+   const result = (calculateBankSettlement({
+      price,
+      fixedCost,
+      shippingCharge,
+      isNational,
+      isRound: false,
+   }) - cost);
+
+   return isRound ? Math.round(result) : result;
+}
+
+function calculatePriceFromProfit({
+   desiredProfit,
+   fixedCost = 71,
+   shippingCharge = 0,
+   isNational = false,
+   isRound = true,
+}) {
+   const TAX = 0.18; // 18% tax
+   const SHIPPING_CHARGES = isNational ? 16 : 0;
+
+   // Calculate MP_TAX based on PRICE (initial guess)
+   function getMPTax(price) {
+      const PRICE = price + shippingCharge;
+      return PRICE <= 300 ? 0.14 : PRICE <= 500 ? 0.16 : 0.18;
+   }
+
+   // Calculate A, B, and C
+   const MP_TAX = getMPTax(desiredProfit); // Initial guess for MP_TAX
+   const A = MP_TAX + TAX * MP_TAX + 0.0055;
+   const B = fixedCost * (1 + TAX);
+   const C = SHIPPING_CHARGES * (1 + TAX);
+
+   // Calculate PRICE
+   const PRICE = (desiredProfit + B + C) / (1 - A);
+
+   // Adjust for shippingCharge
+   const price = PRICE - shippingCharge;
+
+   return isRound ? Math.round(price) : price;
+}
+
+function calculateProfit(totalCost, price) {
+   const commissionRate = [0.14, 0.16, 0.18];
+   const tax = 1.18; // 18% tax
+
+   let profit;
+
+   // Determine which commission rate to use based on the price
+   if (price <= 300) {
+      // Use 14% commission rate
+      profit = price * (1 - commissionRate[0] * tax) - totalCost * tax;
+   } else if (price <= 500) {
+      // Use 16% commission rate
+      profit = price * (1 - commissionRate[1] * tax) - totalCost * tax;
+   } else {
+      // Use 18% commission rate
+      profit = price * (1 - commissionRate[2] * tax) - totalCost * tax;
+   }
+
+   // Round the profit to 2 decimal places
+   return Math.round(profit * 100) / 100;
 }
 
 function getIncrementAmount(data, UNIT_TO_PIECE) {
@@ -310,5 +438,207 @@ function getSkuIDWithData(name, subtitle, i) {
 }
 
 function getIdByCurrentTime(i = 0) {
-   return parseInt(parseInt(Date.now().toString().slice(7)) + i).toString(36).toUpperCase();
+   return parseInt(parseInt(Date.now().toString().slice(7)) + i)
+      .toString(36)
+      .toUpperCase();
 }
+
+function subTitleToQuantityAndType(subtitle) {
+   const [q, t] = subtitle.toUpperCase().split(" ");
+   const quantity = N(q);
+   const type = t === "PER" ? "PIECE" : t;
+   return { quantity, type };
+}
+
+async function modifyVerifiedProducts(products, userId) {
+   const MD = await chromeStorageGetLocal(KEYS.STORAGE_MAPPING);
+   const MAX_PROFIT = N(MD?.MAX_PROFIT || 25);
+   const MIN_PROFIT = N(MD?.MIN_PROFIT || 10);
+   const PACKING_COST = N(MD?.PACKING_COST || 3);
+   const FIXED_COST = N(MD?.FIXED_COST || 71);
+
+   let DL = N(MD?.DELIVERY_LOCAL || 0);
+   let DN = N(MD?.DELIVERY_NATIONAL || 0);
+   let DZ = N(MD?.DELIVERY_ZONAL || 19);
+   // const DELIVERY_CHARGE_MIN = Math.min(DL, DN, DZ);
+
+   // console.log(products);
+   return products.map((product) => {
+      const { sellersInfo, titles, alreadySelling, mrp } = product;
+      const MRP = mrp.value;
+
+      // const minShippingCharge = Math.min(localFee, nationalFee, zonalFee);
+      // const minimumPrice = minShippingCharge + finalPrice;
+      const { quantity, type } = subTitleToQuantityAndType(titles.subtitle);
+
+      const PRODUCT_COST = getProductCost(MD, quantity, type);
+      const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
+      const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
+      const COST = PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
+      // let SELLING_PRICE = calculateProductPrice(FIXED_COST, COST + MAX_PROFIT);
+
+      // const PRICE_PERCENTAGE_90 = Math.ceil(mrp * 0.1);
+      // if (SELLING_PRICE < PRICE_PERCENTAGE_90)
+      //    SELLING_PRICE = PRICE_PERCENTAGE_90;
+
+      // console.log(`mrp: ${MRP}`);
+      // console.log(`quantity: ${quantity} || type: ${type}`);
+      
+      // console.log(`product cost: ${PRODUCT_COST}`);
+      // console.log(`packing cost: ${PACKING_COST}`);
+      // console.log(`max profit: ${MAX_PROFIT}`);
+      // console.log(`increment amount: ${INCREMENT_AMOUNT}`);
+      // console.log(`total: ${COST}`);
+      // console.log(`--> minPrice: ${sellersInfo.sellers[0].totalPrice}`);
+
+      // let sellingPrice;
+      // let profit;
+
+      const { price, signal, profit, nationalFee } = getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_PROFIT, MAX_PROFIT, DN, FIXED_COST);
+
+      // console.log(`price: ${price} || signal: ${signal} || profit: ${profit} || nationalFee: ${nationalFee}`);
+      
+
+      // if (PRICE_PERCENTAGE_90 > minimumPrice) {
+      //    sellingPrice = PRICE_PERCENTAGE_90;
+      // } else if (minimumPrice < SELLING_PRICE) {
+      //    sellingPrice = minimumPrice - 1;
+      // } else {
+      //    sellingPrice = SELLING_PRICE;
+      // }
+
+      // const bankSettlement = calculateBankSettlement({
+      //    price: sellingPrice,
+      //    fixedCost: FIXED_COST,
+      // });
+
+      // const D_TOTAL = TOTAL - MAX_PROFIT;
+      // const PROFIT = bankSettlement - D_TOTAL;
+
+      // console.log(`selling price: ${sellingPrice}`);
+      // console.log(`bank settlement: ${bankSettlement}`);
+      // console.log(`profit: ${PROFIT}`);
+
+      // console.log(product);
+
+
+      // if (sellerId == "8136cfdc49f34957") {
+      //    sellingPrice = minimumPrice;
+      // } else {
+      //    console.log(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
+         
+      //    sellingPrice = getOptimizedPrice(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
+      // }
+
+      // profit = getProfitUsingBankSettlement({
+      //    price: sellingPrice,
+      //    cost: TOTAL,
+      //    fixedCost: FIXED_COST,
+      // });
+
+      // console.log(`minimum price: ${minimumPrice}`);
+      // console.log(`selling price: ${sellingPrice}`);
+      // console.log(`profit: ${profit}`);
+
+      // console.log(`\n\n\t\t--------------------------------------\n\n`);
+
+      return {
+         ...product,
+         PRICE: price,
+         SIGNAL: signal,
+         PROFIT: profit,
+         NATIONAL_FEE: nationalFee
+         // sellingPrice,
+         // profit
+      };
+   });
+}
+
+function getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_PROFIT, MAX_PROFIT, national_fee, fixedCost = 71) {
+   const { totalPrice, sellerId, sellerName } = sellersInfo?.sellers?.[0];
+   const price90 = MRP * 0.1;
+   let signal, price, profit;
+
+   if (alreadySelling && sellerId === userId) {
+      const secondSeller = sellersInfo?.sellers?.[1];
+      if (secondSeller) {
+         price = secondSeller.totalPrice - 1;
+      } else {
+         price = calculatePriceFromProfit({ desiredProfit: COST + MAX_PROFIT, fixedCost });
+      }
+   } else {
+      price = totalPrice - 1;
+   }
+
+   profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
+   // console.log(`--> price: ${price} || profit: ${profit}`);
+   
+
+   if (profit > 0 && profit < MIN_PROFIT) {
+      signal = "yellow";
+      profit = MIN_PROFIT;
+      price = calculatePriceFromProfit({ desiredProfit: COST + MIN_PROFIT, fixedCost });
+   } else if (profit <= 0) {
+      signal = "red";
+      profit = MIN_PROFIT;
+      price = calculatePriceFromProfit({ desiredProfit: COST + MIN_PROFIT, fixedCost });
+   } else if (profit > MAX_PROFIT) {
+      signal = "green";
+      profit = MAX_PROFIT;
+      price = calculatePriceFromProfit({ desiredProfit: COST + MAX_PROFIT, fixedCost });
+   } else {
+      signal = "lightgreen";
+   }
+
+   if (price < price90) {
+      price = price90;
+      signal = "orange";
+      profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
+   } else if (price > MRP) {
+      price = MRP;
+      signal = "red";
+      profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
+   }
+
+   const nationalDelivery = national_fee - (profit - MIN_PROFIT);
+
+   return {
+      price,
+      profit,
+      signal,
+      nationalFee: nationalDelivery
+   };
+}
+
+// function getOptimizedPrice(MIN_PRICE, MRP, COST, MIN_PROFIT, MAX_PROFIT, fixedCost = 71) {
+//    const price90 = MRP * 0.1;
+//    let targetPrice = Math.max(MIN_PRICE - 1, price90);
+//    targetPrice = Math.min(targetPrice, MRP - 1);
+
+//    // Calculate profit for the target price
+//    const profit = getProfitUsingBankSettlement({ 
+//       price: targetPrice, 
+//       cost: COST, 
+//       fixedCost 
+//    });
+   
+//    // If profit is within acceptable range, return target price
+//    if (profit >= MIN_PROFIT && profit <= MAX_PROFIT) {
+//       return targetPrice;
+//    }
+
+//    // Handle cases where profit is outside acceptable range
+//    if (profit < MIN_PROFIT) {
+//       const adjustedPrice = calculatePriceFromProfit({ 
+//          desiredProfit: COST + MIN_PROFIT, 
+//          fixedCost 
+//       });
+//       return Math.max(adjustedPrice, price90);
+//    }
+
+//    // When profit exceeds MAX_PROFIT
+//    return calculatePriceFromProfit({ 
+//       desiredProfit: COST + MAX_PROFIT, 
+//       fixedCost 
+//    });
+// }

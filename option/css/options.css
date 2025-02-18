@@ -2,10 +2,6 @@
    margin: 0;
    padding: 0;
    box-sizing: border-box;
-   -ms-overflow-style: none;
-   /* IE and Edge */
-   scrollbar-width: none;
-   /* Firefox */
 
    /* outline: solid 1px #f004; */
 }
@@ -53,6 +49,14 @@ body {
    background: light-dark(#ddd, #333);
    overflow: hidden;
    padding: calc(var(--s) * 1.5);
+   /* IE and Edge */
+   -ms-overflow-style: none;
+   /* Firefox */
+   scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+   display: none;
 }
 
 .container {
