@@ -233,6 +233,8 @@ function createProductCard() {
    );
 
    if (showMyProducts.checked) {
+      console.log("------------");
+      
       showOldMappingProducts.innerHTML = getHTMLProductCards(
          PRODUCTS.filter((p) => p.alreadySelling),
          searchNames

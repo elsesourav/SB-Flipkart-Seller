@@ -149,9 +149,8 @@ function getImageFilesFromLocalStorage() {
 }
 
 function getMixDataToNewMappingData(DATA) {
-   const { products, fkCsrfToken, mappingData: MD, sellerId, PRICE,  } = DATA;
+   const { products, fkCsrfToken, mappingData: MD, sellerId, PRICE } = DATA;
    // console.log(DATA);
-
 
    const SKU_NAME = MD?.SKU_NAME;
    // const MAX_PROFIT = N(MD?.MAX_PROFIT || 15);
@@ -194,9 +193,8 @@ function getMixDataToNewMappingData(DATA) {
          alreadySelling,
          internal_state,
          PRICE,
-         NATIONAL_FEE
+         NATIONAL_FEE,
       } = product;
-
 
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, t.subtitle, i);
       // let _DL = DL;
@@ -342,13 +340,14 @@ function getProfitUsingBankSettlement({
    isNational = false,
    isRound = true,
 }) {
-   const result = (calculateBankSettlement({
-      price,
-      fixedCost,
-      shippingCharge,
-      isNational,
-      isRound: false,
-   }) - cost);
+   const result =
+      calculateBankSettlement({
+         price,
+         fixedCost,
+         shippingCharge,
+         isNational,
+         isRound: false,
+      }) - cost;
 
    return isRound ? Math.round(result) : result;
 }
@@ -483,7 +482,7 @@ async function modifyVerifiedProducts(products, userId) {
 
       // console.log(`mrp: ${MRP}`);
       // console.log(`quantity: ${quantity} || type: ${type}`);
-      
+
       // console.log(`product cost: ${PRODUCT_COST}`);
       // console.log(`packing cost: ${PACKING_COST}`);
       // console.log(`max profit: ${MAX_PROFIT}`);
@@ -494,10 +493,19 @@ async function modifyVerifiedProducts(products, userId) {
       // let sellingPrice;
       // let profit;
 
-      const { price, signal, profit, nationalFee } = getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_PROFIT, MAX_PROFIT, DN, FIXED_COST);
+      const { price, signal, profit, nationalFee } = getOptimizedPrice(
+         sellersInfo,
+         userId,
+         alreadySelling,
+         MRP,
+         COST,
+         MIN_PROFIT,
+         MAX_PROFIT,
+         DN,
+         FIXED_COST
+      );
 
       // console.log(`price: ${price} || signal: ${signal} || profit: ${profit} || nationalFee: ${nationalFee}`);
-      
 
       // if (PRICE_PERCENTAGE_90 > minimumPrice) {
       //    sellingPrice = PRICE_PERCENTAGE_90;
@@ -521,12 +529,11 @@ async function modifyVerifiedProducts(products, userId) {
 
       // console.log(product);
 
-
       // if (sellerId == "8136cfdc49f34957") {
       //    sellingPrice = minimumPrice;
       // } else {
       //    console.log(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
-         
+
       //    sellingPrice = getOptimizedPrice(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
       // }
 
@@ -547,67 +554,107 @@ async function modifyVerifiedProducts(products, userId) {
          PRICE: price,
          SIGNAL: signal,
          PROFIT: profit,
-         NATIONAL_FEE: nationalFee
+         NATIONAL_FEE: nationalFee,
          // sellingPrice,
          // profit
       };
    });
 }
 
-function getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_PROFIT, MAX_PROFIT, national_fee, fixedCost = 71) {
-   const { totalPrice, sellerId, sellerName } = sellersInfo?.sellers?.[0];
-   const price90 = MRP * 0.1;
-   let signal, price, profit;
+function getOptimizedPrice(
+   sellersInfo,
+   userId,
+   alreadySelling,
+   MRP,
+   COST,
+   MIN_PROFIT,
+   MAX_PROFIT,
+   national_fee,
+   fixedCost = 71
+) {
+   try {
+      const totalPrice = sellersInfo?.sellers?.[0]?.totalPrice || 0;
+      const sellerId = sellersInfo?.sellers?.[0]?.sellerId || "";
 
-   if (alreadySelling && sellerId === userId) {
-      const secondSeller = sellersInfo?.sellers?.[1];
-      if (secondSeller) {
-         price = secondSeller.totalPrice - 1;
+      const price90 = MRP * 0.1;
+      let signal, price, profit;
+
+      if (alreadySelling && sellerId === userId) {
+         const secondSeller = sellersInfo?.sellers?.[1];
+         if (secondSeller) {
+            price = secondSeller.totalPrice - 1;
+         } else {
+            price = calculatePriceFromProfit({
+               desiredProfit: COST + MAX_PROFIT,
+               fixedCost,
+            });
+         }
       } else {
-         price = calculatePriceFromProfit({ desiredProfit: COST + MAX_PROFIT, fixedCost });
+         price = totalPrice - 1;
       }
-   } else {
-      price = totalPrice - 1;
-   }
 
-   profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
-   // console.log(`--> price: ${price} || profit: ${profit}`);
-   
-
-   if (profit > 0 && profit < MIN_PROFIT) {
-      signal = "yellow";
-      profit = MIN_PROFIT;
-      price = calculatePriceFromProfit({ desiredProfit: COST + MIN_PROFIT, fixedCost });
-   } else if (profit <= 0) {
-      signal = "red";
-      profit = MIN_PROFIT;
-      price = calculatePriceFromProfit({ desiredProfit: COST + MIN_PROFIT, fixedCost });
-   } else if (profit > MAX_PROFIT) {
-      signal = "green";
-      profit = MAX_PROFIT;
-      price = calculatePriceFromProfit({ desiredProfit: COST + MAX_PROFIT, fixedCost });
-   } else {
-      signal = "lightgreen";
-   }
-
-   if (price < price90) {
-      price = price90;
-      signal = "orange";
       profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
-   } else if (price > MRP) {
-      price = MRP;
-      signal = "red";
-      profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
+      // console.log(`--> price: ${price} || profit: ${profit}`);
+
+      if (profit > 0 && profit < MIN_PROFIT) {
+         signal = "yellow";
+         profit = MIN_PROFIT;
+         price = calculatePriceFromProfit({
+            desiredProfit: COST + MIN_PROFIT,
+            fixedCost,
+         });
+      } else if (profit <= 0) {
+         signal = "red";
+         profit = MIN_PROFIT;
+         price = calculatePriceFromProfit({
+            desiredProfit: COST + MIN_PROFIT,
+            fixedCost,
+         });
+      } else if (profit > MAX_PROFIT) {
+         signal = "green";
+         profit = MAX_PROFIT;
+         price = calculatePriceFromProfit({
+            desiredProfit: COST + MAX_PROFIT,
+            fixedCost,
+         });
+      } else {
+         signal = "lightgreen";
+      }
+
+      if (price < price90) {
+         price = price90;
+         signal = "orange";
+         profit = getProfitUsingBankSettlement({
+            price,
+            cost: COST,
+            fixedCost,
+         });
+      } else if (price > MRP) {
+         price = MRP;
+         signal = "red";
+         profit = getProfitUsingBankSettlement({
+            price,
+            cost: COST,
+            fixedCost,
+         });
+      }
+
+      const nationalDelivery = national_fee - (profit - MIN_PROFIT);
+
+      return {
+         price,
+         profit,
+         signal,
+         nationalFee: nationalDelivery,
+      };
+   } catch (error) {
+      return {
+         price: 99999,
+         profit: 99,
+         signal: "red",
+         nationalFee: 19,
+      };
    }
-
-   const nationalDelivery = national_fee - (profit - MIN_PROFIT);
-
-   return {
-      price,
-      profit,
-      signal,
-      nationalFee: nationalDelivery
-   };
 }
 
 // function getOptimizedPrice(MIN_PRICE, MRP, COST, MIN_PROFIT, MAX_PROFIT, fixedCost = 71) {
@@ -616,12 +663,12 @@ function getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_P
 //    targetPrice = Math.min(targetPrice, MRP - 1);
 
 //    // Calculate profit for the target price
-//    const profit = getProfitUsingBankSettlement({ 
-//       price: targetPrice, 
-//       cost: COST, 
-//       fixedCost 
+//    const profit = getProfitUsingBankSettlement({
+//       price: targetPrice,
+//       cost: COST,
+//       fixedCost
 //    });
-   
+
 //    // If profit is within acceptable range, return target price
 //    if (profit >= MIN_PROFIT && profit <= MAX_PROFIT) {
 //       return targetPrice;
@@ -629,16 +676,16 @@ function getOptimizedPrice(sellersInfo, userId, alreadySelling, MRP, COST, MIN_P
 
 //    // Handle cases where profit is outside acceptable range
 //    if (profit < MIN_PROFIT) {
-//       const adjustedPrice = calculatePriceFromProfit({ 
-//          desiredProfit: COST + MIN_PROFIT, 
-//          fixedCost 
+//       const adjustedPrice = calculatePriceFromProfit({
+//          desiredProfit: COST + MIN_PROFIT,
+//          fixedCost
 //       });
 //       return Math.max(adjustedPrice, price90);
 //    }
 
 //    // When profit exceeds MAX_PROFIT
-//    return calculatePriceFromProfit({ 
-//       desiredProfit: COST + MAX_PROFIT, 
-//       fixedCost 
+//    return calculatePriceFromProfit({
+//       desiredProfit: COST + MAX_PROFIT,
+//       fixedCost
 //    });
 // }

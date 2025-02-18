@@ -276,6 +276,12 @@ function getOrganizeListing(data, fkCsrfToken, productId) {
          listingDataLength > 0
             ? data?.[productId] || {}
             : await getProductIdToSKUId(fkCsrfToken, productId);
+
+      // if (listingDataLength > 0) console.log(data);
+
+      // console.log(is, sku_id, imageUrl, internal_state);
+      // console.log(`\n\n-----------------\n\n`);
+      
       resolve({ isError: false, is, sku_id, imageUrl, internal_state });
    });
 }
@@ -287,8 +293,15 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
          const { is, sku_id, imageUrl, internal_state } =
             await getOrganizeListing(listingData, fkCsrfToken, product.id);
 
+            // console.log(is);
+
          if (is) {
             const data = await getMinSellerPrice(product.id);
+
+            if (!data) {
+               resolve({ isError: false, error: error.message });
+               return;
+            }
 
             resolve({
                isError: false,
@@ -322,6 +335,11 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
             if (result.is) {
                const data = await getMinSellerPrice(product.id);
 
+               if (!data) {
+                  resolve({ isError: false, error: error.message });
+                  return;
+               }
+
                resolve({
                   isError: false,
                   is: true,
@@ -339,30 +357,6 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
                   error: "Not approved",
                });
             }
-
-            // console.log(searchResult);
-
-            // const productInfo = searchResult?.result?.productList?.[0];
-
-            // const { detail, alreadySelling, vertical, imagePaths } = data;
-            // const imageUrl = Object.values(imagePaths)?.[0];
-
-            // const result = await checkApprovalStatus(vertical, detail.Brand);
-
-            // if (result?.isError) {
-            //    resolve({ isError: true, is: false, error: "Server error" });
-            //    return;
-            // }
-
-            // resolve({
-            //    isError: false,
-            //    is: result?.is,
-            //    sku_id: null,
-            //    internal_state: null,
-            //    alreadySelling: alreadySelling,
-            //    imageUrl: result?.is ? imageUrl : null,
-            //    error: result?.is ? null : "Not approved",
-            // });
          }
       } catch (error) {
          resolve({ isError: false, error: error.message });
@@ -746,6 +740,7 @@ function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
                imageUrl,
                internal_state,
                sku_id,
+               is: true,
             };
          });
       });
@@ -814,25 +809,24 @@ function getMinSellerPrice(productId) {
          });
          const { RESPONSE } = await response.json();
 
-         const { data } = RESPONSE?.data?.product_seller_detail_1;
+         const data = RESPONSE?.data?.product_seller_detail_1?.data;
          const [productSummary] = RESPONSE?.data?.product_summary_1?.data;
          const { vertical, productBrand, subTitle, title } =
             productSummary?.value;
 
          const newData = data.map(({ value }) => {
             // seller info
-            const { id, name } = value?.sellerInfo?.value;
+            const id = value?.sellerInfo?.value?.id;
+            const name = value?.sellerInfo?.value?.name;
 
             // price info
-            const { FKFP, MRP } =
-               value?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints;
+            const FKFP = value?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints?.FKFP || 9999;
+            const MRP = value?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints?.MRP || 99999;
 
             // shipping fees
-            const {
-               local_shipping_fee,
-               national_shipping_fee,
-               zonal_shipping_fee,
-            } = value?.npsListing?.shipping_fees;
+            const local_shipping_fee = value?.npsListing?.shipping_fees?.local_shipping_fee || 0;
+            const zonal_shipping_fee = value?.npsListing?.shipping_fees?.zonal_shipping_fee || 0;
+            const national_shipping_fee = value?.npsListing?.shipping_fees?.national_shipping_fee || 19;
 
             const isFAssured = value?.npsListing?.listing_tier === "FASSURED";
 

@@ -71,7 +71,7 @@ runtimeOnMessage(
                   products,
                   fkCsrfToken,
                   i,
-                  sellerListingData
+                  sellerListingData?.data || {}
                );
                if (batchResults?.isError) {
                   sendResponse({ isError: true, error: "Too many requests" });

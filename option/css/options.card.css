@@ -164,7 +164,19 @@
    position: relative;
    width: 50%;
    height: 100%;
-   border-radius: calc(var(--s) / 4);
+   display: grid;
+   place-items: center;
+}
+
+.card .quantity-signal .signal::before {
+   content: "";
+   position: absolute;
+   right: 0;
+   top: 0;
+   width: 20px;
+   height: 20px;
+   outline: solid 1px #000;
+   border-radius: 50%;
    background: var(--s-color);
 }
 
