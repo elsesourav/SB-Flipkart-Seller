@@ -1,13 +1,15 @@
-function selectFile(ele, data, name, index) {
-   const fileElements = I(".file", importResults[index]);
+function selectFile(ele, data, name, parent) {
+   const fileElements = I(".file", parent);
    fileElements.each((e) => e.classList.remove("selected"));
    ele.classList.add("selected");
-   IMPORT_SELECTED_FILE = { file: data, name };
+   SELECTED_FILE = { file: data, name };
 }
 
-function searchFile(_, index = 1) {
-   const searchValue = importSearches[index]?.value?.toLowerCase();
-   const fileElements = I(".file", importResults[index]);
+function searchFile(e) {
+   const searchValue = e.target.value.toLowerCase();
+   const resultId = e.target.dataset.resultId;
+   const searchElement = I(`.${resultId}`)[0];
+   const fileElements = I(".file", searchElement);
    fileElements.each((e) => {
       if (searchValue) {
          if (e.getAttribute("name")?.toLowerCase().includes(searchValue)) {
@@ -21,74 +23,70 @@ function searchFile(_, index = 1) {
    });
 }
 
-function dbSearchFile({ parent, username, type, index = 1 }) {
+function dbSearchFile({ parent, username, type, searchElement }) {
    runtimeSendMessage(
       "p_b_search_file",
       { fileType: type, username },
-      ({ status, message, data }) => {
-         IMPORT_SELECTED_FILE = null;
-         importSearches[index].value = "";
+      ({ _, __, data }) => {
+         SELECTED_FILE = null;
+         searchElement.value = "";
 
          const files = data.map(([_, { filename, date }]) => ({
             filename,
             date,
          }));
 
-         parent.html(
-            files
-               .map(
-                  ({ filename, date }) => `
+         if (files.length > 0) {
+            parent.html(
+               files
+                  .map(
+                     ({ filename, date }) => `
                   <div class="file" name="${filename}">
                      <div class="name">${filename}</div>
                      <div class="date">${date}</div>
                      <i class="sbi-bin"></i>
                   </div>
                `
-               )
-               .join("")
-         );
+                  )
+                  .join("")
+            );
+         } else {
+            parent.html("");
+         }
 
-         const filesElements = I(".file", parent[0]);
-         const deleteElements = I(".sbi-bin", parent[0]);
+         const filesElements = I(".file", parent);
+         const deleteElements = I(".sbi-bin", parent);
 
          filesElements.click((_, i, ele) => {
-            selectFile(ele, data[i][1].data, data[i][0], index);
+            selectFile(ele, data[i][1].data, data[i][0], parent);
          });
 
          deleteElements.click((_, i, ele) => {
-            deleteFile(parent, username, type, data[i][0], index);
+            deleteFile(parent, username, type, data[i][0], searchElement);
          });
       }
    );
 }
 
-function getFiles(_, index = 1) {
-   importUsernames[index]?.classList.toggle(
-      "unfilled",
-      importUsernames[index]?.value.length < 2
-   );
-   if (index === 0) {
-      importTypes[0]?.classList.toggle(
-         "unfilled",
-         importTypes[0]?.selectedIndex < 1
-      );
-      if (importTypes[0]?.selectedIndex < 1) return;
-   }
-   if (importUsernames[index]?.value?.length < 2) return;
+function getFiles(e) {
+   const id = e.target.dataset.id;
+   const usernameElement = I(`.${id}-username`)[0];
+   const parent = I(`.${id}-result`)[0];
+   const typeElement = I(`.${id}-type`)[0];
+   const searchElement = I(`.${id}-filename`)[0];
 
-   const type =
-      index === 1
-         ? importTypes[1]?.textContent
-         : importTypes[index]?.value?.toLowerCase();
-   const username = importUsernames[index]?.value?.toLowerCase();
-   const search = importSearches[index]?.value?.toLowerCase();
-   const parent = importResults[index];
+   const usernameLen = usernameElement?.value.length;
 
-   dbSearchFile({ parent, username, search, type, index });
+   usernameElement?.classList.toggle("unfilled", usernameLen < 2);
+   if (usernameLen < 2) return;
+
+   const type = typeElement?.textContent?.toLowerCase();
+   const username = usernameElement?.value?.toLowerCase();
+   dbSearchFile({ parent, username, type, searchElement });
 }
 
 // -------------- need to update ----------------
-async function deleteFile(parent, username, type, filename, index) {
+async function deleteFile(parent, username, type, filename, searchElement) {
    const form = new FormHTML();
    form.show();
 
@@ -110,7 +108,7 @@ async function deleteFile(parent, username, type, filename, index) {
             { username, fileType: type, filename, password },
             ({ status, message }) => {
                showAlertMessage(status, message);
-               dbSearchFile({ parent, username, type, index });
+               dbSearchFile({ parent, username, type, searchElement });
             }
          );
       }

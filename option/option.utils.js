@@ -384,10 +384,15 @@ function getOldAndNewProductSize(DATA) {
 async function createAllSelectedProductMapping() {
    showLoading();
    const response = await createMappingSendRequest();
+   console.log(response);
+   
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;
    const { oldSize, newSize } = getOldAndNewProductSize(response);
+
+   console.log(oldSize, newSize);
+   
    const failed = total - (oldSize + newSize);
 
    updateSuccessStats(total, oldSize, newSize, failed);

@@ -117,7 +117,7 @@ runtimeOnMessage(
             allResults.push(...batchResult);
          }
          // Send final results
-         // console.log(newMappingData);
+         console.log(newMappingData);
          // console.log(allResults);
          
          sendResponse(allResults);
@@ -290,7 +290,7 @@ runtimeOnMessage(
 runtimeOnMessage(
    "p_b_export_file",
    async (
-      { data, fileType, filename, username, password },
+      { data, fileType, filename, isUpdate, name, username, password },
       __,
       sendResponse
    ) => {
@@ -299,7 +299,9 @@ runtimeOnMessage(
          fileType,
          filename,
          data,
-         password
+         password,
+         isUpdate,
+         name,
       );
       sendResponse(result);
    }

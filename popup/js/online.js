@@ -18,7 +18,7 @@ const exportWindow = I("#exportWindow");
 
 const importTypes = I(".import-type");
 const importUsernames = I(".import-username");
-const importSearches = I(".import-search");
+const importSearches = I(".import-filename");
 const importResults = I(".import-result");
 const importButtons = I(".import-btn");
 
@@ -26,10 +26,11 @@ const exportTypes = I(".export-type");
 const exportUsernames = I(".export-username");
 const exportPasswords = I(".export-password");
 const exportFileNames = I(".export-filename");
+const exportResults = I(".export-result");
 const exportButtons = I(".export-btn");
 
 const SEARCH_DELAY = () => 1000;
-let IMPORT_SELECTED_FILE = null;
+let SELECTED_FILE = null;
 
 function showAlertMessage(status, message, callback = () => {}) {
    const alert = new AlertHTML({
@@ -142,13 +143,16 @@ logoutUserButton.click(() => {
    logoutUserButton.classList.add("hide");
 });
 
-exportButtons.click(async (_, i) => {
-   const type = i === 1 ? exportTypes[1].textContent : exportTypes[i].value;
-   const username = exportUsernames[i].value;
-   const password = exportPasswords[i].value;
-   const filename = exportFileNames[i].value;
+exportButtons.click(async (_) => {
+   const type = exportTypes[0].textContent;
+   const username = exportUsernames[0].value;
+   const password = exportPasswords[0].value;
+   const filename = exportFileNames[0].value;
 
-   if (!type || !username || !password || !filename) {
+   const isSelected = SELECTED_FILE ? true : false;
+   let name = isSelected ? SELECTED_FILE.name : null;
+
+   if (!type || !username || !password || (!isSelected && !filename)) {
       showAlertMessage("ERROR", "Please fill all the fields");
       return;
    }
@@ -161,24 +165,55 @@ exportButtons.click(async (_, i) => {
       return;
    }
 
-   if (filename.length < 1) {
+   if (filename.length < 1 && !isSelected) {
       showAlertMessage("ERROR", "Filename must be at least 1 characters long");
       return;
    }
 
    const getFile = await getLocalFile(type.toUpperCase());
 
-   runtimeSendMessage(
-      "p_b_export_file",
-      { data: getFile, fileType: type, filename, username, password },
-      ({ status, message }) => {
-         showAlertMessage(status, message, (STATUS) => {
-            if (STATUS === "SUCCESS") {
-               exportWindow.addClass("hide");
-            }
-         });
-      }
-   );
+   if (isSelected) {
+      const alert = new AlertHTML({
+         title: "Alert",
+         message: `Are you sure you want to Update '<small><b>${name}</b></small>' this Product?`,
+         btnNm1: "No",
+         btnNm2: "Yes",
+      });
+   
+      alert.show();
+      alert.clickBtn1(() => {
+         alert.hide();
+      });
+      alert.clickBtn2(() => {
+         alert.hide();
+         action();
+      });
+   } else {
+      action();
+   }
+
+
+   function action() {
+      runtimeSendMessage(
+         "p_b_export_file",
+         {
+            data: getFile,
+            fileType: type,
+            isUpdate: isSelected,
+            name,
+            filename,
+            username,
+            password,
+         },
+         ({ status, message }) => {
+            showAlertMessage(status, message, (STATUS) => {
+               if (STATUS === "SUCCESS") {
+                  exportWindow.addClass("hide");
+               }
+            });
+         }
+      );
+   }
 });
 
 exportButtonElement.click(async () => {
@@ -186,32 +221,41 @@ exportButtonElement.click(async () => {
    if (!type) return;
 
    exportWindow.removeClass("hide");
-   exportTypes[1].innerHTML = type.toUpperCase();
+   exportTypes[0].innerHTML = type.toUpperCase();
 
    const { username, password } = await chromeStorageGetLocal(
       KEYS.STORAGE_USER_LOGIN
    );
-   exportUsernames[1].value = username || "";
-   exportPasswords[1].value = password || "";
-   exportFileNames[1].value = "";
+   exportUsernames[0].value = username || "";
+   exportPasswords[0].value = password || "";
+   exportFileNames[0].value = "";
+
+   dbSearchFile({
+      parent: exportResults[0],
+      username,
+      type,
+      searchElement: exportFileNames[0],
+   });
 });
 
-importTypes.on("input", debounce(getFiles, SEARCH_DELAY));
+// importTypes.on("input", debounce(getFiles, SEARCH_DELAY));
 importUsernames.on("input", debounce(getFiles, SEARCH_DELAY));
+exportUsernames.on("input", debounce(getFiles, SEARCH_DELAY));
 importSearches.on("input", searchFile);
+exportFileNames.on("input", searchFile);
 
-importButtons.click(async (_, i) => {
-   const type = i === 1 ? importTypes[1].textContent : importTypes[i].value;
-   if (IMPORT_SELECTED_FILE === null) {
+importButtons.click(async (_) => {
+   const type = importTypes[0].textContent;
+   if (SELECTED_FILE === null) {
       showAlertMessage("ERROR", "Please select a file");
       return;
    }
 
-   await setLocalFile(type.toUpperCase(), IMPORT_SELECTED_FILE.file);
+   await setLocalFile(type.toUpperCase(), SELECTED_FILE.file);
 
    showAlertMessage(
       "SUCCESS",
-      `File <b>${IMPORT_SELECTED_FILE.name}</b> is imported successfully`,
+      `File <b>${SELECTED_FILE.name}</b> is imported successfully`,
       () => {
          importWindow.addClass("hide");
       }
@@ -222,20 +266,20 @@ importButtonElement.click(async () => {
    const type = I(".options .btn input:checked")[0]?.dataset.name;
    if (!type) return;
    importWindow.removeClass("hide");
-   importTypes[1].innerHTML = type.toUpperCase();
+   importTypes[0].innerHTML = type.toUpperCase();
 
    const DATA = await chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN);
    let { username } = DATA;
    if (DATA) {
-      importUsernames[1].value = username;
+      importUsernames[0].value = username;
    } else {
-      username = importUsernames[1].value.toLowerCase();
+      username = importUsernames[0].value.toLowerCase();
    }
 
    dbSearchFile({
-      parent: importResults[1],
+      parent: importResults[0],
       username,
       type,
-      index: 1,
+      searchElement: importSearches[0],
    });
 });

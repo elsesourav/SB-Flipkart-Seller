@@ -141,9 +141,9 @@ async function init() {
    // load settings
    chromeStorageGetLocal(KEYS.STORAGE_SETTINGS, (val) => {
       settings = val;
-      settings.listingOpen.forEach(
-         (is, i) => (I(".grid-flip")[i].checked = is)
-      );
+      // settings.listingOpen.forEach(
+      //    (is, i) => (I(".grid-flip")[i].checked = is)
+      // );
       I("nav .options .btn input")[settings.currentMode].checked = true;
    });
 

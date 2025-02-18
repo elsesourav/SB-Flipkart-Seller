@@ -1631,150 +1631,6 @@
                                  Settings
       ------------------------------------------------------------------>
       <div class="container" id="settings">
-         <div class="basic-grid flip">
-            <div class="open-close">
-               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
-               <i class="sbi-chevron-circle-down"></i>
-               <span class="inp-span">IMPORT SETTINGS</span>
-               <i class="sbi-chevron-circle-down"></i>
-            </div>
-
-            <div class="import-grid imp-exp attach full-width">
-               <div class="part">
-                  <div class="take-inp">
-                     <span class="inp-span">File Type</span>
-                     <section>
-                        <div class="take-value">
-                           <div class="inp selection">
-                              <select name="IMPORT_TYPE" class="import-type">
-                                 <option selected>SELECT</option>
-                                 <option value="mapping">MAPPING</option>
-                                 <option value="listing">LISTING</option>
-                                 <option value="orders">ORDERS</option>
-                              </select>
-                           </div>
-                        </div>
-                     </section>
-                  </div>
-                  <div class="take-inp">
-                     <span class="inp-span">UserName</span>
-                     <section>
-                        <div class="take-value">
-                           <div class="inp text">
-                              <input autocomplete="off" class="big-style import-username" type="text" name="IMPORT_USERNAME" />
-                           </div>
-                        </div>
-                     </section>
-                  </div>
-
-                  <div class="take-inp full">
-                     <section>
-                        <div class="take-value">
-                           <div class="inp button">
-                              <input type="button" class="import-btn import-button" name="IMPORT_FILE" value="IMPORT" />
-                           </div>
-                        </div>
-                     </section>
-                  </div>
-
-               </div>
-               <div class="part row-1fr-2fr">
-                  <div class="take-inp">
-                     <span class="inp-span">File Name</span>
-                     <section>
-                        <div class="take-value">
-                           <div class="inp text">
-                              <input autocomplete="off" class="big-style import-search" type="text" name="IMPORT_SEARCH" placeholder="Search"/>
-                           </div>
-                        </div>
-                     </section>
-                  </div>
-
-                  <div class="show-output tow-rows">
-                     <section class="scroll import-result">
-                        <!-- <div class="file">
-                           <div class="name">Name Hello</div>
-                           <div class="date">17-12-24 | 12:48</div>
-                           <i class="sbi-bin"></i>
-                        </div> -->
-                     </section>
-                  </div>
-               </div>
-            </div>
-
-         </div>
-
-         <p class="br-tag"></p>
-
-         <div class="basic-grid flip">
-            <div class="open-close">
-               <input autocomplete="off" type="checkbox" name="grid-flip" class="grid-flip open-close" />
-               <i class="sbi-chevron-circle-down"></i>
-               <span class="inp-span">EXPORT SETTINGS</span>
-               <i class="sbi-chevron-circle-down"></i>
-            </div>
-            
-            <div class="take-inp">
-               <span class="inp-span">File Type</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp selection">
-                        <select name="EXPORT_TYPE" class="export-type">
-                           <option selected>SELECT</option>
-                           <option value="mapping">MAPPING</option>
-                           <option value="listing">LISTING</option>
-                           <option value="orders">ORDERS</option>
-                        </select>
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span class="inp-span">File Name</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp text">
-                        <input type="text" class="big-style export-filename" name="EXPORT_FILE_NAME" />
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span class="inp-span">UserName</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp text">
-                        <input type="text" class="big-style export-username" name="EXPORT_USERNAME" />
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp">
-               <span class="inp-span">Password</span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp text">
-                        <input type="password" name="EXPORT_PASSWORD" class="big-style export-password" />
-                     </div>
-                  </div>
-               </section>
-            </div>
-
-            <div class="take-inp center full">
-               <section>
-                  <div class="take-value">
-                     <div class="inp button">
-                        <input type="button" class="export-btn" name="EXPORT_FILE" value="EXPORT" />
-                     </div>
-                  </div>
-               </section>
-            </div>
-         </div>
-
-         <div class="br-tag"></div>
          <p class="gap x8"></p>
 
          <footer class="create-user">
@@ -1928,7 +1784,7 @@
                      <section>
                         <div class="take-value">
                            <div class="inp text">
-                              <input autocomplete="off" class="big-style import-username" type="text" />
+                              <input autocomplete="off" class="big-style import-username" data-id="import" type="text" />
                            </div>
                         </div>
                      </section>
@@ -1939,7 +1795,7 @@
                      <section>
                         <div class="take-value">
                            <div class="inp text">
-                              <input autocomplete="off" class="big-style import-search" type="text" placeholder="Search"/>
+                              <input autocomplete="off" class="big-style import-search import-filename" data-result-id="import-result" type="text" placeholder="Search"/>
                            </div>
                         </div>
                      </section>
@@ -1995,7 +1851,7 @@
                      <section>
                         <div class="take-value">
                            <div class="inp text">
-                              <input autocomplete="off" class="big-style export-username" type="text" />
+                              <input autocomplete="off" class="big-style export-username" data-id="export" type="text" />
                            </div>
                         </div>
                      </section>
@@ -2017,9 +1873,19 @@
                      <section>
                         <div class="take-value">
                            <div class="inp text">
-                              <input autocomplete="off" class="big-style export-filename" type="text" placeholder="Enter"/>
+                              <input autocomplete="off" class="big-style export-filename" data-result-id="export-result" type="text" placeholder="Enter"/>
                            </div>
                         </div>
+                     </section>
+                  </div>
+
+                  <div class="show-output big tow-rows imp-exp small-height">
+                     <section class="scroll export-result big">
+                        <!-- <div class="file">
+                           <div class="name">Name Hello</div>
+                           <div class="date">17-12-24 | 12:48</div>
+                           <i class="sbi-bin"></i>
+                        </div> -->
                      </section>
                   </div>
 

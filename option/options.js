@@ -111,7 +111,7 @@ cancelPreview.addEventListener("click", hidePreviewWindow);
 startMappingBtn.addEventListener("click", async () => {
    EXTENSION_MAPPING_DATA = await getMappingData();
 
-   console.log(EXTENSION_MAPPING_DATA);
+   // console.log(EXTENSION_MAPPING_DATA);
 
    hidePreviewWindow();
    showConfirmationWindow();
@@ -150,7 +150,6 @@ confirmationWindow.addEventListener("click", (e) => {
 startFinalMapping.addEventListener("click", async () => {
    showLoading();
    hideConfirmationWindow();
-   hideLoading();
    createAllSelectedProductMapping();
 });
 

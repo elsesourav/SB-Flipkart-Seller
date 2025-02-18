@@ -57,7 +57,7 @@ function createUser(username, password) {
    });
 }
 
-function exportFile(username, fileType, filename, data, password) {
+function exportFile(username, fileType, filename, data, password, isUpdate, name) {
    return new Promise(async (resolve) => {
       try {
          const dbRef = db.ref(`users/${username}`);
@@ -75,10 +75,17 @@ function exportFile(username, fileType, filename, data, password) {
          }
 
          const { yy, mm, dd, hh, ss, ms } = DATE();
+         const refName = isUpdate ? name : `${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`;
+         const fileRef = dbRef.child(`${fileType.toLowerCase()}/${refName}`);
+         
+         if (isUpdate) {
+            await fileRef.update({
+               data,
+               date: `${dd}-${mm}-${yy} | ${hh}:${ss}`,
+            });
+            return resolve({ message: "File updated successfully", status: "SUCCESS" });
+         }
 
-         const fileRef = dbRef.child(
-            `${fileType.toLowerCase()}/${filename}-${dd}-${mm}-${yy}--${hh}:${ss}:${ms}`
-         );
          await fileRef.set({
             id: Date.now().toString(36).toUpperCase(),
             filename,
