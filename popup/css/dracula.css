@@ -15,6 +15,7 @@
 
 .cm-s-dracula .CodeMirror-linenumber {
    color: #6d8a88
+   
 }
 
 .cm-s-dracula .CodeMirror-selected {
@@ -34,7 +35,7 @@
 }
 
 .cm-s-dracula span.cm-comment {
-   color: #6272a4
+   color: #6272a4;
 }
 
 .cm-s-dracula span.cm-string,

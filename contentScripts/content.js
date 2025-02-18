@@ -55,7 +55,7 @@ async function setup_listing() {
 }
 
 function setup_orders_print() {
-   let openInputBtn, closeBtn, printBtn, downloadBtn;
+   let expandOrdersBtn, openInputBtn, closeBtn, printBtn, downloadBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
    if (sku_ids.length <= 0) return;
 
@@ -66,10 +66,30 @@ function setup_orders_print() {
 
    CE(
       { id: "__fwo__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "OPEN ORDERS TABLE")),
-      (printBtn = CE({ class: "__btn__" }, "Print")),
-      (downloadBtn = CE({ class: "__btn__" }, "Download")),
-      (closeBtn = CE({ class: "__btn__ __1__" }, "Close"))
+      (expandOrdersBtn = CE(
+         { class: "__btn__", "data-text": "EXPAND", style: "--delay: 200ms" },
+         "EXPAND"
+      )),
+      (openInputBtn = CE(
+         { class: "__btn__", "data-text": "SHOW", style: "--delay: 400ms" },
+         "SHOW"
+      )),
+      (printBtn = CE(
+         { class: "__btn__", "data-text": "PRINT", style: "--delay: 600ms" },
+         "PRINT"
+      )),
+      (downloadBtn = CE(
+         { class: "__btn__", "data-text": "DOWNLOAD", style: "--delay: 800ms" },
+         "DOWNLOAD"
+      )),
+      (closeBtn = CE(
+         {
+            class: "__btn__ __1__",
+            "data-text": "CLOSE",
+            style: "--delay: 1000ms",
+         },
+         "CLOSE"
+      ))
    ).parent(document.body);
 
    closeBtn.style.display = "none";
@@ -77,44 +97,46 @@ function setup_orders_print() {
    downloadBtn.style.display = "none";
    TABLE.style.display = "none";
 
+   expandOrdersBtn.addEventListener("click", async () => {
+      const IS = {
+         pack: isUrlContains("orderState=shipments_to_pack"),
+         dispatch: isUrlContains("orderState=shipments_to_dispatch"),
+         handover: isUrlContains("orderState=shipments_to_handover"),
+      };
+      const element = [
+         ...document.querySelectorAll(`button[data-testid="button"]`),
+      ].find((e) => e.textContent == "Request OTC");
+
+      if (IS.handover && element) {
+         const parent =
+            element?.parentNode?.parentNode?.parentNode?.parentNode?.firstChild;
+         parent.click();
+         parent.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      if (IS.pack || IS.dispatch || IS.handover) {
+         const select = document.querySelector(`select[name="default"]`);
+         const value = select?.value;
+         if (select && value != "70") {
+            select.selectedIndex = 3;
+            select.dispatchEvent(new Event("change", { bubbles: true }));
+         }
+      }
+   });
+
    openInputBtn.addEventListener("click", async () => {
       const IS = {
          pack: isUrlContains("orderState=shipments_to_pack"),
          dispatch: isUrlContains("orderState=shipments_to_dispatch"),
          handover: isUrlContains("orderState=shipments_to_handover"),
-      }
-
-      if (IS.pack || IS.dispatch) {
-         const select = document.querySelector(`select[name="default"]`);
-         const value = select?.value;
-         if (select && value != "70") {
-            select.selectedIndex = 3;
-            select.dispatchEvent(new Event("change", { bubbles: true }));
-            await wait(1000);
-         }
-      } else if (IS.handover) {
-         const element = [...document.querySelectorAll(`button[data-testid="button"]`)].find((e) => e.textContent == "Request OTC");
-
-         if (element) {
-            const parent = element?.parentNode?.parentNode?.parentNode?.parentNode?.firstChild;
-            parent.click();
-            parent.dispatchEvent(new Event("change", { bubbles: true }));
-         }
-
-         const select = document.querySelector(`select[name="default"]`);
-         const value = select?.value;
-         if (select && value != "70") {
-            select.selectedIndex = 3;
-            select.dispatchEvent(new Event("change", { bubbles: true }));
-            await wait(1500);
-         }
-      }
+      };
 
       if (IS.pack || IS.dispatch || IS.handover) {
          closeBtn.style.display = "block";
          printBtn.style.display = "block";
          downloadBtn.style.display = "block";
          openInputBtn.style.display = "none";
+         expandOrdersBtn.style.display = "none";
          TABLE.style.display = "flex";
          showOrders();
       }
@@ -125,6 +147,7 @@ function setup_orders_print() {
       printBtn.style.display = "none";
       downloadBtn.style.display = "none";
       openInputBtn.style.display = "block";
+      expandOrdersBtn.style.display = "block";
       TABLE.style.display = "none";
    });
 
@@ -260,7 +283,13 @@ addEventListener("mousedown", async (_) => {
       }
    }
 
-   if (ifMatchSingleOrderLocation()) {
+   const IS = {
+      pack: isUrlContains("orderState=shipments_to_pack"),
+      dispatch: isUrlContains("orderState=shipments_to_dispatch"),
+      handover: isUrlContains("orderState=shipments_to_handover"),
+   };
+
+   if (IS.pack || IS.dispatch || IS.handover) {
       const fwo = I("#__fwo__")[0];
       const isFWO = fwo instanceof Node;
 
@@ -270,6 +299,9 @@ addEventListener("mousedown", async (_) => {
       } else if (isFWO) {
          fwo.style.display = "flex";
       }
+   } else {
+      const fwo = document.getElementById("__fwo__");
+      if (fwo) fwo.style.display = "none";
    }
 
    // const fw = I("#__fws__")[0];

@@ -235,6 +235,10 @@ function printTable() {
                   border-bottom: 1px double #000;
                }
 
+               ._-checkbox {
+                  display: none;
+               }
+
                ._-cell {
                   width: 100%;
                   position: relative;
