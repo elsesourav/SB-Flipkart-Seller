@@ -107,15 +107,16 @@ runtimeOnMessage(
          const allResults = [];
 
          // Process data in batches of BATCH_SIZE eg:(25)
-         for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
-            const batchData = {
-               ...newMappingData,
-               PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
-            };
+         // for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
+         //    const batchData = {
+         //       ...newMappingData,
+         //       PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
+         //    };
 
-            const batchResult = await createProductMappingBulk(batchData);
-            allResults.push(...batchResult);
-         }
+         //    const batchResult = await createProductMappingBulk(batchData);
+         //    await wait(500);
+         //    allResults.push(...batchResult);
+         // }
          // Send final results
          console.log(newMappingData);
          // console.log(allResults);
@@ -170,15 +171,24 @@ runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
 
 runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
    chromeStorageGetLocal(KEYS.STORAGE_ORDERS, async (val) => {
-      const productsJson = chrome.runtime.getURL(
-         "./../assets/unique/products.json"
+      const purav = chrome.runtime.getURL(
+         "./../assets/changes/sku.purav.json"
+      );
+      const sbarui = chrome.runtime.getURL(
+         "./../assets/changes/sku.sbarui.json"
       );
       try {
-         const response = await fetch(productsJson);
-         const products = await response.json();
+         const puravResponse = await fetch(purav);
+         const sbaruiResponse = await fetch(sbarui);
+         const puravSKUs = await puravResponse.json();
+         const sbaruiSKUs = await sbaruiResponse.json();
+
          sendResponse({
             ...val,
-            products,
+            changesSKU: {
+               ...puravSKUs,
+               ...sbaruiSKUs,
+            },
          });
       } catch (error) {
          console.log("Error loading products.json:", error);

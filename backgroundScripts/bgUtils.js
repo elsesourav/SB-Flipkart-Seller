@@ -219,8 +219,10 @@ function getMixDataToNewMappingData(DATA) {
       //    _DZ = Math.max(_DZ - DELTA_PRICE, 0);
       // }
 
+      
       // if alreadySelling then don't change sku and listing status
       const SKU = alreadySelling ? sku_id : sku;
+      if (!alreadySelling) console.log(`alreadySelling: ${sku_id}, sku: ${sku}`);
       const LISTING_STATUS = alreadySelling ? internal_state : LISTING_STATUS_G;
 
       return {
@@ -551,10 +553,10 @@ async function modifyVerifiedProducts(products, userId) {
 
       return {
          ...product,
-         PRICE: price,
+         PRICE: Math.round(price),
          SIGNAL: signal,
-         PROFIT: profit,
-         NATIONAL_FEE: nationalFee,
+         PROFIT: Math.round(profit),
+         NATIONAL_FEE: Math.round(nationalFee),
          // sellingPrice,
          // profit
       };
@@ -639,7 +641,7 @@ function getOptimizedPrice(
          });
       }
 
-      const nationalDelivery = national_fee - (profit - MIN_PROFIT);
+      const nationalDelivery = Math.max(national_fee - (profit - MIN_PROFIT), 0);
 
       return {
          price,

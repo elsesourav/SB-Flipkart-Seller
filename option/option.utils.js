@@ -165,8 +165,6 @@ function getHTMLProductCards(ps, searchNames = []) {
             NATIONAL_FEE,
             internal_state,
          } = p;
-
-         console.log(p);
          
          const classRating = rating.count <= 0 ? "hidden" : "";
 

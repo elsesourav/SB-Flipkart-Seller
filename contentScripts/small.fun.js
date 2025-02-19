@@ -292,8 +292,16 @@ async function showOrders() {
 
    // console.log(DATA);
 
-   const { WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor, typeInBengali } = DATA;
+   const { WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor, changesSKU } = DATA;
+
    const { calculateWeight, nameInBengali } = editor;
+
+   const TYPE_IN_BENGALI = {
+      PIECE: "পিস",
+      KG: "কেজি",
+      G: "গ্রাম",
+      TIMES: "প্যাকেট",
+   };
 
    // console.log(WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor);
 
@@ -303,9 +311,10 @@ async function showOrders() {
    }
 
    let TYPES = {};
-   for (const [key, value] of Object.entries(typeInBengali)) {
-      TYPES[key.toUpperCase()] = WORD_IN_BENGALI ? value : key;
-   }
+
+   Object.entries(TYPE_IN_BENGALI).forEach(([key, value]) => {
+      TYPES[key] = WORD_IN_BENGALI ? value : key;
+   });
 
    // if (WORD_IN_BENGALI) TABLE.style.fontSize = "18px";
    // else
@@ -313,84 +322,77 @@ async function showOrders() {
 
    const SKU = [...sku_ids].map((el) => el.innerText);
    const UNIT = [...unit].map((el) => parseInt(el.innerText));
-   const sku_data = SKU.map((el) => el.split("__"));
+   const PRODUCTS_INFO = SKU.map((el) => {
+      const correctSku = changesSKU[el] ? changesSKU[el].NEW_SKU_ID : el;
+      return correctSku.split("__");
+   });
 
    const PRODUCTS = {};
-   sku_data.forEach((_sku_, i) => {
-      if (DATA.products[SKU[i]]) {
-         const temp = DATA.products[SKU[i]];
-         const { NAME, TYPE, QUANTITY } = temp;
 
-         const weight = calculateWeight[NAME.toUpperCase()] || null;
+   PRODUCTS_INFO.forEach((p_info, i) => {
+      if (p_info.length >= 3) {
+         const [nm, quantity, type] = p_info;
+         const splitName = nm.split("-");
+         // const isMy = splitName.length > 1;
+         const name = splitName[splitName.length - 1];
 
-         const name = NAMES[NAME.toUpperCase()] || NAME.toUpperCase();
-         const type =
-            TYPES[TYPE === "per packet" ? "P" : TYPE.toUpperCase()] ||
-            TYPE.toUpperCase();
-         const num = NUMBER_IN_BENGALI ? toBengaliNumber(QUANTITY) : QUANTITY;
+         const NAME_IN_LAN = NAMES[name] || name;
+         const TYPE_IN_LAN = TYPES[type];
+         const QUANTITY_IN_LAN = NUMBER_IN_BENGALI
+            ? toBengaliNumber(quantity)
+            : quantity;
+         const WEIGHT = calculateWeight[name] || null;
 
-         let gram = "";
+         let IN_GRAM = "";
 
-         if (type === "PIECE" && weight) {
-            const [_p_, _g_] = extractNumbers(weight);
-            const result = (num * _g_) / _p_;
-            const formattedResult = Number.isInteger(result)
-               ? result
-               : result.toFixed(3);
-            gram = `, ${formattedResult} ${TYPES["G"]}`;
-         }
-
-         !PRODUCTS[name] && (PRODUCTS[name] = {});
-         const quantityKey = `${num} ${type}${gram}`;
-         PRODUCTS[name][quantityKey] =
-            (PRODUCTS[name][quantityKey] || 0) + UNIT[i];
-      } else if (_sku_.length >= 3) {
-         let [name, quantity, type] = _sku_;
-         name = name.split("-").pop();
-
-         const weight = calculateWeight[name.toUpperCase()] || null;
-
-         const NAME = NAMES[name.toUpperCase()] || name.toUpperCase();
-         const TYPE = TYPES[type === "PIECE" ? "P" : type] || type;
-         const NUM = NUMBER_IN_BENGALI ? toBengaliNumber(quantity) : quantity;
-
-         let gram = "";
-
-         if (type === "PIECE" && weight) {
-            const [_p_, _g_] = extractNumbers(weight);
+         // calculate weight if type is PIECE
+         if (type === "PIECE" && WEIGHT) {
+            const [_p_, _g_] = extractNumbers(WEIGHT);
             const result = (quantity * _g_) / _p_;
-            const formattedResult = Number.isInteger(result)
-               ? result
-               : result.toFixed(2);
-            const VALUE = NUMBER_IN_BENGALI
+            const formattedResult = result.toFixed(2);
+            const temp = NUMBER_IN_BENGALI
                ? toBengaliNumber(formattedResult)
                : formattedResult;
-            gram = `, ${VALUE} ${TYPES["G"]}`;
+            IN_GRAM = ` 〉〈 ${temp} ${TYPES["G"]}`;
          }
 
-         !PRODUCTS[NAME] && (PRODUCTS[NAME] = {});
-         const quantityKey = `${NUM} ${TYPE}${gram}`;
-         PRODUCTS[NAME][quantityKey] =
-            (PRODUCTS[NAME][quantityKey] || 0) + UNIT[i];
+         !PRODUCTS[NAME_IN_LAN] && (PRODUCTS[NAME_IN_LAN] = {});
+         const key = `${QUANTITY_IN_LAN} ${TYPE_IN_LAN}${IN_GRAM}`;
+         PRODUCTS[NAME_IN_LAN][key] =
+            (PRODUCTS[NAME_IN_LAN][key] || 0) + UNIT[i];
       } else {
-         console.log("SKU NOT FOUND", SKU[i]);
+         console.log("SKU NOT MATCHING THE FORMAT -> ", SKU[i]);
       }
    });
 
-   const tableRows = Object.entries(PRODUCTS)
+   const ARRAY_PRODUCTS = Object.entries(PRODUCTS);
+   ARRAY_PRODUCTS.sort(
+      (a, b) => Object.keys(b[1]).length - Object.keys(a[1]).length
+   );
+   const OBJECT_ORDERS = Object.fromEntries(ARRAY_PRODUCTS);
+
+   const tableRows = Object.entries(OBJECT_ORDERS)
       .map(([name, quantities]) => {
+         const TOTAL = Object.values(quantities).reduce((a, b) => a + b, 0);
+         const TOTAL_IN_LAN = NUMBER_IN_BENGALI
+            ? toBengaliNumber(TOTAL)
+            : TOTAL;
+
          const header = `
             <input type="checkbox" class="_-checkbox" />
-            <div class="_-cell _-header">${name}</div>
+            <div class="_-cell _-header">${name}&nbsp;&nbsp;&nbsp;(${TOTAL_IN_LAN})</div>
          `;
 
          const cells = Object.entries(quantities)
             .map(([quantity, multi]) => {
                const MULTI = WORD_IN_BENGALI
-                  ? `${multi} ${TYPES["TIMES"]}`
-                  : `(${multi})`;
+                  ? `${NUMBER_IN_BENGALI ? toBengaliNumber(multi) : multi} ${
+                       TYPES["TIMES"]
+                    }`
+                  : `${multi}x`;
 
-               const isMulti = multi > 1 ? ` => <span class="_-multi">${MULTI}</span>` : "";
+               const isMulti =
+                  multi > 1 ? ` ==> <span class="_-multi">${MULTI}</span>` : "";
                return `<div class="_-cell">${quantity}${isMulti}</div>`;
             })
             .join("");
@@ -414,8 +416,8 @@ function fillLintingInputs(DATA) {
 
          const editButtons = I(
             '#sub-app-container .hTTPSU[data-testid="button"]'
-         );       
-         
+         );
+
          await putImagesIntoListing(images, editButtons);
 
          // ------- Price, Stock and Shipping Information ---------

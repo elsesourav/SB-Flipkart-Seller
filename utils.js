@@ -8,7 +8,7 @@ const KEYS = {
    STORAGE_SETTINGS: "SB_Seller_Settings",
    STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
    STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
-}
+};
 
 const URLS = {
    singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
@@ -24,10 +24,12 @@ const URLS = {
    flipkartAPIMapping:
       "https://seller.flipkart.com/napi/listing/create-update-listings",
    flipkartSellerIndexPage: "https://seller.flipkart.com/index.html",
-   flipkartFeaturesForSeller: "https://seller.flipkart.com/getFeaturesForSeller",
+   flipkartFeaturesForSeller:
+      "https://seller.flipkart.com/getFeaturesForSeller",
    listingsDataForStates:
       "https://seller.flipkart.com/napi/listing/listingsDataForStates",
-   productSellers: "https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
+   productSellers:
+      "https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
 };
 
 const FLIPKART_SEARCH_HEADER = {
@@ -82,24 +84,25 @@ let ordersData = {
          HALUD: "হলুদ",
          TURMERIC: "হলুদ",
       },
-   },
-   typeInBengali: {
-      P: "পিস",
-      KG: "কেজি",
-      G: "গ্রাম",
-      TIMES: "টা",
-   },
-   numberInBengali: ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"],
+   }
 };
 
 function toBengaliNumber(number) {
-   return number
-      .toString()
-      .split("")
-      .map((char) => {
-         return /\d/.test(char) ? ordersData.numberInBengali[char] : char;
-      })
-      .join("");
+   const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+   const bengaliDigits = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+
+   const numberString = number.toString();
+   let bengaliNumber = "";
+   for (let char of numberString) {
+      const index = englishDigits.indexOf(char);
+      if (index !== -1) {
+         bengaliNumber += bengaliDigits[index];
+      } else {
+         bengaliNumber += char;
+      }
+   }
+
+   return bengaliNumber;
 }
 
 /* ----  local storage set and get ---- */
@@ -380,8 +383,7 @@ function getSecondsForMonths(months) {
    return Math.round(months * 60 * 60 * 30 * 24);
 }
 
-
 function dateToMilliseconds(dateString) {
    const date = new Date(dateString);
    return date.getTime();
- }
+}
