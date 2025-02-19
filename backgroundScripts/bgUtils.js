@@ -148,15 +148,21 @@ function getImageFilesFromLocalStorage() {
    });
 }
 
+function splitIntoChunks(arr, chunkSize) {
+   const result = [];
+
+   for (let i = 0; i < arr.length; i += chunkSize) {
+      result.push(arr.slice(i, i + chunkSize));
+   }
+
+   return result;
+}
+
 function getMixDataToNewMappingData(DATA) {
-   const { products, fkCsrfToken, mappingData: MD, sellerId, PRICE } = DATA;
-   // console.log(DATA);
+   const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
+   const CHUNK_SIZE = 20;
 
    const SKU_NAME = MD?.SKU_NAME;
-   // const MAX_PROFIT = N(MD?.MAX_PROFIT || 15);
-   // const MIN_PROFIT = N(MD?.MIN_PROFIT || 10);
-   // const PACKING_COST = N(MD?.PACKING_COST || 3);
-   // const FIXED_COST = N(MD?.FIXED_COST || 72);
    const LISTING_STATUS_G = MD?.LISTING_STATUS || "ACTIVE";
    const PROCUREMENT_TYPE = MD?.PROCUREMENT_TYPE || "EXPRESS";
    const SHIPPING_DAYS = MD?.SHIPPING_DAYS || 1;
@@ -173,17 +179,6 @@ function getMixDataToNewMappingData(DATA) {
    const PACKAGING_BREADTH = MD?.PACKAGING_BREADTH || 17;
    const PACKAGING_HEIGHT = MD?.PACKAGING_HEIGHT || 3;
 
-   // let DL = N(MD?.DELIVERY_LOCAL || 0);
-   // let DN = N(MD?.DELIVERY_NATIONAL || 0);
-   // let DZ = N(MD?.DELIVERY_ZONAL || 19);
-   // const DELIVERY_CHARGE_MIN = Math.min(DL, DN, DZ);
-
-   // if (!MD?.IS_INCLUDED) {
-   //    DL -= DELIVERY_CHARGE_MIN;
-   //    DN -= DELIVERY_CHARGE_MIN;
-   //    DZ -= DELIVERY_CHARGE_MIN;
-   // }
-
    const newData = products.map((product, i) => {
       const {
          id,
@@ -197,32 +192,14 @@ function getMixDataToNewMappingData(DATA) {
       } = product;
 
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, t.subtitle, i);
-      // let _DL = DL;
-      // let _DN = DN;
-      // let _DZ = DZ;
 
       const TOTAL_WEIGHT = getTotalWeight(MD, quantity, type);
-      // const PRODUCT_COST = getProductCost(MD, quantity, type);
-      // const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
-      // const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
-      // const TOTAL = MAX_PROFIT + PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
-      // let SELLING_PRICE = calculateProductPrice(FIXED_COST, TOTAL);
 
-      // if (MD?.IS_INCLUDED) SELLING_PRICE -= DELIVERY_CHARGE_MIN;
-      // const PERCENTAGE_90 = Math.ceil(mrp.value * 0.1);
-      // const DELTA_PRICE = PERCENTAGE_90 - SELLING_PRICE;
-
-      // if (SELLING_PRICE < PERCENTAGE_90) {
-      //    SELLING_PRICE = PERCENTAGE_90;
-      //    _DL = Math.max(_DL - DELTA_PRICE, 0);
-      //    _DN = Math.max(_DN - DELTA_PRICE, 0);
-      //    _DZ = Math.max(_DZ - DELTA_PRICE, 0);
-      // }
-
-      
       // if alreadySelling then don't change sku and listing status
       const SKU = alreadySelling ? sku_id : sku;
-      if (!alreadySelling) console.log(`alreadySelling: ${sku_id}, sku: ${sku}`);
+      // console.log(
+      //    `alreadySelling: ${alreadySelling}, sku_id: ${sku_id}, sku: ${sku}, id: "${id}"`
+      // );
       const LISTING_STATUS = alreadySelling ? internal_state : LISTING_STATUS_G;
 
       return {
@@ -254,7 +231,7 @@ function getMixDataToNewMappingData(DATA) {
    return {
       SELLER_ID: sellerId,
       FK_CSRF_TOKEN: fkCsrfToken,
-      PRODUCTS: newData,
+      PRODUCTS_CHUNK: splitIntoChunks(newData, CHUNK_SIZE)
    };
 }
 
@@ -458,42 +435,18 @@ async function modifyVerifiedProducts(products, userId) {
    const PACKING_COST = N(MD?.PACKING_COST || 3);
    const FIXED_COST = N(MD?.FIXED_COST || 71);
 
-   let DL = N(MD?.DELIVERY_LOCAL || 0);
-   let DN = N(MD?.DELIVERY_NATIONAL || 0);
-   let DZ = N(MD?.DELIVERY_ZONAL || 19);
-   // const DELIVERY_CHARGE_MIN = Math.min(DL, DN, DZ);
+   let DN = N(MD?.DELIVERY_NATIONAL || 19);
 
-   // console.log(products);
    return products.map((product) => {
       const { sellersInfo, titles, alreadySelling, mrp } = product;
       const MRP = mrp.value;
 
-      // const minShippingCharge = Math.min(localFee, nationalFee, zonalFee);
-      // const minimumPrice = minShippingCharge + finalPrice;
       const { quantity, type } = subTitleToQuantityAndType(titles.subtitle);
 
       const PRODUCT_COST = getProductCost(MD, quantity, type);
       const UNIT_TO_PIECE = getUnitToPiece(MD, quantity, type);
       const INCREMENT_AMOUNT = getIncrementAmount(MD, UNIT_TO_PIECE);
       const COST = PACKING_COST + PRODUCT_COST + INCREMENT_AMOUNT; // SRCELEMENT AMOUNT
-      // let SELLING_PRICE = calculateProductPrice(FIXED_COST, COST + MAX_PROFIT);
-
-      // const PRICE_PERCENTAGE_90 = Math.ceil(mrp * 0.1);
-      // if (SELLING_PRICE < PRICE_PERCENTAGE_90)
-      //    SELLING_PRICE = PRICE_PERCENTAGE_90;
-
-      // console.log(`mrp: ${MRP}`);
-      // console.log(`quantity: ${quantity} || type: ${type}`);
-
-      // console.log(`product cost: ${PRODUCT_COST}`);
-      // console.log(`packing cost: ${PACKING_COST}`);
-      // console.log(`max profit: ${MAX_PROFIT}`);
-      // console.log(`increment amount: ${INCREMENT_AMOUNT}`);
-      // console.log(`total: ${COST}`);
-      // console.log(`--> minPrice: ${sellersInfo.sellers[0].totalPrice}`);
-
-      // let sellingPrice;
-      // let profit;
 
       const { price, signal, profit, nationalFee } = getOptimizedPrice(
          sellersInfo,
@@ -506,59 +459,12 @@ async function modifyVerifiedProducts(products, userId) {
          DN,
          FIXED_COST
       );
-
-      // console.log(`price: ${price} || signal: ${signal} || profit: ${profit} || nationalFee: ${nationalFee}`);
-
-      // if (PRICE_PERCENTAGE_90 > minimumPrice) {
-      //    sellingPrice = PRICE_PERCENTAGE_90;
-      // } else if (minimumPrice < SELLING_PRICE) {
-      //    sellingPrice = minimumPrice - 1;
-      // } else {
-      //    sellingPrice = SELLING_PRICE;
-      // }
-
-      // const bankSettlement = calculateBankSettlement({
-      //    price: sellingPrice,
-      //    fixedCost: FIXED_COST,
-      // });
-
-      // const D_TOTAL = TOTAL - MAX_PROFIT;
-      // const PROFIT = bankSettlement - D_TOTAL;
-
-      // console.log(`selling price: ${sellingPrice}`);
-      // console.log(`bank settlement: ${bankSettlement}`);
-      // console.log(`profit: ${PROFIT}`);
-
-      // console.log(product);
-
-      // if (sellerId == "8136cfdc49f34957") {
-      //    sellingPrice = minimumPrice;
-      // } else {
-      //    console.log(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
-
-      //    sellingPrice = getOptimizedPrice(minimumPrice, mrp, TOTAL, MIN_PROFIT, MAX_PROFIT, FIXED_COST);
-      // }
-
-      // profit = getProfitUsingBankSettlement({
-      //    price: sellingPrice,
-      //    cost: TOTAL,
-      //    fixedCost: FIXED_COST,
-      // });
-
-      // console.log(`minimum price: ${minimumPrice}`);
-      // console.log(`selling price: ${sellingPrice}`);
-      // console.log(`profit: ${profit}`);
-
-      // console.log(`\n\n\t\t--------------------------------------\n\n`);
-
       return {
          ...product,
          PRICE: Math.round(price),
          SIGNAL: signal,
          PROFIT: Math.round(profit),
          NATIONAL_FEE: Math.round(nationalFee),
-         // sellingPrice,
-         // profit
       };
    });
 }
@@ -641,7 +547,10 @@ function getOptimizedPrice(
          });
       }
 
-      const nationalDelivery = Math.max(national_fee - (profit - MIN_PROFIT), 0);
+      const nationalDelivery = Math.max(
+         national_fee - (profit - MIN_PROFIT),
+         0
+      );
 
       return {
          price,

@@ -33,17 +33,19 @@ runtimeOnMessage("c_b_get_seller_info", async (__, _, sendResponse) => {
 });
 
 let optionsTabId;
-function sendUpdateLoadingPercentage(percentage) {
+function sendUpdateLoadingPercentage(percentage, color = "white") {
    if (!optionsTabId) return;
    tabSendMessage(optionsTabId, "b_c_update_loading_percentage", {
       percentage,
+      color,
    });
 }
 
 runtimeOnMessage(
    "c_b_get_mapping_product_data",
    async (data, sender, sendResponse) => {
-      const { productName, startingPage, endingPage, fkCsrfToken, sellerId } = data;
+      const { productName, startingPage, endingPage, fkCsrfToken, sellerId } =
+         data;
 
       optionsTabId = sender.tab.id;
 
@@ -82,11 +84,12 @@ runtimeOnMessage(
             sendUpdateLoadingPercentage(
                Math.round((i / (endingPage - startingPage + 1)) * 100)
             );
-            // if ((j + 1) % MAX_PAGE_IN_ONE_TIME === 0 && i !== endingPage)
-            //    await wait(40000);
          }
 
-         const modifiedProducts = await modifyVerifiedProducts(verifiedProducts, sellerId);
+         const modifiedProducts = await modifyVerifiedProducts(
+            verifiedProducts,
+            sellerId
+         );
 
          // console.log(modifiedProducts);
          // Send final filtered response
@@ -102,25 +105,28 @@ runtimeOnMessage(
    "c_b_create_all_selected_product_mapping",
    async (DATA, _, sendResponse) => {
       try {
-         const newMappingData = getMixDataToNewMappingData(DATA);
-         const BATCH_SIZE = 25;
+         const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS_CHUNK } =
+            getMixDataToNewMappingData(DATA);
          const allResults = [];
+         const PCLength = PRODUCTS_CHUNK.length;
 
-         // Process data in batches of BATCH_SIZE eg:(25)
-         // for (let i = 0; i < newMappingData.PRODUCTS.length; i += BATCH_SIZE) {
-         //    const batchData = {
-         //       ...newMappingData,
-         //       PRODUCTS: newMappingData.PRODUCTS.slice(i, i + BATCH_SIZE),
-         //    };
+         let i = 1;
+         for (const PRODUCTS of PRODUCTS_CHUNK) {
+            const batchData = {
+               SELLER_ID,
+               FK_CSRF_TOKEN,
+               PRODUCTS,
+            };
 
-         //    const batchResult = await createProductMappingBulk(batchData);
-         //    await wait(500);
-         //    allResults.push(...batchResult);
-         // }
-         // Send final results
-         console.log(newMappingData);
+            const batchResult = await createProductMappingBulk(batchData);
+            allResults.push(...batchResult);
+            sendUpdateLoadingPercentage(Math.round((i / PCLength) * 100), "green");
+            if (PCLength > ++i) await wait(2000);
+         }
+
+         // console.log(PRODUCTS_CHUNK);
          // console.log(allResults);
-         
+
          sendResponse(allResults);
       } catch (error) {
          console.log("Error in product mapping:", error);
@@ -171,9 +177,7 @@ runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
 
 runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
    chromeStorageGetLocal(KEYS.STORAGE_ORDERS, async (val) => {
-      const purav = chrome.runtime.getURL(
-         "./../assets/changes/sku.purav.json"
-      );
+      const purav = chrome.runtime.getURL("./../assets/changes/sku.purav.json");
       const sbarui = chrome.runtime.getURL(
          "./../assets/changes/sku.sbarui.json"
       );
@@ -311,7 +315,7 @@ runtimeOnMessage(
          data,
          password,
          isUpdate,
-         name,
+         name
       );
       sendResponse(result);
    }
@@ -332,103 +336,3 @@ runtimeOnMessage(
       sendResponse(result);
    }
 );
-
-// function fetchProductSellerDetails(productId, fkCsrfToken) {
-//    const url = "https://seller.flipkart.com/napi/listing/listingsDataForStates";
-
-//    // Define the request payload
-
-//    // Define the headers
-
-//    console.log("starting test");
-//    console.time();
-
-//    for (let i = 0; i < 97; i++) {
-//       // Make the fetch request
-//       fetch(url, {
-//          method: "POST",
-//          headers: headers,
-//          body: JSON.stringify(data),
-//       })
-//          .then((response) => {
-//             if (!response.ok) {
-//                throw new Error("Network response was not ok");
-//             }
-//             return response.json();
-//          })
-//          .then((data) => {
-//             console.log("Success:", data);
-//             if (i === 96) {
-//                console.log("ending test");
-//                console.timeEnd();
-//             }
-//          })
-//          .catch((error) => {
-//             console.error("Error:", error);
-//          });
-//    }
-// }
-
-// fetchProductSellerDetails();
-
-// fetch(URLS.productSellers, {
-//    method: "POST",
-//    headers: {
-//       "X-User-Agent":
-//          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop",
-//    },
-//    body: JSON.stringify({ requestContext: { productId: "PAEGGREHZTG9CNTQ" } }),
-// })
-//    .then((response) => response.json())
-//    .then((DATA) => {
-//       const { data } = DATA?.RESPONSE?.data?.product_seller_detail_1;
-//       const [data1] = DATA?.RESPONSE?.data?.product_summary_1?.data;
-//       const { vertical, productBrand, subTitle, title } = data1?.value;
-
-//       const nData = data.map((e) => e.value);
-//       const newData = nData.map((e) => {
-//          // seller info
-//          const { id, name } = e?.sellerInfo?.value;
-
-//          // price info
-//          const { FKFP, MRP } =
-//             e?.npsListing?.pnp_lite_listing_info?.priceInfo?.pricePoints;
-
-//          // shipping fees
-//          const {
-//             local_shipping_fee,
-//             national_shipping_fee,
-//             zonal_shipping_fee,
-//          } = e?.npsListing?.shipping_fees;
-
-//          const is_fAssured = e?.npsListing?.listing_tier === "FASSURED";
-
-//          return {
-//             id,
-//             name,
-//             is_fAssured,
-//             final_price: FKFP?.value,
-//             brand: productBrand,
-//             subTitle,
-//             title,
-//             vertical,
-//             newTitle: title.substring(productBrand.length + 1),
-//             mrp: MRP?.value,
-//             local_shipping_fee: local_shipping_fee?.amount,
-//             zonal_shipping_fee: zonal_shipping_fee?.amount,
-//             national_shipping_fee: national_shipping_fee?.amount,
-//          };
-//       });
-
-//       const sortedData = newData.sort(
-//          (a, b) =>
-//             a.final_price +
-//             a.local_shipping_fee -
-//             (b.final_price + b.local_shipping_fee)
-//       );
-
-//       console.table(sortedData);
-//    })
-//    .catch((error) => console.error("Fetch Error:", error));
-
-// Define the URL

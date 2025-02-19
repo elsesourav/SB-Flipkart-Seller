@@ -203,7 +203,6 @@ function getProductData(url) {
          const sellingMRP = price1 ? price1[1].replace(/,/g, "") : null;
          const MRP = price2 ? price2[1].replace(/,/g, "") : null;
 
-         console.log(sellingMRP, MRP);
          resolve({
             sellingMRP,
             MRP,
@@ -279,16 +278,12 @@ function getProductIdToSKUId(fkCsrfToken, productId) {
 function getOrganizeListing(data, fkCsrfToken, productId) {
    return new Promise(async (resolve) => {
       const listingDataLength = Object.keys(data).length;
+
       const { is, sku_id, imageUrl, internal_state } =
          listingDataLength > 0
             ? data?.[productId] || {}
             : await getProductIdToSKUId(fkCsrfToken, productId);
 
-      // if (listingDataLength > 0) console.log(data);
-
-      // console.log(is, sku_id, imageUrl, internal_state);
-      // console.log(`\n\n-----------------\n\n`);
-      
       resolve({ isError: false, is, sku_id, imageUrl, internal_state });
    });
 }
@@ -300,13 +295,11 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
          const { is, sku_id, imageUrl, internal_state } =
             await getOrganizeListing(listingData, fkCsrfToken, product.id);
 
-            // console.log(is);
-
          if (is) {
             const data = await getMinSellerPrice(product.id);
 
             if (!data) {
-               resolve({ isError: false, error: error.message });
+               resolve({ isError: false, is: false, sku_id: null, internal_state: null, alreadySelling: false, imageUrl, error: "Server error" });
                return;
             }
 
@@ -335,7 +328,7 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
             const result = await checkApprovalStatus(vertical, brand);
 
             if (result?.isError) {
-               resolve({ isError: true, is: false, error: "Server error" });
+               resolve({ isError: false, is: false, sku_id: null, internal_state: null, alreadySelling: false, imageUrl, error: "Server error" });
                return;
             }
 
@@ -343,7 +336,7 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
                const data = await getMinSellerPrice(product.id);
 
                if (!data) {
-                  resolve({ isError: false, error: error.message });
+                  resolve({ isError: false, is: false, sku_id: null, internal_state: null, alreadySelling: false, imageUrl, error: "Server error" });
                   return;
                }
 
@@ -358,15 +351,11 @@ function verifyProductUsingUserData(product, fkCsrfToken, listingData) {
                   sellersInfo: data,
                });
             } else {
-               resolve({
-                  isError: false,
-                  is: false,
-                  error: "Not approved",
-               });
+               resolve({ isError: false, is: false, sku_id: null, internal_state: null, alreadySelling: false, imageUrl, error: "Not approved" });
             }
          }
       } catch (error) {
-         resolve({ isError: false, error: error.message });
+         resolve({ isError: true, is: false, sku_id: null, internal_state: null, alreadySelling: false, imageUrl, error: error.message });
          console.log("Error verifying product:", error);
       }
    });
@@ -456,19 +445,6 @@ function GET_SELLER_INFO() {
       }
    });
 }
-
-// fetch("", {
-//    method: "GET",
-//    headers: {
-//        "Accept": "application/json, text/javascript, */*; q=0.01",
-//        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-//        "X-Requested-With": "XMLHttpRequest"
-//    },
-//    credentials: "include" // If authentication is required
-// })
-// .then(response => response.json()) // Convert response to JSON
-// .then(data => console.log(data)) // Handle the response data
-// .catch(error => console.error("Error fetching data:", error));
 
 const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
    return new Promise(async (resolve) => {
@@ -569,7 +545,6 @@ function createProductMappingBulk(DATA) {
             PACKAGING_LENGTH,
             PACKAGING_BREADTH,
             PACKAGING_HEIGHT,
-            ALREADY_LISTING,
          } = product;
 
          const PRODUCT_DATA = {
@@ -646,9 +621,6 @@ function createProductMappingBulk(DATA) {
 
       try {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
-
-         // console.log(response);
-
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
             resolve([]);
@@ -656,6 +628,7 @@ function createProductMappingBulk(DATA) {
          }
 
          const data = await response.json();
+
          resolve(data?.result?.bulkResponse);
       } catch (error) {
          console.log("Error mapping product:", error);
@@ -715,12 +688,12 @@ function fetchListingSellerData(i, fkCsrfToken, state = "ACTIVE") {
 function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
    return new Promise(async (resolve) => {
       const listingData = {};
-      // console.time();
+      
       const firstData = await fetchListingSellerData(0, fkCsrfToken, state);
       const { count, data } = firstData;
 
       const len = Math.floor(count / 100);
-      // console.log(count, len);
+      sendUpdateLoadingPercentage((1 / len) * 100, "yellow"); // After first batch
 
       // Process first batch
       data.map(({ product_id, imageUrl, internal_state, sku_id }) => {
@@ -737,8 +710,18 @@ function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
          fetchListingSellerData(i + 1, fkCsrfToken, state)
       );
 
-      // Execute all promises in parallel
-      const results = await Promise.all(promises);
+      // Execute all promises in parallel and track progress
+      let completedBatches = 0;
+      const results = await Promise.all(
+         promises.map(async (promise, i) => {
+            const result = await promise;
+            completedBatches++;
+            // Calculate percentage from 10 to 95 based on completed batches
+            const percentage = Math.round(((i + 1) / len) * 100);
+            sendUpdateLoadingPercentage(percentage, "yellow");
+            return result;
+         })
+      );
 
       // Process all results
       results.forEach(({ data }) => {
@@ -752,7 +735,7 @@ function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
          });
       });
 
-      // console.timeEnd();
+      sendUpdateLoadingPercentage(0, "yellow");
       resolve({ count, data: listingData });
    });
 }
@@ -775,29 +758,6 @@ function getAllListingSellerData(fkCsrfToken) {
       resolve({ count: c1 + c2 + c3, data: { ...d1, ...d2, ...d3 } });
    });
 }
-
-// getAllListingSellerData("cGtvbSEB-adbOkA4pDbQaKH5zcO5w33Bl1OM");
-
-// async function test(i) {
-//    try {
-//       const url = `https://seller.flipkart.com/napi/regulation/approvalStatus?vertical=plant_seed&brand=ibains`;
-//       const response = await fetch(url);
-//       const result = await response.json();
-//       console.log("test: ", i);
-//       console.log(result);
-//    } catch (error) {
-//       resolve({ isError: true, result: null });
-//    }
-// }
-
-// (async () => {
-//    console.log("starting test");
-
-//    for (let i = 0; i < 1000; i++) {
-//       test(i);
-//    }
-//    console.log("ending test");
-// })();
 
 function getMinSellerPrice(productId) {
    return new Promise(async (resolve) => {

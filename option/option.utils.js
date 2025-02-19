@@ -22,9 +22,9 @@ function getMappingPossibleProductData(data, sellerId) {
    });
 }
 
-runtimeOnMessage("b_c_update_loading_percentage", async ({ percentage }, _, sendResponse) => {
+runtimeOnMessage("b_c_update_loading_percentage", async ({ percentage, color }, _, sendResponse) => {
    sendResponse({ status: "ok" });
-   updateLoadingProgress(percentage);
+   updateLoadingProgress(percentage, color);
 });
 
 function createMappingSendRequest() {
@@ -55,10 +55,11 @@ async function hideLoading() {
    resetLoadingProgress();
 }
 
-function updateLoadingProgress(percent) {
+function updateLoadingProgress(percent, color) {
    percent = Math.min(100, Math.max(0, percent)); // Ensure percent is between 0 and 100
    lineProgress.style.width = `${percent}%`;
    progressText.textContent = `${Math.round(percent)}%`;
+   lineProgress.style.backgroundColor = color;
 }
 
 function resetLoadingProgress() {
@@ -231,8 +232,6 @@ function createProductCard() {
    );
 
    if (showMyProducts.checked) {
-      console.log("------------");
-      
       showOldMappingProducts.innerHTML = getHTMLProductCards(
          PRODUCTS.filter((p) => p.alreadySelling),
          searchNames
@@ -337,7 +336,8 @@ function showConfirmationWindow() {
 
    const {
       SKU_NAME,
-      PROFIT,
+      MIN_PROFIT,
+      MAX_PROFIT,
       FIXED_COST,
       PACKING_COST,
       DELIVERY_NATIONAL,
@@ -345,7 +345,7 @@ function showConfirmationWindow() {
    } = EXTENSION_MAPPING_DATA;
 
    productName.innerHTML = SKU_NAME;
-   productProfit.innerHTML = PROFIT;
+   productProfit.innerHTML = `${MIN_PROFIT} <-> ${MAX_PROFIT}`;
    productFixedCost.innerHTML = FIXED_COST;
    productPackingCost.innerHTML = PACKING_COST;
    productNationalDelivery.innerHTML = DELIVERY_NATIONAL;
@@ -366,6 +366,10 @@ function getOldAndNewProductSize(DATA) {
    let oldSize = 0;
    let newSize = 0;
 
+   const failureData = DATA.filter((p) => p?.status === "failure");
+
+   console.table(failureData);
+
    DATA.forEach((p) => {
       if (
          SELECTED_PRODUCTS_DATA.filter((e) => e.id === p.productID)?.[0]
@@ -382,17 +386,12 @@ function getOldAndNewProductSize(DATA) {
 async function createAllSelectedProductMapping() {
    showLoading();
    const response = await createMappingSendRequest();
-   console.log(response);
-   
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;
    const { oldSize, newSize } = getOldAndNewProductSize(response);
 
-   console.log(oldSize, newSize);
-   
    const failed = total - (oldSize + newSize);
-
    updateSuccessStats(total, oldSize, newSize, failed);
    showSuccessWindow();
 }
