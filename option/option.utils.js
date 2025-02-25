@@ -140,7 +140,7 @@ async function searchSubmitAction() {
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
-      
+
       console.table(PRODUCTS);
 
       if (PRODUCTS?.isError) {
@@ -268,8 +268,8 @@ function filterByRating() {
 
    // Start with current filtered products
    PRODUCTS = PRODUCTS.sort(
-      (a, b) => b?.rating?.average - a?.rating.average
-   ).filter((x) => x?.rating.count <= 0 || x?.rating.average >= ratingValue);
+      (a, b) => b?.rating?.average - a?.rating?.average
+   ).filter((x) => x?.rating?.count <= 0 || x?.rating?.average >= ratingValue);
 }
 
 function filterByNames() {
