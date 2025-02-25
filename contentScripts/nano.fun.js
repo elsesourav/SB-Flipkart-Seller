@@ -293,7 +293,6 @@ function getProductCost(data, quantity, value) {
 
 function getTotalWeight(data, quantity, value) {
    console.log(data, quantity, value);
-
    return (
       N(data?.PACKET_WEIGHT || 1) +
       (value === "PIECE"

@@ -16,28 +16,33 @@ function getFkCsrfToken() {
 
 function getMappingPossibleProductData(data, sellerId) {
    return new Promise((resolve) => {
-      runtimeSendMessage("c_b_get_mapping_product_data", { ...data, sellerId }, (r) => {
-         resolve(r);
-      });
+      runtimeSendMessage(
+         "c_b_get_mapping_product_data",
+         { ...data, sellerId },
+         (r) => resolve(r)
+      );
    });
 }
 
-runtimeOnMessage("b_c_update_loading_percentage", async ({ percentage, color }, _, sendResponse) => {
-   sendResponse({ status: "ok" });
-   updateLoadingProgress(percentage, color);
-});
+runtimeOnMessage(
+   "b_c_update_loading_percentage",
+   async ({ percentage, color }, _, sendResponse) => {
+      sendResponse({ status: "ok" });
+      updateLoadingProgress(percentage, color);
+   }
+);
 
 function createMappingSendRequest() {
    return new Promise((resolve) => {
       runtimeSendMessage(
          "c_b_create_all_selected_product_mapping",
          {
-            products: SELECTED_PRODUCTS_DATA,
+            products: SELECTED_PRODUCTS_DATA.reverse(),
             fkCsrfToken: FK_CSRF_TOKEN,
             mappingData: EXTENSION_MAPPING_DATA,
             sellerId: SELLER_ID,
          },
-         (response) => {
+         (response = []) => {
             resolve(response);
          }
       );
@@ -109,7 +114,7 @@ function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
    totalProducts.textContent = total;
    updateProducts.textContent = oldSuccess;
    newProducts.textContent = newSuccess;
-   failedProducts.textContent = failed;
+   failedProducts.textContent = Math.max(failed, 0);
 }
 
 async function searchSubmitAction() {
@@ -135,6 +140,8 @@ async function searchSubmitAction() {
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
+      console.table(PRODUCTS);
+
       if (PRODUCTS?.isError) {
          PRODUCTS = [];
          alert("Too many requests");
@@ -150,15 +157,14 @@ async function searchSubmitAction() {
 }
 
 function getHTMLProductCards(ps, searchNames = []) {
+
+   console.log(ps);
+   
    return ps
       .map((p) => {
          const {
-            finalPrice,
-            id,
             imageUrl,
-            mrp,
-            rating,
-            titles,
+            id, rating, title, subTitle, mrp, finalPrice,
             alreadySelling,
             PRICE,
             PROFIT,
@@ -166,19 +172,18 @@ function getHTMLProductCards(ps, searchNames = []) {
             NATIONAL_FEE,
             internal_state,
          } = p;
-         
-         const classRating = rating.count <= 0 ? "hidden" : "";
 
-         const { highlightedTitle, isFind } = highlightMatches(
-            titles.title,
-            searchNames
-         );
+         const classRating = !rating?.count ? "hidden" : "";
+         const { highlightedTitle, isFind } = highlightMatches(title, searchNames);
 
          const getListingStatus = () => {
             if (alreadySelling && internal_state === "ACTIVE") {
                return "listed";
             }
-            if (internal_state === "INACTIVE" || internal_state === "ARCHIVED") {
+            if (
+               internal_state === "INACTIVE" ||
+               internal_state === "ARCHIVED"
+            ) {
                return "listed hidden";
             }
             return "";
@@ -187,25 +192,25 @@ function getHTMLProductCards(ps, searchNames = []) {
          let className = getListingStatus();
          className += isFind ? " glow" : "";
 
-         const classQuantity =
-            titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
+         const classQuantity = subTitle.split(" ")?.[1] !== "per" ? " color" : "";
 
+         if (!finalPrice || !mrp) return "";
          return `
          <div class="card product ${className}" id="${id}">
             <input type="checkbox" class="select-product" data-product-id="${id}">
             <div class="show-img">
                <img src="${imageUrl}" alt="product-image-${id}">
             </div>
-            <div class="rating ${classRating}">${rating.average}</div>
+            <div class="rating ${classRating}">${rating?.average}</div>
             <div class="name">${highlightedTitle}</div>
             <div class="quantity-signal">
-               <div class="quantity${classQuantity}">${titles.subtitle}</div>
+               <div class="quantity${classQuantity}">${subTitle}</div>
                <div class="signal" style="--s-color: ${SIGNAL};"></div>
             </div>
             <div class="prices">
                <div class="list current">
-                  <div class="rs selling-price">${finalPrice.value}</div>
-                  <div class="rs original-price">${mrp.value}</div>
+                  <div class="rs selling-price">${finalPrice}</div>
+                  <div class="rs original-price">${mrp}</div>
                </div>
                <div class="list new">
                   <div class="rs price-new">${PRICE}</div>
@@ -274,8 +279,8 @@ function filterByRating() {
 
    // Start with current filtered products
    PRODUCTS = PRODUCTS.sort(
-      (a, b) => b.rating.average - a.rating.average
-   ).filter((x) => x.rating.count <= 0 || x.rating.average >= ratingValue);
+      (a, b) => b?.rating?.average - a?.rating.average
+   ).filter((x) => x?.rating.count <= 0 || x?.rating.average >= ratingValue);
 }
 
 function filterByNames() {
@@ -292,8 +297,8 @@ function filterByNames() {
 
    // Sort products: matching names first, non-matching last
    PRODUCTS.sort((a, b) => {
-      const titleA = a.titles?.newTitle?.toLowerCase();
-      const titleB = b.titles?.newTitle?.toLowerCase();
+      const titleA = a?.newTitle?.toLowerCase();
+      const titleB = b?.newTitle?.toLowerCase();
 
       // Check if titles match any of the search names
       const matchesA = names.some((name) => titleA?.includes(name));
@@ -372,7 +377,7 @@ function getOldAndNewProductSize(DATA) {
 
    DATA.forEach((p) => {
       if (
-         SELECTED_PRODUCTS_DATA.filter((e) => e.id === p.productID)?.[0]
+         SELECTED_PRODUCTS_DATA.filter((e) => e?.id === p.productID)?.[0]
             ?.alreadySelling
       ) {
          oldSize++;
@@ -399,35 +404,48 @@ async function createAllSelectedProductMapping() {
 function getHTMLPreviewProductCards(ps) {
    return ps
       .map((p) => {
-         const { finalPrice, id, imageUrl, mrp, titles, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
-         
+         const {
+            imageUrl,
+            id, title, subTitle, finalPrice, mrp,
+            alreadySelling,
+            PRICE,
+            PROFIT,
+            SIGNAL,
+            NATIONAL_FEE,
+            internal_state,
+         } = p;
+
          const getListingStatus = () => {
             if (alreadySelling && internal_state === "ACTIVE") {
                return "listed";
             }
-            if (internal_state === "INACTIVE" || internal_state === "ARCHIVED") {
+            if (
+               internal_state === "INACTIVE" ||
+               internal_state === "ARCHIVED"
+            ) {
                return "listed hidden";
             }
             return "";
          };
 
          const className = getListingStatus();
-         const { highlightedTitle } = highlightMatches(titles.title);
-         const classQuantity =
-            titles.subtitle.split(" ")?.[1] !== "per" ? " color" : "";
+         const { highlightedTitle } = highlightMatches(title);
+         const classQuantity = subTitle.split(" ")?.[1] !== "per" ? " color" : "";
+
+         if (!finalPrice || !mrp) return "";
 
          return `
          <div class="card preview-product ${className}" data-product-id="${id}">
-            <div class="show-img"><img src="${imageUrl}" alt="image-${titles.title}"></div>
+            <div class="show-img"><img src="${imageUrl}" alt="image-${title}"></div>
             <div class="name bright">${highlightedTitle}</div>
             <div class="quantity-signal">
-               <div class="quantity${classQuantity}">${titles.subtitle}</div>
+               <div class="quantity${classQuantity}">${subTitle}</div>
                <div class="signal" style="--s-color: ${SIGNAL};"></div>
             </div>
             <div class="prices">
                <div class="list current">
-                  <div class="rs selling-price">${finalPrice.value}</div>
-                  <div class="rs original-price">${mrp.value}</div>
+                  <div class="rs selling-price">${finalPrice}</div>
+                  <div class="rs original-price">${mrp}</div>
                </div>
                <div class="list new">
                   <div class="rs price-new">${PRICE}</div>
