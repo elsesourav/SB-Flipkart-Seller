@@ -1,12 +1,16 @@
 function checkApprovalStatus(vertical, productBrand) {
    return new Promise(async (resolve) => {
       try {
-         const response = await fetch(
-            `${URLS.brandApproval}vertical=${vertical}&productBrand=${productBrand}`
-         );
+         if (approvalBrands[productBrand]) {
+            resolve({ isError: false, isNotNeed: approvalBrands[productBrand].isNotNeed });
+            return;
+         } 
+         const response = await fetch(`${URLS.brandApproval}vertical=${vertical}&brand=${productBrand}`);
          const result = await response.json();
-         
+
+         // console.log(result);
          const isNotNeed = result.approvalStatus === "APPROVED";
+         approvalBrands[productBrand] = isNotNeed;
          resolve({ isError: false, isNotNeed });
       } catch (error) {
          resolve({ isError: true, isNotNeed: null });

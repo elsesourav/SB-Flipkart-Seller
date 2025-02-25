@@ -1,3 +1,5 @@
+let approvalBrands = {};
+
 runtimeOnMessage(
    "c_b_get_mapping_product_data",
    async (data, sender, sendResponse) => {
@@ -8,6 +10,7 @@ runtimeOnMessage(
       try {
          const verifiedProducts = [];
          let sellerListingData = {};
+         approvalBrands = {};
 
          if (endingPage - startingPage > 6) {
             sellerListingData = await getAllListingSellerData(fkCsrfToken);
@@ -80,7 +83,7 @@ runtimeOnMessage(
          }
 
          // console.log(PRODUCTS_CHUNK);
-         // console.log(allResults);
+         console.log(allResults);
 
          sendResponse(allResults);
       } catch (error) {

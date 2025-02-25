@@ -140,6 +140,7 @@ async function searchSubmitAction() {
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
+      
       console.table(PRODUCTS);
 
       if (PRODUCTS?.isError) {
@@ -157,21 +158,9 @@ async function searchSubmitAction() {
 }
 
 function getHTMLProductCards(ps, searchNames = []) {
-
-   console.log(ps);
-   
    return ps
       .map((p) => {
-         const {
-            imageUrl,
-            id, rating, title, subTitle, mrp, finalPrice,
-            alreadySelling,
-            PRICE,
-            PROFIT,
-            SIGNAL,
-            NATIONAL_FEE,
-            internal_state,
-         } = p;
+         const { imageUrl, id, rating, title, subTitle, mrp, finalPrice, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
 
          const classRating = !rating?.count ? "hidden" : "";
          const { highlightedTitle, isFind } = highlightMatches(title, searchNames);
