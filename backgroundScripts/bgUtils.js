@@ -195,7 +195,7 @@ function getIdByCurrentTime(i = 0) {
 }
 
 function subTitleToQuantityAndType(subtitle) {
-   const [q, t] = subtitle.toUpperCase().split(" ");
+   const [q, t] = subtitle?.toUpperCase()?.split(" ");
    const quantity = N(q);
    const type = t === "PER" ? "PIECE" : t;
    return { quantity, type };

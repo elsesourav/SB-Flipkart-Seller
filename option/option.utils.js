@@ -141,7 +141,14 @@ async function searchSubmitAction() {
    try {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
 
-      console.table(PRODUCTS);
+      // console.log(JSON.stringify(PRODUCTS));
+
+      PRODUCTS = PRODUCTS.sort((a, b) => {
+         const priority = { "G": 1, "PIECE": 2 };
+         const categoryOrder = (priority[a.CATEGORY] || 3) - (priority[b.CATEGORY] || 3);
+         if (categoryOrder === 0) return b.QUANTITY - a.QUANTITY;
+         return categoryOrder;
+     });
 
       if (PRODUCTS?.isError) {
          PRODUCTS = [];
@@ -160,7 +167,7 @@ async function searchSubmitAction() {
 function getHTMLProductCards(ps, searchNames = []) {
    return ps
       .map((p) => {
-         const { imageUrl, id, rating, title, subTitle, mrp, finalPrice, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
+         const { imageUrl, id, rating, title, CATEGORY, QUANTITY, mrp, finalPrice, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
 
          const classRating = !rating?.count ? "hidden" : "";
          const { highlightedTitle, isFind } = highlightMatches(title, searchNames);
@@ -181,21 +188,19 @@ function getHTMLProductCards(ps, searchNames = []) {
          let className = getListingStatus();
          className += isFind ? " glow" : "";
 
-         const classQuantity = subTitle.split(" ")?.[1] !== "per" ? " color" : "";
+         const category = CATEGORY?.[0]?.toUpperCase() || "N";
 
          if (!finalPrice || !mrp) return "";
          return `
-         <div class="card product ${className}" id="${id}">
+         <div class="card product ${className}" id="${id}" style="--c-bg: ${SIGNAL};">
             <input type="checkbox" class="select-product" data-product-id="${id}">
+            <i class="sbi-asterisk icon"></i>
             <div class="show-img">
                <img src="${imageUrl}" alt="product-image-${id}">
+               <div class="rating ${classRating}">${rating?.average}</div>
+               <div class="quantity">${QUANTITY} ${category}</div>
             </div>
-            <div class="rating ${classRating}">${rating?.average}</div>
             <div class="name">${highlightedTitle}</div>
-            <div class="quantity-signal">
-               <div class="quantity${classQuantity}">${subTitle}</div>
-               <div class="signal" style="--s-color: ${SIGNAL};"></div>
-            </div>
             <div class="prices">
                <div class="list current">
                   <div class="rs selling-price">${finalPrice}</div>
@@ -328,15 +333,7 @@ function showConfirmationWindow() {
    confirmationError.textContent = "";
    startFinalMapping.disabled = true;
 
-   const {
-      SKU_NAME,
-      MIN_PROFIT,
-      MAX_PROFIT,
-      FIXED_COST,
-      PACKING_COST,
-      DELIVERY_NATIONAL,
-      MANUFACTURER_DETAILS,
-   } = EXTENSION_MAPPING_DATA;
+   const { SKU_NAME, MIN_PROFIT, MAX_PROFIT, FIXED_COST, PACKING_COST, DELIVERY_NATIONAL, MANUFACTURER_DETAILS } = EXTENSION_MAPPING_DATA;
 
    productName.innerHTML = SKU_NAME;
    productProfit.innerHTML = `${MIN_PROFIT} <-> ${MAX_PROFIT}`;
@@ -393,16 +390,7 @@ async function createAllSelectedProductMapping() {
 function getHTMLPreviewProductCards(ps) {
    return ps
       .map((p) => {
-         const {
-            imageUrl,
-            id, title, subTitle, finalPrice, mrp,
-            alreadySelling,
-            PRICE,
-            PROFIT,
-            SIGNAL,
-            NATIONAL_FEE,
-            internal_state,
-         } = p;
+         const { imageUrl, id, title, CATEGORY, QUANTITY, finalPrice, mrp, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
 
          const getListingStatus = () => {
             if (alreadySelling && internal_state === "ACTIVE") {
@@ -419,18 +407,18 @@ function getHTMLPreviewProductCards(ps) {
 
          const className = getListingStatus();
          const { highlightedTitle } = highlightMatches(title);
-         const classQuantity = subTitle.split(" ")?.[1] !== "per" ? " color" : "";
+         
+         const category = CATEGORY?.[0]?.toUpperCase() || "N";
 
          if (!finalPrice || !mrp) return "";
-
          return `
-         <div class="card preview-product ${className}" data-product-id="${id}">
-            <div class="show-img"><img src="${imageUrl}" alt="image-${title}"></div>
-            <div class="name bright">${highlightedTitle}</div>
-            <div class="quantity-signal">
-               <div class="quantity${classQuantity}">${subTitle}</div>
-               <div class="signal" style="--s-color: ${SIGNAL};"></div>
+         <div class="card preview-product ${className}" id="${id}" style="--c-bg: ${SIGNAL};">
+            <i class="sbi-asterisk icon"></i>
+            <div class="show-img">
+               <img src="${imageUrl}" alt="product-image-${id}">
+               <div class="quantity">${QUANTITY} ${category}</div>
             </div>
+            <div class="name bright">${highlightedTitle}</div>
             <div class="prices">
                <div class="list current">
                   <div class="rs selling-price">${finalPrice}</div>
@@ -443,10 +431,9 @@ function getHTMLPreviewProductCards(ps) {
                </div>
             </div>
             <div class="remove-product-btn">
-                  <i class="sbi-bin"></i>
-               </div>
-         </div> 
-      `;
+               <i class="sbi-bin"></i>
+            </div>
+         </div>`;
       })
       .join("");
 }

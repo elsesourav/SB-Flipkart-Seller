@@ -9,6 +9,8 @@ async function modifyVerifiedProducts(products, userId) {
 
    return products.map((product) => {
       const { sellers, subTitle, alreadySelling } = product;
+      if(!subTitle) return { PROFIT: 0 };
+      
       const { quantity, type } = subTitleToQuantityAndType(subTitle);
       const MRP = sellers?.[0]?.mrp;
 
@@ -24,6 +26,8 @@ async function modifyVerifiedProducts(products, userId) {
       return {
          ...product,
          PRICE: Math.round(price) || 0,
+         QUANTITY: quantity,
+         CATEGORY: type,
          SIGNAL: signal,
          PROFIT: Math.round(profit) || 0,
          NATIONAL_FEE: Math.round(nationalFee) || 0,
@@ -86,28 +90,28 @@ function calculateOptimizedValues(price, COST, MIN_PROFIT, MAX_PROFIT, fixedCost
    let signal;
 
    if (profit > 0 && profit < MIN_PROFIT) {
-      signal = "yellow";
+      signal = "#4B3C00";
       profit = MIN_PROFIT;
       price = calculatePriceFromProfit({
          desiredProfit: COST + MIN_PROFIT,
          fixedCost,
       });
    } else if (profit <= 0) {
-      signal = "red";
+      signal = "#4A0000";
       profit = MIN_PROFIT;
       price = calculatePriceFromProfit({
          desiredProfit: COST + MIN_PROFIT,
          fixedCost,
       });
    } else if (profit > MAX_PROFIT) {
-      signal = "green";
+      signal = "#003925";
       profit = MAX_PROFIT;
       price = calculatePriceFromProfit({
          desiredProfit: COST + MAX_PROFIT,
          fixedCost,
       });
    } else {
-      signal = "lightgreen";
+      signal = "#1D3B1E";
    }
 
    return { price, profit, signal };
