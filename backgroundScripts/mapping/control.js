@@ -28,6 +28,7 @@ async function modifyVerifiedProducts(products, userId) {
          PRICE: Math.round(price) || 0,
          QUANTITY: quantity,
          CATEGORY: type,
+         SRCELEMENT_AMOUNT: Math.round(COST + profit),
          SIGNAL: signal,
          PROFIT: Math.round(profit) || 0,
          NATIONAL_FEE: Math.round(nationalFee) || 0,
@@ -164,7 +165,7 @@ function getMixDataToNewMappingData(DATA) {
    const multiRequestSameProductData = [];
 
    let newData = products.map((product, i) => {
-      const { id, mrp, subTitle, sku_id, ssp, alreadySelling, internal_state, PRICE, NATIONAL_FEE } = product;
+      const { id, mrp, subTitle, sku_id, ssp, alreadySelling, internal_state, PRICE, NATIONAL_FEE, SRCELEMENT_AMOUNT } = product;
       // console.table(id, sku_id, mrp, subTitle, ssp);
 
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, subTitle, i);
@@ -181,6 +182,7 @@ function getMixDataToNewMappingData(DATA) {
             ID: id,
             SKU,
             SELLING_PRICE: price,
+            SRCELEMENT_AMOUNT,
             MRP: mrp,
             LISTING_STATUS,
             PROCUREMENT_TYPE,

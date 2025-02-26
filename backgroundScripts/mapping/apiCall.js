@@ -325,15 +325,18 @@ function createProductMappingBulk(DATA) {
       const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS } = DATA;
 
       const BULK_REQUESTS = PRODUCTS.map((product) => {
+         console.log(product);
+
          const {
             ID,
             SKU,
-            SELLING_PRICE,
             MRP,
             LISTING_STATUS,
             PROCUREMENT_TYPE,
             SHIPPING_DAYS,
             STOCK_SIZE,
+            SELLING_PRICE,
+            SRCELEMENT_AMOUNT,
             HSN,
             MINIMUM_ORDER_QUANTITY,
             DELIVERY_LOCAL,
@@ -353,25 +356,16 @@ function createProductMappingBulk(DATA) {
             sku_id: [{ value: SKU, qualifier: "" }],
             country_of_origin: [{ value: "IN", qualifier: "" }],
             earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
-            flipkart_selling_price: [
-               { value: SELLING_PRICE, qualifier: "INR" },
-            ],
+            flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
+            // esp: [{value: SRCELEMENT_AMOUNT, qualifier: "INR"}],
             hsn: [{ value: HSN, qualifier: "" }],
             listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
-            local_shipping_fee_from_buyer: [
-               { value: DELIVERY_LOCAL, qualifier: "INR" },
-            ],
+            local_shipping_fee_from_buyer: [{ value: DELIVERY_LOCAL, qualifier: "INR" }],
             luxury_cess: [{ qualifier: "Percentage" }],
-            manufacturer_details: [
-               { value: MANUFACTURER_DETAILS, qualifier: "" },
-            ],
-            minimum_order_quantity: [
-               { value: MINIMUM_ORDER_QUANTITY, qualifier: "" },
-            ],
+            manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
+            minimum_order_quantity: [{ value: MINIMUM_ORDER_QUANTITY, qualifier: "" }],
             mrp: [{ value: MRP, qualifier: "INR" }],
-            national_shipping_fee_from_buyer: [
-               { value: DELIVERY_NATIONAL, qualifier: "INR" },
-            ],
+            national_shipping_fee_from_buyer: [{ value: DELIVERY_NATIONAL, qualifier: "INR" }],
             packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
             procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
             service_profile: [{ value: "NON_FBF", qualifier: "" }],
@@ -380,9 +374,7 @@ function createProductMappingBulk(DATA) {
             shipping_provider: [{ value: "FLIPKART", qualifier: "" }],
             stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
             tax_code: [{ value: "GST_5", qualifier: "" }],
-            zonal_shipping_fee_from_buyer: [
-               { value: DELIVERY_ZONAL, qualifier: "INR" },
-            ],
+            zonal_shipping_fee_from_buyer: [{ value: DELIVERY_ZONAL, qualifier: "INR" }],
          };
 
          const PACKAGE_DATA = {
