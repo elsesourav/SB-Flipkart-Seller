@@ -24,11 +24,11 @@ runtimeOnMessage(
             }
 
             // Process products in batches
-            for (let i = 0; i < products.length; i += BATCH_SIZE) {
+            for (let index = 0; index < products.length; index += BATCH_SIZE) {
                const batchResults = await processBatchForVerification(
                   products,
                   fkCsrfToken,
-                  i,
+                  index,
                   sellerListingData?.data || {}
                );
                if (batchResults?.isError) {
@@ -38,7 +38,7 @@ runtimeOnMessage(
                verifiedProducts.push(...batchResults);
             }
             sendUpdateLoadingPercentage(
-               Math.round((i / (endingPage - startingPage + 1)) * 100)
+               Math.round((j / (endingPage - startingPage + 1)) * 100)
             );
          }
 
@@ -78,8 +78,8 @@ runtimeOnMessage(
 
             const batchResult = await createProductMappingBulk(batchData);
             allResults.push(...batchResult);
-            sendUpdateLoadingPercentage(Math.round((i / PCLength) * 100), "green");
-            if (PCLength > ++i) await wait(2000);
+            sendUpdateLoadingPercentage(Math.round((i++ / PCLength) * 100), "green");
+            if (PCLength > i) await wait(2000);
          }
 
          // console.log(PRODUCTS_CHUNK);
