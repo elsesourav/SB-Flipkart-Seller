@@ -23,15 +23,19 @@ async function modifyVerifiedProducts(products, userId) {
       if (!result) return { PROFIT: 0 };
 
       const { price, signal, profit, nationalFee } = result;
+      // const NATIONAL_FEE = Math.round(nationalFee) || 0;
+      const NATIONAL_FEE = 22;
+      const AVG_SRCELEMENT_AMOUNT = (COST + profit) * 0.44 + (COST + profit - MIN_PROFIT) * 0.56;
       return {
          ...product,
          PRICE: Math.round(price) || 0,
          QUANTITY: quantity,
          CATEGORY: type,
-         SRCELEMENT_AMOUNT: Math.round(COST + profit),
+         SRCELEMENT_AMOUNT: COST + profit,
+         SRCELEMENT_AMOUNT_NEW: COST + profit,
          SIGNAL: signal,
          PROFIT: Math.round(profit) || 0,
-         NATIONAL_FEE: Math.round(nationalFee) || 0,
+         NATIONAL_FEE,
       };
    }).filter((product) => product.PROFIT > 0);
 }
@@ -165,7 +169,7 @@ function getMixDataToNewMappingData(DATA) {
    const multiRequestSameProductData = [];
 
    let newData = products.map((product, i) => {
-      const { id, mrp, subTitle, sku_id, ssp, alreadySelling, internal_state, PRICE, NATIONAL_FEE, SRCELEMENT_AMOUNT } = product;
+      const { id, mrp, subTitle, sku_id, ssp, alreadySelling, internal_state, PRICE, NATIONAL_FEE, SRCELEMENT_AMOUNT, SRCELEMENT_AMOUNT_NEW } = product;
       // console.table(id, sku_id, mrp, subTitle, ssp);
 
       const { sku, quantity, type } = getSkuIDWithData(SKU_NAME, subTitle, i);
@@ -183,6 +187,7 @@ function getMixDataToNewMappingData(DATA) {
             SKU,
             SELLING_PRICE: price,
             SRCELEMENT_AMOUNT,
+            SRCELEMENT_AMOUNT_NEW,
             MRP: mrp,
             LISTING_STATUS,
             PROCUREMENT_TYPE,

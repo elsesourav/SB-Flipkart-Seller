@@ -49,6 +49,8 @@
       "purav",
       "rynq",
       "sbarui",
+      "selectedend",
+      "selectedstart",
       "SILBA",
       "skus",
       "sourceid",
@@ -69,5 +71,6 @@
       "লঙ্কা",
       "সজনে",
       "হলুদ"
-   ]
+   ],
+   "liveServer.settings.port": 5501
 }
