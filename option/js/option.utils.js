@@ -24,6 +24,25 @@ function getMappingPossibleProductData(data, sellerId) {
    });
 }
 
+async function getAllListingSellerData(fkCsrfToken) {
+   if (!(await verifyUserMustLogin())) return;
+   return new Promise((resolve) => {
+      runtimeSendMessage(
+         "c_b_get_all_listing_seller_data",
+         { fkCsrfToken },
+         (r) => resolve(r)
+      );
+   });
+}
+
+runtimeOnMessage(
+   "b_c_loading_progress",
+   async ({ percentage, total }, _, sendResponse) => {
+      sendResponse({ status: "ok" });
+      updateCompleteProgress(percentage, total);
+   }
+);
+
 runtimeOnMessage(
    "b_c_update_loading_percentage",
    async ({ percentage, color }, _, sendResponse) => {
@@ -89,26 +108,33 @@ function hideSuccessWindow() {
    successWindow.classList.remove("show");
 }
 
+function updateCompleteProgress(percent, total) {
+   percent = Math.min(100, Math.max(0, percent));
+   progressFill.style.width = `${percent}%`;
+   const formattedTotal = (Number(total) || 0).toLocaleString();
+   progressStatusText.textContent = `Seller Listing Loaded ${formattedTotal}`;
+}
+
 function updateSelectedCount() {
    const len = I(".select-product:checked")?.length || 0;
    showNumberOfProductsSelected.textContent = len;
    startMapping.classList.toggle("active", len > 0);
 }
 
-showNewMappingProducts.addEventListener("change", (e) => {
-   if (e.target.classList.contains("select-product")) {
-      updateSelectedCount();
-   }
-});
-showOldMappingProducts.addEventListener("change", (e) => {
-   if (e.target.classList.contains("select-product")) {
-      updateSelectedCount();
-   }
-});
+// showNewMappingProducts.addEventListener("change", (e) => {
+//    if (e.target.classList.contains("select-product")) {
+//       updateSelectedCount();
+//    }
+// });
+// showOldMappingProducts.addEventListener("change", (e) => {
+//    if (e.target.classList.contains("select-product")) {
+//       updateSelectedCount();
+//    }
+// });
 
-showMyProducts.addEventListener("change", (e) => {
-   createProductCard();
-});
+// showMyProducts.addEventListener("change", (e) => {
+//    createProductCard();
+// });
 
 function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
    totalProducts.textContent = total;

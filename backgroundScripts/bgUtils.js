@@ -1,4 +1,9 @@
 let optionsTabId;
+
+function sendLoadingProgress(percentage, total) {
+   if (!optionsTabId) return;
+   tabSendMessage(optionsTabId, "b_c_loading_progress", { percentage, total });
+}
 function sendUpdateLoadingPercentage(percentage, color = "white") {
    if (!optionsTabId) return;
    tabSendMessage(optionsTabId, "b_c_update_loading_percentage", {

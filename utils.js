@@ -8,6 +8,8 @@ const KEYS = {
    STORAGE_SETTINGS: "SB_Seller_Settings",
    STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
    STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
+   STORAGE_BRAND_NAME: "SB_Seller_BrandName",
+   STORAGE_SELLER_LISTING: "SB_Seller_SellerListing",
 };
 
 const URLS = {

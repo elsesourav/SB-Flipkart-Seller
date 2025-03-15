@@ -45,122 +45,127 @@ function getProductIdToInfo(fkCsrfToken, productId) {
    });
 }
 
-function fetchListingSellerData(i, fkCsrfToken, state = "ACTIVE") {
-   return new Promise(async (resolve) => {
-      const body = JSON.stringify({
-         search_text: "",
-         search_filters: {
-            internal_state: state,
+// Constants
+const BATCH_LEN = 100;
+const LISTING_STATES = {
+   INACTIVATED: "INACTIVATED_BY_FLIPKART",
+   ARCHIVED: "ARCHIVED",
+   INACTIVE: "INACTIVE",
+   ACTIVE: "ACTIVE",
+};
+
+function extractProductData(obj) {
+   const { internal_state, sku_id, ssp, mrp, esp, procurement_type } = obj;
+   return { internal_state, sku_id, ssp, mrp, esp, procurement_type };
+}
+
+async function fetchListingSellerData(batchNumber, fkCsrfToken, state, orderBy = "DESC") {
+   const body = JSON.stringify({
+      search_text: "",
+      search_filters: { internal_state: state },
+      column: { 
+         pagination: {
+            batch_no: batchNumber, batch_size: BATCH_LEN 
          },
-         column: {
-            pagination: {
-               batch_no: i,
-               batch_size: 100,
-            },
-            sort: {
-               column_name: "demand_weight",
-               sort_by: "DESC",
-            },
+         sort: {
+            column_name: "title",
+            sort_by: orderBy,
          },
+      }
+   });
+
+   const headers = {
+      "Content-Type": "application/json",
+      "accept": "*/*",
+      "fk-csrf-token": fkCsrfToken,
+      "origin": "https://seller.flipkart.com",
+      "referer": "https://seller.flipkart.com/index.html",
+      "sec-fetch-site": "same-origin"
+   };
+
+   try {
+      const response = await fetch(URLS.listingsDataForStates, {
+         method: "POST",
+         headers,
+         body,
+         credentials: "include"
       });
-      const headers = {
-         Accept: "*/*",
-         "Accept-Encoding": "gzip, deflate, br, zstd",
-         "Accept-Language": "en-US,en;q=0.9,bn;q=0.8,hi;q=0.7",
-         Connection: "keep-alive",
-         "Content-Type": "application/json",
-         "fk-csrf-token": fkCsrfToken,
-      };
+
+      const { count, listing_data_response } = await response.json();
+      return { count: count || 0, data: listing_data_response || [] };
+   } catch (error) {
+      console.error(`Error fetching listing data for state ${state}:`, error);
+      return { count: 0, data: [] };
+   }
+}
+
+function getListingSellerData(fkCsrfToken) {
+   return new Promise(async (resolve) => {
+      const listingData = {};
+      let progress = 0;
+      let total = 0;
+      let BATCH_NEED = {}
+      let remainingBatches = [];
 
       try {
-         const response = await fetch(URLS.listingsDataForStates, {
-            method: "POST",
-            headers,
-            body,
-         });
-
-         const { count, listing_data_response } = await response.json();
-
-         if (!count) {
-            resolve({ count: 0, data: [] });
-         } else {
-            resolve({ count, data: listing_data_response });
+         for (const [i, state] of Object.values(LISTING_STATES).entries()) {
+            const firstBatch = await fetchListingSellerData(0, fkCsrfToken, state);
+            const { count, data } = firstBatch;
+            if (!count) continue;
+            
+            BATCH_NEED[state] = Math.floor(count / BATCH_LEN);
+            data.forEach((info) => {
+               listingData[info.product_id] = { ...info };
+            });
+            progress += data.length;
+            total += count;
+            sendLoadingProgress(i+1, progress);
          }
+
+         for (const state in BATCH_NEED) {
+            const half = Math.ceil(BATCH_NEED[state] / 2);
+            const remaining = BATCH_NEED[state] - half;
+
+            for (let i = 1; i <= half; i++) {
+               remainingBatches.push(fetchListingSellerData(i, fkCsrfToken, state))
+            }
+            
+            for (let i = 0; i < remaining; i++) {
+               remainingBatches.push(fetchListingSellerData(i, fkCsrfToken, state, "ASC"))
+            }
+         }
+
+         await Promise.all(
+            remainingBatches.map(async (promise) => {
+               const { data } = await promise;
+               if (!data) return true;
+               data.forEach((info) => {
+                  listingData[info.product_id] = { ...info };
+               });
+
+               progress += data.length;
+               const percentage = progress / total * 100;
+               sendLoadingProgress(percentage, progress);
+               return true;
+            })
+         );
+      
+         resolve({ count: progress, data: listingData });
       } catch (error) {
-         console.log(error);
-         resolve({ count: 0, data: [] });
+         console.log(`Error processing listing data for state:`, error);
+         resolve({ count: 0, data: {} });
       }
    });
 }
 
-function getListingSellerData(fkCsrfToken, state = "ACTIVE") {
-   return new Promise(async (resolve) => {
-      const listingData = {};
+async function getAllListingSellerData(fkCsrfToken) {
+   const { count, data } = await getListingSellerData(fkCsrfToken);
+   
+   const products = Object.fromEntries(
+      Object.entries(data).map(([key, obj]) => [key, extractProductData(obj)])
+   );
 
-      const firstData = await fetchListingSellerData(0, fkCsrfToken, state);
-      const { count, data } = firstData;
-
-      const len = Math.floor(count / 100);
-      sendUpdateLoadingPercentage((1 / len) * 100, "yellow");
-
-      data.map((info) => {
-         const pid = info.product_id;
-         listingData[pid] = { alreadySelling: true, ...info };
-      });
-
-      const promises = Array.from({ length: len }, (_, i) =>
-         fetchListingSellerData(i + 1, fkCsrfToken, state)
-      );
-
-      let completedBatches = 0;
-      const results = await Promise.all(
-         promises.map(async (promise, i) => {
-            const result = await promise;
-            completedBatches++;
-            const percentage = Math.round(((i + 1) / len) * 100);
-            sendUpdateLoadingPercentage(percentage, "yellow");
-            return result;
-         })
-      );
-
-      results.forEach(({ data }) => {
-         data.map((info) => {
-            const pid = info.product_id;
-            listingData[pid] = { alreadySelling: true, ...info };
-         });
-      });
-
-      sendUpdateLoadingPercentage(0, "yellow");
-      resolve({ count, data: listingData });
-   });
-}
-
-function getAllListingSellerData(fkCsrfToken) {
-   return new Promise(async (resolve) => {
-      const { count: c1, data: d1 } = await getListingSellerData(
-         fkCsrfToken,
-         "ACTIVE"
-      );
-      const { count: c2, data: d2 } = await getListingSellerData(
-         fkCsrfToken,
-         "INACTIVE"
-      );
-      const { count: c3, data: d3 } = await getListingSellerData(
-         fkCsrfToken,
-         "ARCHIVED"
-      );
-
-      const products = { ...d1, ...d2, ...d3 };
-      const newProducts = Object.fromEntries(
-         Object.entries(products).map(([key, obj]) => {
-            const { internal_state, sku_id, ssp } = obj
-             const p = { internal_state, sku_id, ssp, alreadySelling: true };
-           return [key, p]
-         })
-      );
-
-      resolve({ count: c1 + c2 + c3, data: newProducts });
-   });
+   return { count, data: products };
 }
 
 function getMyListingInfo(data, fkCsrfToken, pId) {
@@ -215,7 +220,7 @@ function verifyProductUsingUserData(product, fct, sellerProducts) {
 
 function processBatchForVerification(products, fct, startIdx, sellerProducts) {
    return new Promise(async (resolve) => {
-      const batch = products.slice(startIdx, startIdx + BATCH_SIZE);
+      const batch = products.slice(startIdx, startIdx + BATCH_LEN);
       if (batch.length === 0) {
          resolve([]);
          return;

@@ -17,12 +17,13 @@
       <link rel="stylesheet" href="./css/options.success.css" />
       <script defer src="./../utils.js"></script>
       <script defer src="./../querySelector.js"></script>
-      <script defer src="./option.utils.js"></script>
-      <script defer src="./options.js"></script>
+      <script defer src="./js/range-selector.js"></script>
+      <script defer src="./js/option.utils.js"></script>
+      <script defer src="./js/options.js"></script>
    </head>
    <body>
       <!-- <h1 class="title">More Mapping Options</h1> -->
-      <div class="container">
+      <section class="container">
          <header>
             <div class="title">More Mapping Options</div>
             <div class="others">
@@ -30,12 +31,12 @@
                   <img src="./../assets/icons/icon.png" alt="extension icon" />
                </div>
                <section>
-                  <p>Seller Automation ES</p>
+                  <p>Seller Automation</p>
                   <b>
                      &copy;
                      <span class="first">else</span>
                      <span class="second">sourav</span>
-                     <span class="third">2024</span>
+                     <span class="third">2025</span>
                   </b>
                </section>
             </div>
@@ -45,20 +46,31 @@
             <div class="dashboard-container">
                <div class="progress-section">
                   <div class="progress-bar">
-                     <div class="progress-fill"></div>
-                     <div class="progress-text">Seller Listing Loaded 11,540</div>
+                     <div id="progressFill" class="progress-fill"></div>
+                     <div id="progressStatusText" class="progress-text">
+                        Seller Listing Loaded 11,540
+                     </div>
                   </div>
-                  <div class="refresh-icon"><i class="sbi-refresh"></i></div>
+                  <div id="refreshButton" class="refresh-icon"><i class="sbi-refresh"></i></div>
                </div>
 
                <div class="toggle-switch">
                   <div class="switch-container">
                      <div class="switch-option">
-                        <input type="radio" checked class="listing-type first" name="listing-type">
+                        <input
+                           type="radio"
+                           checked
+                           class="listing-type first"
+                           name="listing-type"
+                        />
                         <p>Update Old Listing</p>
                      </div>
                      <div class="switch-option">
-                        <input type="radio" class="listing-type second" name="listing-type">
+                        <input
+                           type="radio"
+                           class="listing-type second"
+                           name="listing-type"
+                        />
                         <p>Mapping New Products</p>
                      </div>
                      <div class="switch-active"></div>
@@ -68,159 +80,89 @@
                <div class="brand-management">
                   <div class="brand-input-wrapper">
                      <div class="brand-input">
-                        <input type="text" id="brandInput" placeholder="Enter Brand Name" />
+                        <input
+                           type="text"
+                           id="brandNameInput"
+                           placeholder="Enter Brand Name"
+                        />
                      </div>
-                     <div class="brand-add-btn">Add Brand Name</div>
+                     <div id="addBrandName" class="brand-add-btn">Add Brand Name</div>
                   </div>
-                  <div class="brand-tags-container">
-                     <div class="brand-tag">SILBA</div>
-                     <div class="brand-tag select">SILBA</div>
-                     <div class="brand-tag select-only">SILBA</div>
-                     <div class="brand-tag select-not">SILBA</div>
+                  <div id="brandNameContainer" class="brand-tags-container">
+                     <!-- <div class="brand-tag">
+                        <p>SILBA</p>
+                        <i class="sbi-delete"></i>
+                     </div> -->
                   </div>
                </div>
             </div>
-            <div></div>
+            <div class="select-page-and-search">
+               <p class="select-page-title">Select How Many Pages Search</p>
+               <div class="range-selector">
+                  <range-selector
+                     bg="#0000"
+                     columns="10"
+                     fontsize="12px"
+                     base="#009c1f"
+                     width="100%"
+                     gap="8px"
+                     size="35px"
+                     total="25"
+                     padding="5px"
+                     selectedstart="1"
+                     selectedend="25"
+                     id="selectPages"
+                  ></range-selector>
+               </div>
+               <div class="search-wrapper">
+                  <input
+                     type="text"
+                     name="search"
+                     id="searchProduct"
+                     placeholder="Search Product"
+                  />
+                  <button id="searchSubmit">
+                     <i class="sbi-search"></i>
+                  </button>
+               </div>
+            </div>
          </div>
 
          <nav>
-            <div class="search-inputs">
-               <div class="outer first">
-                  <div class="page-select">
-                     <p>Page</p>
-                     <select name="startPage" id="startPage">
-                        <option selected value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                     </select>
-                     <p>to</p>
-                     <select name="endPage" id="endPage">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option selected value="25">25</option>
-                     </select>
-                  </div>
-                  <div class="search-field">
-                     <input
-                        type="text"
-                        name="search"
-                        id="searchProduct"
-                        placeholder="Search Product"
-                     />
-                     <button id="searchSubmit">
-                        <i class="sbi-search"></i>
-                     </button>
-                  </div>
-               </div>
-               <div class="outer second">
-                  <label>Show Old</label>
-                  <input
-                     autocomplete="off"
-                     type="checkbox"
-                     id="showMyProducts"
-                     class="toggle"
-                     checked
-                  />
-                  <input
-                     type="text"
-                     name="names"
-                     id="matchNames"
-                     placeholder="Filter Different Name"
-                  />
-                  <select name="rating" id="rating">
-                     <option value="0">Rating</option>
-                     <option value="2">2</option>
-                     <option value="2.5">2.5</option>
-                     <option value="2.6">2.6</option>
-                     <option value="2.7">2.7</option>
-                     <option value="2.8">2.8</option>
-                     <option value="2.9">2.9</option>
-                     <option value="3">3</option>
-                     <option value="3.5">3.5</option>
-                     <option value="4">4</option>
-                     <option value="4.5">4.5</option>
-                     <option value="5">5</option>
-                  </select>
-               </div>
-            </div>
+            <section>
+               <p>Select Rating</p>
+               <range-selector
+                  bg="#0000"
+                  columns="10"
+                  total="10"
+                  start="1"
+                  step="0.5"
+                  size="35px"
+                  fontsize="12px"
+                  base="#009c1f"
+                  selectedstart="1"
+                  selectedend="10"
+                  id="selectRating"
+               ></range-selector>
+            </section>
 
-            <div class="features">
-               <div id="showNumberOfProductsSelected">0</div>
-               <p>Select</p>
-               <div id="selectAllProducts">All</div>
-               <div id="selectAllUnMappedProducts">UnMapped</div>
-               <div id="selectAllMappedProducts">Mapped</div>
-               <div id="selectNameMatchProducts">Match</div>
-               <div id="startMapping">Ready</div>
-            </div>
+            <section>
+               <input
+                  type="text"
+                  name="names"
+                  id="matchNames"
+                  placeholder="Filter Different Name"
+               />
+
+               <div id="selectAllProducts">Select All</div>
+               <div id="selectNameMatchProducts">Select Match</div>
+            </section>
          </nav>
 
          <div class="cardsCover">
-            <div class="section-header" id="newMappingHeader">
-               <span class="toggle-arrow">▲</span>
-               <h3>UnMapping Products</h3>
-               <span class="toggle-arrow">▲</span>
-            </div>
-            <div id="showNewMappingProducts" class="cards">
-               <!-- <div class="card product">
-                  <input type="checkbox" name="" class="select-product">
-                  <div class="show-img">
-                      <img src="" alt="">
-                  </div>
-                  <div class="rating">4.5</div>
-                  <div class="name">A product title is the <span>200</span> name of an item for sale, as chosen by the seller. It's the first thing a customer sees when searching for a product</div>
-                  <div class="quantity">200 per packet</div>
-                  <div class="prices">
-                      <div class="selling-price">140</div>
-                      <div class="original-price">499</div>
-                  </div>
-              </div> -->
+            <div class="cards">
 
-               <!-- <div class="card product" style="--c-bg: #333;">
+               <div class="card product" style="--c-bg: #333;">
                   <input
                      type="checkbox"
                      class="select-product"
@@ -374,16 +316,14 @@
                         <div class="rs national-fee">10</div>
                      </div>
                   </div>
-               </div> -->
+               </div>
             </div>
-            <div class="gap x3"></div>
-            <div class="section-header collapsed" id="oldMappingHeader">
-               <span class="toggle-arrow">▲</span>
-               <h3>Already Mapped Products</h3>
-               <span class="toggle-arrow">▲</span>
-            </div>
-            <div id="showOldMappingProducts" class="cards collapsed"></div>
          </div>
+      </section>
+
+      <div id="showSelectedAndReady" class="show-selected-and-ready active">
+         <div id="showNumberOfProductsSelected">880</div>
+         <div id="startMapping">Ready</div>
       </div>
 
       <div id="previewWindow" class="preview-window">

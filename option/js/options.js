@@ -1,3 +1,4 @@
+let SELLER_LISTING_DATA = {};
 let SAVED_PRODUCTS = [];
 let PRODUCTS = [];
 let SELECTED_PRODUCTS = [];
@@ -6,18 +7,39 @@ let SELECTED_PRODUCTS_DATA = [];
 let EXTENSION_MAPPING_DATA = null;
 let FK_CSRF_TOKEN = null;
 let SELLER_ID = null;
+let ALL_BRAND_NAMES = {};
+let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
 
-rating.addEventListener(
-   "change",
-   debounce(filterProducts, () => 1000)
-);
+
+(async () => {
+   SELLER_LISTING_DATA = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
+
+   if (SELLER_LISTING_DATA) {
+      const { count } = SELLER_LISTING_DATA;
+      updateCompleteProgress(100, count);
+   } else {
+      updateCompleteProgress(100, 0);
+   }
+
+   
+   if (!FK_CSRF_TOKEN) {
+      const data = await getFkCsrfToken();
+      if (data) {
+         FK_CSRF_TOKEN = data.csrfToken;
+         SELLER_ID = data.sellerId;
+      }
+   }
+})();
+
+// rating.addEventListener(
+//    "change",
+//    debounce(filterProducts, () => 1000)
+// );
 matchNames.addEventListener(
    "input",
    debounce(filterProducts, () => 1000)
 );
-
 searchSubmit.addEventListener("click", searchSubmitAction);
-
 searchProduct.addEventListener("keydown", (e) => {
    if (e.key === "Enter") {
       searchSubmitAction();
@@ -50,14 +72,14 @@ selectAllProducts.addEventListener("click", () => {
 });
 
 // Select all unmapped products
-selectAllUnMappedProducts.addEventListener("click", () => {
-   selectProducts(selectAllUnMappedProducts, showNewMappingProducts);
-})
+// selectAllUnMappedProducts.addEventListener("click", () => {
+//    selectProducts(selectAllUnMappedProducts, showNewMappingProducts);
+// })
 
 // Select all mapped products
-selectAllMappedProducts.addEventListener("click", () => {
-   selectProducts(selectAllMappedProducts, showOldMappingProducts);
-})
+// selectAllMappedProducts.addEventListener("click", () => {
+//    selectProducts(selectAllMappedProducts, showOldMappingProducts);
+// })
 
 // Select products with matching names
 selectNameMatchProducts.addEventListener("click", () => {
@@ -172,9 +194,82 @@ function toggleSection(header, cardsSection) {
    cardsSection.classList.toggle("collapsed");
 }
 
-newMappingHeader.addEventListener("click", () =>
-   toggleSection(newMappingHeader, showNewMappingProducts)
-);
-oldMappingHeader.addEventListener("click", () =>
-   toggleSection(oldMappingHeader, showOldMappingProducts)
-);
+// newMappingHeader.addEventListener("click", () =>
+//    toggleSection(newMappingHeader, showNewMappingProducts)
+// );
+// oldMappingHeader.addEventListener("click", () =>
+//    toggleSection(oldMappingHeader, showOldMappingProducts)
+// );
+
+
+
+refreshButton.addEventListener("click", async () => {
+   const data = await getAllListingSellerData(FK_CSRF_TOKEN);
+   if (data) {
+      setDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING, data)
+   }
+})
+
+function setupBrandNames() {
+   brandNameContainer.innerHTML = "";
+   loadBrandNames();
+
+   for (const name in ALL_BRAND_NAMES) {
+      const type = ALL_BRAND_NAMES[name].type;
+      const brandElement = document.createElement("div");
+      const p = document.createElement("p");
+      const deleteBtn = document.createElement("i");
+
+      brandElement.classList.add("brand-tag", BRAND_NAME_TAGS[type]);
+      p.textContent = name;
+      deleteBtn.classList.add("sbi-delete");
+
+      brandElement.append(p, deleteBtn);
+      brandNameContainer.append(brandElement);
+
+      brandElement.addEventListener("click", () => {
+         const type = (ALL_BRAND_NAMES[name].type + 1) % 4;
+         ALL_BRAND_NAMES[name].type = type;
+         saveBrandNames();
+         brandElement.classList = [];
+         brandElement.classList.add("brand-tag", BRAND_NAME_TAGS[type]);
+      });
+
+      deleteBtn.addEventListener("click", (e) => {
+         e.stopPropagation();
+         delete ALL_BRAND_NAMES[name];
+         saveBrandNames();
+         setupBrandNames();
+      });
+   }
+}
+setupBrandNames();
+
+addBrandName.addEventListener("click", () => {
+   const brandName = brandNameInput.value.toUpperCase();
+   console.log(brandName);
+   
+   if(brandName == "" || brandName.length <= 2) {
+      alert("Please enter a valid brand name");
+      return;
+   }
+
+   for (const name in ALL_BRAND_NAMES) {
+      if(name == brandName) {
+         alert("Brand name already exists");
+         return;
+      }
+   }
+
+   ALL_BRAND_NAMES[brandName] = { type: 0 }
+   saveBrandNames();
+   setupBrandNames();
+});
+
+function saveBrandNames() {
+   setDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES)
+}
+
+function loadBrandNames() {
+   ALL_BRAND_NAMES = getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME) || {};
+}

@@ -6,11 +6,13 @@ class MyRange extends HTMLElement {
         this.start = null;
         this.end = null;
         this.isFirstClick = true;
-        this.renderAttr = ["base", "bg", "radius", "size", "fontsize", "padding", "gap", "color"];
+        this.holdTimer = null;
+        this.holdDuration = 200; // 200ms hold threshold
+        this.renderAttr = ["base", "bg", "radius", "size", "fontsize", "padding", "gap", "color", "width"];
     }
 
     static get observedAttributes() {
-        return ["columns", "total", "selectedstart", "selectedend", "theme", "base", "bg", "radius", "size", "fontsize", "padding", "start", "step", "color", "gap"];
+        return ["columns", "total", "selectedstart", "selectedend", "theme", "base", "bg", "radius", "size", "fontsize", "padding", "start", "step", "color", "gap", "width"];
     }
 
     connectedCallback() {
@@ -32,7 +34,7 @@ class MyRange extends HTMLElement {
             <style>
                 :host {
                     display: block;
-                    width: fit-content;
+                    width: 100%;
                     margin: 0 auto;
                 }
 
@@ -44,6 +46,7 @@ class MyRange extends HTMLElement {
                     background-color: var(--bg-color);
                     row-gap: var(--gap);
                     overflow: hidden;
+                    width: 100%;
                 }
 
                 ${this.getStyles()}
@@ -61,6 +64,7 @@ class MyRange extends HTMLElement {
         const fontsize = this.getAttribute("fontsize") || "16px";
         const padding = this.getAttribute("padding") || "16px";
         const gap = this.getAttribute("gap") || "8px";
+        const width = this.getAttribute("width");
 
         return `
             :host {
@@ -111,15 +115,24 @@ class MyRange extends HTMLElement {
                 font-size: var(--font-size);
                 cursor: pointer;
                 background: transparent;
-                transition: all 0.2s ease;
+                transition: all 200ms ease;
                 user-select: none;
                 color: var(--color);
                 transform: scale(1);
                 z-index: 3;
+
+            }
+
+            .point:not(.selected, .in-range) {
+                width: calc(100% - 1px);
+                height: calc(var(--size) - 1px);
+                margin: 1px;
+                border: 1px solid rgb(from var(--base-color) r g b / 0.4);}
             }
 
             .point:hover {
                 transform: scale(1.02);
+                border: none;
             }
 
             .point::after {
@@ -128,7 +141,7 @@ class MyRange extends HTMLElement {
                 inset: 0;
                 border-radius: inherit;
                 background: transparent;
-                transition: all 0.2s ease;
+                transition: all 200ms ease;
                 z-index: 2;
             }
                 
@@ -191,6 +204,7 @@ class MyRange extends HTMLElement {
         const start = parseInt(this.getAttribute("start")) || 1;
         const selectedstart = parseInt(this.getAttribute("selectedstart"));
         const selectedend = parseInt(this.getAttribute("selectedend"));
+        const width = this.getAttribute("width");
     
         // Ensure selected values are within valid range based on start value
         if (!isNaN(selectedstart) && !isNaN(selectedend)) {
@@ -215,9 +229,11 @@ class MyRange extends HTMLElement {
             return;
         }
 
+        const w = width ? width : `calc(var(--size) * ${columns} + var(--padding) * 2)`;
+
         rangeGrid.innerHTML = "";
         rangeGrid.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-        rangeGrid.style.width = `calc(var(--size) * ${columns} + var(--padding) * 2)`;
+        rangeGrid.style.width = w;
         rangeGrid.style.setProperty("--columns", columns);
 
         this.createGrid();
@@ -228,20 +244,27 @@ class MyRange extends HTMLElement {
     createGrid() {
         const total = parseInt(this.getAttribute("total")) || 30;
         const start = parseInt(this.getAttribute("start")) || 1;
-        const step = parseInt(this.getAttribute("step")) || 1;
+        const step = parseFloat(this.getAttribute("step")) || 1;
         const color = this.getAttribute("color") || "inherit";
         const rangeGrid = this.shadowRoot.getElementById("rangeGrid");
 
         for (let i = 0; i < total; i++) {
-            const value = start + (i * step);
+            const value = start + i;
             const point = document.createElement("div");
             point.className = "point";
-            point.textContent = value;
+            const contextValue = step % 1 === 0 ? value * step : parseFloat((value * step).toFixed(1));
+            point.textContent = contextValue;
             point.dataset.value = value;
             point.style.color = color;
 
             point.addEventListener("mousedown", this.handleStart.bind(this));
             point.addEventListener("mouseenter", this.handleMove.bind(this));
+            point.addEventListener("mouseup", () => {
+                if (this.holdTimer) {
+                    clearTimeout(this.holdTimer);
+                }
+                this.isDragging = false;
+            });
             point.addEventListener("touchstart", (e) => {
                 e.preventDefault();
                 this.handleStart(e.touches[0]);
@@ -254,30 +277,61 @@ class MyRange extends HTMLElement {
                     this.handleMove({ target });
                 }
             });
+            point.addEventListener("touchend", () => {
+                if (this.holdTimer) {
+                    clearTimeout(this.holdTimer);
+                }
+                this.isDragging = false;
+            });
 
             rangeGrid.appendChild(point);
         }
 
-        this.shadowRoot.addEventListener("mouseup", () => this.isDragging = false);
-        this.shadowRoot.addEventListener("touchend", () => this.isDragging = false);
+        this.shadowRoot.addEventListener("mouseup", () => {
+            if (this.holdTimer) {
+                clearTimeout(this.holdTimer);
+            }
+            this.isDragging = false;
+        });
+        this.shadowRoot.addEventListener("touchend", () => {
+            if (this.holdTimer) {
+                clearTimeout(this.holdTimer);
+            }
+            this.isDragging = false;
+        });
         rangeGrid.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
     }
 
     handleStart(e) {
-        this.isDragging = true;
-        if (this.isFirstClick || e.target.classList.contains("selected")) {
-            this.start = Number(e.target.dataset.value);
-            this.end = null;
-            this.isFirstClick = false;
-        } else {
-            this.end = Number(e.target.dataset.value);
-            this.isFirstClick = true;
+        if (this.holdTimer) {
+            clearTimeout(this.holdTimer);
         }
-        this.updateSelection();
+
+        const targetValue = Number(e.target.dataset.value);
+
+        this.holdTimer = setTimeout(() => {
+            this.isDragging = true;
+            this.start = targetValue;
+            this.end = targetValue;
+            this.isFirstClick = false;
+            this.updateSelection();
+        }, this.holdDuration);
+
+        if (!this.isDragging) {
+            if (this.isFirstClick) {
+                this.start = targetValue;
+                this.end = null;
+                this.isFirstClick = false;
+            } else {
+                this.end = targetValue;
+                this.isFirstClick = true;
+            }
+            this.updateSelection();
+        }
     }
 
     handleMove(e) {
-        if (this.isDragging) {
+        if (this.isDragging && e.target.classList.contains('point')) {
             this.end = Number(e.target.dataset.value);
             this.updateSelection();
         }
