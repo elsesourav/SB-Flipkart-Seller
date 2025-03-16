@@ -18,34 +18,36 @@ function checkApprovalStatus(vertical, productBrand) {
    });
 }
 
-function getProductIdToInfo(fkCsrfToken, productId) {
-   return new Promise(async (resolve) => {
-      try {
-         const response = await fetch(URLS.listingsDataForStates, {
-            method: "POST",
-            headers: {
-               Accept: "application/json",
-               "Content-Type": "application/json",
-               "fk-csrf-token": fkCsrfToken,
-            },
-            body: JSON.stringify({
-               search_text: productId,
-            }),
-         });
-         const r = await response.json();
+// function getProductIdToInfo(fkCsrfToken, productId) {
+//    return new Promise(async (resolve) => {
+//       try {
+//          const response = await fetch(URLS.listingsDataForStates, {
+//             method: "POST",
+//             headers: {
+//                Accept: "application/json",
+//                "Content-Type": "application/json",
+//                "fk-csrf-token": fkCsrfToken,
+//             },
+//             body: JSON.stringify({
+//                search_text: productId,
+//             }),
+//          });
+//          const r = await response.json();
 
-         if (r?.count > 0) {
-            const { internal_state, sku_id, ssp } = r.listing_data_response?.[0];
-            resolve({ alreadySelling: true, internal_state, sku_id, ssp });
-         }
-         resolve(null);
-      } catch (error) {
-         resolve({ isError: true });
-      }
-   });
-}
+//          if (r?.count > 0) {
+//             const { internal_state, sku_id, ssp } = r.listing_data_response?.[0];
+//             resolve({ alreadySelling: true, internal_state, sku_id, ssp });
+//          }
+//          resolve(null);
+//       } catch (error) {
+//          resolve({ isError: true });
+//       }
+//    });
+// }
 
 // Constants
+
+
 const BATCH_LEN = 100;
 const LISTING_STATES = {
    INACTIVATED: "INACTIVATED_BY_FLIPKART",
@@ -56,7 +58,7 @@ const LISTING_STATES = {
 
 function extractProductData(obj) {
    const { internal_state, sku_id, ssp, mrp, esp, procurement_type } = obj;
-   return { internal_state, sku_id, ssp, mrp, esp, procurement_type };
+   return { internal_state, sku_id, ssp, mrp, esp, procurement_type, alreadySelling: true };
 }
 
 async function fetchListingSellerData(batchNumber, fkCsrfToken, state, orderBy = "DESC") {
@@ -168,13 +170,13 @@ async function getAllListingSellerData(fkCsrfToken) {
    return { count, data: products };
 }
 
-function getMyListingInfo(data, fkCsrfToken, pId) {
-   return new Promise(async (resolve) => {
-      const is = Object.keys(data).length > 0;
-      const DATA = is ? data[pId] : await getProductIdToInfo(fkCsrfToken, pId);
-      resolve(DATA);
-   });
-}
+// function getMyListingInfo(data, fkCsrfToken, pId) {
+//    return new Promise(async (resolve) => {
+//       const is = Object.keys(data).length > 0;
+//       const DATA = is ? data[pId] : await getProductIdToInfo(fkCsrfToken, pId);
+//       resolve(DATA);
+//    });
+// }
 
 function getProductSellers(pid) {
    return new Promise(async (resolve) => {
@@ -185,12 +187,12 @@ function getProductSellers(pid) {
 }
 
 
-function verifyProductUsingUserData(product, fct, sellerProducts) {
+function verifyProductUsingUserData(product, sellerProducts) {
    return new Promise(async (resolve) => {
       try {
          // Search for product details
          const { productBrand, vertical, media, id } = product;
-         const myListingData = await getMyListingInfo(sellerProducts, fct, id);
+         const myListingData = sellerProducts[id];
          const imageUrl = newImgPath(media.images?.[0]?.url)
 
          if (myListingData?.alreadySelling) {
@@ -218,7 +220,7 @@ function verifyProductUsingUserData(product, fct, sellerProducts) {
    });
 }
 
-function processBatchForVerification(products, fct, startIdx, sellerProducts) {
+function processBatchForVerification(products, startIdx, sellerProducts) {
    return new Promise(async (resolve) => {
       const batch = products.slice(startIdx, startIdx + BATCH_LEN);
       if (batch.length === 0) {
@@ -228,8 +230,7 @@ function processBatchForVerification(products, fct, startIdx, sellerProducts) {
 
       const processProduct = async (product) => {
          try {
-            const result = await verifyProductUsingUserData(product, fct, sellerProducts);
-            // console.log(result);
+            const result = await verifyProductUsingUserData(product, sellerProducts);
             
             if (result?.isError) {
                throw new Error("Too many requests");

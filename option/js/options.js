@@ -35,10 +35,9 @@ let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
 //    "change",
 //    debounce(filterProducts, () => 1000)
 // );
-matchNames.addEventListener(
-   "input",
-   debounce(filterProducts, () => 1000)
-);
+
+selectRating.addEventListener("selectionchange", debounce(filterProducts, () => 1000));
+matchNames.addEventListener("input", debounce(filterProducts, () => 1000));
 searchSubmit.addEventListener("click", searchSubmitAction);
 searchProduct.addEventListener("keydown", (e) => {
    if (e.key === "Enter") {
@@ -273,3 +272,7 @@ function saveBrandNames() {
 function loadBrandNames() {
    ALL_BRAND_NAMES = getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME) || {};
 }
+
+
+
+

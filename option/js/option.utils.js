@@ -147,27 +147,24 @@ async function searchSubmitAction() {
    const productName = searchProduct.value;
    if (!productName) return;
 
-   const startingPage = N(startPage.value) || 1;
-   const endingPage = N(endPage.value) || 1;
-
-   const min = Math.min(startingPage, endingPage);
-   const max = Math.max(startingPage, endingPage);
+   const start = selectPages.selectedstart || 1;
+   const end = selectPages.selectedend || 1;
 
    if (!(await verifyUserMustLogin())) return;
    showLoading();
 
+   const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING)
+
    const data = {
       productName,
-      startingPage: min,
-      endingPage: max,
-      sellerId: SELLER_ID,
+      startingPage: start,
+      endingPage: end,
+      sellerListing: listingData,
       fkCsrfToken: FK_CSRF_TOKEN,
    };
 
    try {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
-
-      // console.log(JSON.stringify(PRODUCTS));
 
       PRODUCTS = PRODUCTS.sort((a, b) => {
          const priority = { "G": 1, "PIECE": 2 };
@@ -203,6 +200,7 @@ function getHTMLProductCards(ps, searchNames = []) {
                return "listed";
             }
             if (
+               internal_state === "INACTIVATED_BY_FLIPKART" ||
                internal_state === "INACTIVE" ||
                internal_state === "ARCHIVED"
             ) {
@@ -244,26 +242,18 @@ function getHTMLProductCards(ps, searchNames = []) {
 }
 
 function createProductCard() {
-   const searchNames = matchNames.value
-      ? matchNames.value
-           .toLowerCase()
-           .split("-")
-           .map((n) => n.trim())
-      : [];
-
-   showNewMappingProducts.innerHTML = getHTMLProductCards(
-      PRODUCTS.filter((p) => !p.alreadySelling),
-      searchNames
-   );
-
-   if (showMyProducts.checked) {
-      showOldMappingProducts.innerHTML = getHTMLProductCards(
-         PRODUCTS.filter((p) => p.alreadySelling),
-         searchNames
-      );
+   let searchNames = matchNames?.value?.toLowerCase();
+   
+   if (searchNames) {
+      searchNames = searchNames.split("-").map((n) => n.trim());
    } else {
-      showOldMappingProducts.innerHTML = "";
+      searchNames = [];
    }
+
+   // old | new
+   const type = I(`input[name="listing-type"]:checked`).value;
+   const $PRODUCTS = PRODUCTS.filter(p => type === "new" ? !p.alreadySelling : p.alreadySelling);
+   displayChards.innerHTML = getHTMLProductCards($PRODUCTS, searchNames);
 }
 
 function highlightMatches(title, searchNames = []) {
@@ -291,29 +281,27 @@ function highlightMatches(title, searchNames = []) {
 }
 
 function filterByRating() {
-   const ratingValue = rating.value;
-   if (ratingValue === "0") {
-      // PRODUCTS = [...SAVED_PRODUCTS];
-      return;
-   }
+   const ratingStart = (selectRating.selectedstart || 1) / 2;
+   const ratingEnd = (selectRating.selectedend || 1) / 2;
 
-   // Start with current filtered products
+   console.log(ratingStart, ratingEnd);
+
+   const min = Math.min(ratingStart, ratingEnd);
+   const max = Math.max(ratingStart, ratingEnd);
+   if (max <= 0.5) return;
+
    PRODUCTS = PRODUCTS.sort(
       (a, b) => b?.rating?.average - a?.rating?.average
-   ).filter((x) => x?.rating?.count <= 0 || x?.rating?.average >= ratingValue);
+   ).filter((x) => x?.rating?.count > 0 && x?.rating?.average >= min);
 }
 
 function filterByNames() {
-   const nameValue = matchNames.value;
-   if (!nameValue) {
+   let searchNames = matchNames?.value?.toLowerCase();
+   if (!searchNames) {
       PRODUCTS = [...SAVED_PRODUCTS];
       return;
    }
-
-   const names = nameValue
-      .toLowerCase()
-      .split("-")
-      .map((n) => n.trim());
+   const names = searchNames.split("-").map((n) => n.trim());
 
    // Sort products: matching names first, non-matching last
    PRODUCTS.sort((a, b) => {

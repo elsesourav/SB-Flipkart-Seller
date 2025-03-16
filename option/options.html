@@ -18,6 +18,7 @@
       <script defer src="./../utils.js"></script>
       <script defer src="./../querySelector.js"></script>
       <script defer src="./js/range-selector.js"></script>
+      <script defer src="./js/drag-select.js"></script>
       <script defer src="./js/option.utils.js"></script>
       <script defer src="./js/options.js"></script>
    </head>
@@ -59,17 +60,19 @@
                      <div class="switch-option">
                         <input
                            type="radio"
-                           checked
                            class="listing-type first"
                            name="listing-type"
-                        />
-                        <p>Update Old Listing</p>
-                     </div>
+                           value="old"
+                           />
+                           <p>Update Old Listing</p>
+                        </div>
                      <div class="switch-option">
                         <input
                            type="radio"
                            class="listing-type second"
                            name="listing-type"
+                           value="new"
+                           checked
                         />
                         <p>Mapping New Products</p>
                      </div>
@@ -160,7 +163,7 @@
          </nav>
 
          <div class="cardsCover">
-            <div class="cards">
+            <div class="cards" id="displayChards">
 
                <div class="card product" style="--c-bg: #333;">
                   <input

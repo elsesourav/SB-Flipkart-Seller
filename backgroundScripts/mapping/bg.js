@@ -3,18 +3,13 @@ let approvalBrands = {};
 runtimeOnMessage(
    "c_b_get_mapping_product_data",
    async (data, sender, sendResponse) => {
-      const { productName, startingPage, endingPage, fkCsrfToken, sellerId } =
+      const { productName, startingPage, sellerListing = {}, endingPage, fkCsrfToken, sellerId } =
          data;
       optionsTabId = sender.tab.id;
 
       try {
          const verifiedProducts = [];
-         let sellerListingData = {};
          approvalBrands = {};
-
-         if (endingPage - startingPage > 6) {
-            sellerListingData = await getAllListingSellerData(fkCsrfToken);
-         }
 
          for (let i = startingPage, j = 0; i <= endingPage; i++, j++) {
             const products = [];
@@ -24,13 +19,9 @@ runtimeOnMessage(
             }
 
             // Process products in batches
-            for (let index = 0; index < products.length; index += BATCH_SIZE) {
-               const batchResults = await processBatchForVerification(
-                  products,
-                  fkCsrfToken,
-                  index,
-                  sellerListingData?.data || {}
-               );
+            for (let I = 0; I < products.length; I += BATCH_SIZE) {
+               const batchResults = await processBatchForVerification(products, I, sellerListing);
+
                if (batchResults?.isError) {
                   sendResponse({ isError: true, error: "Too many requests" });
                   return;
@@ -42,8 +33,6 @@ runtimeOnMessage(
             );
          }
 
-         
-         
          const modifiedProducts = await modifyVerifiedProducts(
             verifiedProducts,
             sellerId

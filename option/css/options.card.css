@@ -38,6 +38,23 @@
    transition: all 300ms;
 }
 
+.card::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   border-radius: inherit;
+   border: solid 1px #fff;
+   background: rgba(0, 0, 0, 0.5);
+   opacity: 0;
+   transition: opacity 0.3s ease;
+   z-index: 2;
+}
+
+.card:has(.select-product:checked)::after  {
+   opacity: 1;
+}
+
+
 .card.glow {
    background-image: linear-gradient(var(--c-bg) 0%, #333353 70%);
 }
@@ -80,10 +97,6 @@
 
 .card .select-product:checked ~ * {
    pointer-events: none;
-}
-
-.card:has(.select-product:checked)  {
-   opacity: 0.4;
 }
 
 .card:hover {
@@ -161,7 +174,7 @@
    place-items: center;
    font-size: calc(var(--s) * 1.4);
    line-height: 1;
-   color: #bbb;
+   color: #fff;
    font-family: f3;
    overflow: hidden;
    display: -webkit-box;
