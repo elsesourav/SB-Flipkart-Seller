@@ -118,7 +118,7 @@ function updateCompleteProgress(percent, total) {
 function updateSelectedCount() {
    const len = I(".select-product:checked")?.length || 0;
    showNumberOfProductsSelected.textContent = len;
-   startMapping.classList.toggle("active", len > 0);
+   showSelectedAndReady.classList.toggle("active", len > 0);
 }
 
 // showNewMappingProducts.addEventListener("change", (e) => {
@@ -153,7 +153,7 @@ async function searchSubmitAction() {
    if (!(await verifyUserMustLogin())) return;
    showLoading();
 
-   const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING)
+   const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
 
    const data = {
       productName,
@@ -167,11 +167,12 @@ async function searchSubmitAction() {
       PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
 
       PRODUCTS = PRODUCTS.sort((a, b) => {
-         const priority = { "G": 1, "PIECE": 2 };
-         const categoryOrder = (priority[a.CATEGORY] || 3) - (priority[b.CATEGORY] || 3);
+         const priority = { G: 1, PIECE: 2 };
+         const categoryOrder =
+            (priority[a.CATEGORY] || 3) - (priority[b.CATEGORY] || 3);
          if (categoryOrder === 0) return b.QUANTITY - a.QUANTITY;
          return categoryOrder;
-     });
+      });
 
       if (PRODUCTS?.isError) {
          PRODUCTS = [];
@@ -188,18 +189,37 @@ async function searchSubmitAction() {
 }
 
 function getHTMLProductCards(ps, searchNames = []) {
-   return ps
+   const result = ps
       .map((p) => {
-         const { imageUrl, id, rating, title, CATEGORY, QUANTITY, mrp, finalPrice, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
+         const {
+            imageUrl,
+            id,
+            rating,
+            title,
+            CATEGORY,
+            QUANTITY,
+            mrp,
+            finalPrice,
+            alreadySelling,
+            PRICE,
+            PROFIT,
+            SIGNAL,
+            NATIONAL_FEE,
+            internal_state,
+         } = p;
 
          const classRating = !rating?.count ? "hidden" : "";
-         const { highlightedTitle, isFind } = highlightMatches(title, searchNames);
+         const { highlightedTitle, isFind } = highlightMatches(
+            title,
+            searchNames
+         );
 
          const getListingStatus = () => {
             if (alreadySelling && internal_state === "ACTIVE") {
                return "listed";
             }
             if (
+               internal_state === "READY_FOR_ACTIVATION" ||
                internal_state === "INACTIVATED_BY_FLIPKART" ||
                internal_state === "INACTIVE" ||
                internal_state === "ARCHIVED"
@@ -239,11 +259,12 @@ function getHTMLProductCards(ps, searchNames = []) {
          </div>`;
       })
       .join("");
+   return result;
 }
 
 function createProductCard() {
    let searchNames = matchNames?.value?.toLowerCase();
-   
+
    if (searchNames) {
       searchNames = searchNames.split("-").map((n) => n.trim());
    } else {
@@ -252,8 +273,19 @@ function createProductCard() {
 
    // old | new
    const type = I(`input[name="listing-type"]:checked`).value;
-   const $PRODUCTS = PRODUCTS.filter(p => type === "new" ? !p.alreadySelling : p.alreadySelling);
+   // console.log(PRODUCTS);
+   
+   const $PRODUCTS = PRODUCTS.filter((p) =>
+      type === "new" ? !p.alreadySelling : p.alreadySelling
+   );
    displayChards.innerHTML = getHTMLProductCards($PRODUCTS, searchNames);
+
+   $PRODUCTS.forEach(({ id }) => {
+      const checkbox = II(`#${id} > input`, displayChards);
+      checkbox.addEventListener("click", () => {
+         updateSelectedCount();
+      });
+   })
 }
 
 function highlightMatches(title, searchNames = []) {
@@ -283,8 +315,6 @@ function highlightMatches(title, searchNames = []) {
 function filterByRating() {
    const ratingStart = (selectRating.selectedstart || 1) / 2;
    const ratingEnd = (selectRating.selectedend || 1) / 2;
-
-   console.log(ratingStart, ratingEnd);
 
    const min = Math.min(ratingStart, ratingEnd);
    const max = Math.max(ratingStart, ratingEnd);
@@ -347,7 +377,15 @@ function showConfirmationWindow() {
    confirmationError.textContent = "";
    startFinalMapping.disabled = true;
 
-   const { SKU_NAME, MIN_PROFIT, MAX_PROFIT, FIXED_COST, PACKING_COST, DELIVERY_NATIONAL, MANUFACTURER_DETAILS } = EXTENSION_MAPPING_DATA;
+   const {
+      SKU_NAME,
+      MIN_PROFIT,
+      MAX_PROFIT,
+      FIXED_COST,
+      PACKING_COST,
+      DELIVERY_NATIONAL,
+      MANUFACTURER_DETAILS,
+   } = EXTENSION_MAPPING_DATA;
 
    productName.innerHTML = SKU_NAME;
    productProfit.innerHTML = `${MIN_PROFIT} <-> ${MAX_PROFIT}`;
@@ -366,6 +404,8 @@ function hideConfirmationWindow() {
    confirmationError.textContent = "";
 }
 
+
+// need to remove or update
 function getOldAndNewProductSize(DATA) {
    DATA = DATA?.filter((p) => p?.status !== "failure");
    let oldSize = 0;
@@ -404,13 +444,29 @@ async function createAllSelectedProductMapping() {
 function getHTMLPreviewProductCards(ps) {
    return ps
       .map((p) => {
-         const { imageUrl, id, title, CATEGORY, QUANTITY, finalPrice, mrp, alreadySelling, PRICE, PROFIT, SIGNAL, NATIONAL_FEE, internal_state } = p;
+         const {
+            imageUrl,
+            id,
+            title,
+            CATEGORY,
+            QUANTITY,
+            finalPrice,
+            mrp,
+            alreadySelling,
+            PRICE,
+            PROFIT,
+            SIGNAL,
+            NATIONAL_FEE,
+            internal_state,
+         } = p;
 
          const getListingStatus = () => {
             if (alreadySelling && internal_state === "ACTIVE") {
                return "listed";
             }
             if (
+               internal_state === "READY_FOR_ACTIVATION" ||
+               internal_state === "INACTIVATED_BY_FLIPKART" ||
                internal_state === "INACTIVE" ||
                internal_state === "ARCHIVED"
             ) {
@@ -421,12 +477,12 @@ function getHTMLPreviewProductCards(ps) {
 
          const className = getListingStatus();
          const { highlightedTitle } = highlightMatches(title);
-         
+
          const category = CATEGORY?.[0]?.toUpperCase() || "N";
 
          if (!finalPrice || !mrp) return "";
          return `
-         <div class="card preview-product ${className}" id="${id}" style="--c-bg: ${SIGNAL};">
+         <div class="card preview-product ${className}" data-product-id="${id}" id="${id}" style="--c-bg: ${SIGNAL};">
             <i class="sbi-asterisk icon"></i>
             <div class="show-img">
                <img src="${imageUrl}" alt="product-image-${id}">

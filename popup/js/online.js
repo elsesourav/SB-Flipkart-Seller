@@ -271,7 +271,7 @@ importButtonElement.click(async () => {
    const DATA = await chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN);
    let username;
    if (DATA) {
-      username = DATA
+      username = DATA.username;
       importUsernames[0].value = username;
    } else {
       username = importUsernames[0].value.toLowerCase();

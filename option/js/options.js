@@ -47,8 +47,6 @@ searchProduct.addEventListener("keydown", (e) => {
 
 function removeSelectAll() {
    selectAllProducts.classList.remove("active");
-   selectAllUnMappedProducts.classList.remove("active");
-   selectAllMappedProducts.classList.remove("active");
    selectNameMatchProducts.classList.remove("active");
 }
 

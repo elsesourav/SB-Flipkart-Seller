@@ -50,6 +50,7 @@ function checkApprovalStatus(vertical, productBrand) {
 
 const BATCH_LEN = 100;
 const LISTING_STATES = {
+   READY_FOR_ACTIVATION: "READY_FOR_ACTIVATION",
    INACTIVATED: "INACTIVATED_BY_FLIPKART",
    ARCHIVED: "ARCHIVED",
    INACTIVE: "INACTIVE",
@@ -120,6 +121,7 @@ function getListingSellerData(fkCsrfToken) {
                listingData[info.product_id] = { ...info };
             });
             progress += data.length;
+            
             total += count;
             sendLoadingProgress(i+1, progress);
          }

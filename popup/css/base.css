@@ -121,6 +121,12 @@ body {
    &.x10 {
       --gap: 50px;
    }
+   &.x30 {
+      --gap: 150px;
+   }
+   &.x50 {
+      --gap: 250px;
+   }
 }
 
 #testCanvas {

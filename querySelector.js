@@ -195,3 +195,4 @@
  */
 const I = (selector, parent = document) => parent.querySelectorAll(selector);
 const ID = (selector, parent = document) => parent.getElementById(selector);
+const II = (selector, parent = document) => parent.querySelector(selector);

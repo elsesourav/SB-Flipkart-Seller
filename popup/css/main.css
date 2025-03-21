@@ -15,7 +15,7 @@ main {
 
    img#bgImage {
       position: absolute;
-      height: 100%; /* Set height to full viewport */
+      height: calc(var(--wh) * 0.7); /* Set height to full viewport */
       width: auto; /* Maintain aspect ratio */
       left: 50%; /* Center horizontally */
       top: 50%; /* Center vertically */
@@ -30,7 +30,7 @@ main {
       -webkit-user-select: none;
       z-index: 0;
    }
-
+   
    @keyframes opacity {
       from {
          opacity: 0;
@@ -63,6 +63,7 @@ main .container {
    position: relative;
    width: 100%;
    height: auto;
+   min-height: calc(var(--wh) * 0.7);
    opacity: 1;
    padding: calc(var(--s) * 1.5) 0;
    
@@ -669,7 +670,7 @@ body:has(.btn:nth-child(4) input:checked) {
                width: 100%;
                height: 100%;
                transition: color 400ms;
-               color: light-dark(#000, #fff);
+               border-radius: inherit;
                outline: solid 1px #00ff4066;
 
                option {
@@ -787,6 +788,37 @@ body:has(.btn:nth-child(4) input:checked) {
                color: #ff0000;
             }
          }
+      }
+   }
+
+   &.three-out {
+      grid-template-columns: 1fr 1fr 1fr;
+   }
+   &.two-out {
+      grid-template-columns: 1fr 1fr;
+   }
+
+   &.three-out,
+   &.two-out {
+      justify-items: center;
+
+      label {
+         font-size: calc(var(--s) * 0.9);
+         top: -8px;
+      }
+      sect-8px{
+         border-radius: calc(var(--s) / 1.5);
+         border: solid 1px light-dark(#fff5, #0005);
+         background-color: light-dark(#fff4, #0004);
+      } 
+
+      .out {
+         position: relative;
+         width: 100%;
+         text-align: center;
+         font-size: calc(var(--s) * 1.4);
+         word-spacing: 3px;
+         font-family: f6b;
       }
    }
 

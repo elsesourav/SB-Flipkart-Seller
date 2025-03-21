@@ -38,7 +38,6 @@ runtimeOnMessage(
             sellerId
          );
 
-         // console.log(modifiedProducts);
          // Send final filtered response
          // console.table(modifiedProducts);
 

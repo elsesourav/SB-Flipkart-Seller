@@ -60,6 +60,7 @@ input[type="number"] {
 #MyListingClearBtn,
 #MyMappingClearBtn {
    position: relative;
+   grid-column: span 2;
    width: 100%;
    height: calc(var(--s) * 6);
    display: grid;
