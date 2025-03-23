@@ -3,33 +3,16 @@ main {
    --text: light-dark(#333, #ccc);
    position: relative;
    width: 100%;
-   height: auto;
+   height: 100%;
    display: grid;
-   background-color: var(--bg);
+
+   background: light-dark(#fff3, #0003);
    align-items: center;
    padding: 0 var(--s);
    border-radius: calc(var(--s) / 2);
    animation: opacity linear 400ms;
    /* overflow-y: auto;
    overflow-x: hidden; */
-
-   img#bgImage {
-      position: absolute;
-      height: calc(var(--wh) * 0.7); /* Set height to full viewport */
-      width: auto; /* Maintain aspect ratio */
-      left: 50%; /* Center horizontally */
-      top: 50%; /* Center vertically */
-      transform: translate(-50%, -50%); /* Adjust centering */
-      background-size: cover;
-      background-position: center;
-      opacity: 0.15;
-      animation: opacity linear 4s infinite;
-      pointer-events: none;
-      user-select: none;
-      -ms-user-select: none;
-      -webkit-user-select: none;
-      z-index: 0;
-   }
    
    @keyframes opacity {
       from {
@@ -63,7 +46,6 @@ main .container {
    position: relative;
    width: 100%;
    height: auto;
-   min-height: calc(var(--wh) * 0.7);
    opacity: 1;
    padding: calc(var(--s) * 1.5) 0;
    
@@ -74,6 +56,121 @@ main .container {
 
    @starting-style {
       opacity: 0;
+   }
+
+   .buttons {
+      position: relative;
+      width: 100%;
+      height: calc(var(--s) * 4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: calc(var(--s) * 1.5);
+
+      .search {
+         position: relative;
+         width: 100%;
+         height: 100%;
+         display: grid;
+         border-radius: calc(var(--s) / 1.5);
+         background: light-dark(#fff7, #0007);
+         border: solid 1px light-dark(#0007, #fff7);
+         place-items: center;
+         grid-template-columns: 1fr 4fr;
+         gap: calc(var(--s) * 0.4);
+         overflow: hidden;
+
+         .icon {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: light-dark(#fff, #000);
+            color: light-dark(#000, #fff);
+            font-size: calc(var(--s) * 1.5);
+            display: grid;
+            place-items: center;
+         }
+
+         .search-inp  {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            
+            input {
+               position: absolute;
+               width: 100%;
+               height: 100%;
+               font-size: calc(var(--s) * 1.2);
+               text-transform: uppercase;
+               background: transparent;
+               outline: none;
+               border: none;
+            }
+         }
+      }
+
+      .button {
+         position: relative;
+         width: 100%;
+         height: 100%;
+         border-radius: calc(var(--s) / 1.5);
+         background: light-dark(#fff, #000);
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         gap: calc(var(--s) * 0.5);
+         transition: 300ms;
+         cursor: pointer;
+         border: solid 1px light-dark(#0007, #fff7);
+         opacity: 0.7;
+         scale: 1;
+         transition: opacity 300ms, scale 300ms, color 300ms, background 300ms;
+
+         &.light {
+            background: light-dark(#afa6ff, #060330);
+         }
+
+         &.high-light {
+            background: light-dark(#000, #fff);
+            * { color: #00f; }
+         }
+
+         input[type=checkbox].btn {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            opacity: 0;
+            cursor: pointer;
+         }
+
+         &:has( input[type=checkbox].btn:checked) {
+            background: #00fff2;
+            opacity: 1;
+
+            * {
+               color: #000;
+            }
+         }
+   
+         p {
+            font-family: f1b;
+            font-size: calc(var(--s) * 1.5);
+            color: light-dark(#000, #fff);
+         }
+   
+         i {
+            font-size: calc(var(--s) * 2);
+            color: light-dark(#000, #fff);
+         }
+   
+         &:hover {
+            opacity: 1;
+            scale: 1.02;
+         }
+      }
    }
 
    &.float {
@@ -213,7 +310,7 @@ main .container {
 
 body:has(.btn:first-child input:checked) {
    #myListing,
-   #orders,
+   #products,
    #settings {
       display: none;
       opacity: 1;
@@ -222,7 +319,7 @@ body:has(.btn:first-child input:checked) {
 
 body:has(.btn:nth-child(2) input:checked) {
    #mappingContainer,
-   #orders,
+   #products,
    #settings {
       display: none;
       opacity: 1;
@@ -240,7 +337,7 @@ body:has(.btn:nth-child(3) input:checked) {
 body:has(.btn:nth-child(4) input:checked) {
    #mappingContainer,
    #myListing,
-   #orders {
+   #products {
       display: none;
       opacity: 1;
    }
@@ -532,7 +629,7 @@ body:has(.btn:nth-child(4) input:checked) {
             height: 100%;
             display: grid;
             place-items: center;
-            grid-template-columns: 2fr 3fr 2fr;
+            grid-template-columns: calc(var(--s) * 3) 1fr calc(var(--s) * 3);
             outline: none;
             border-radius: inherit;
             transition: outline 200ms linear;
@@ -820,6 +917,18 @@ body:has(.btn:nth-child(4) input:checked) {
          word-spacing: 3px;
          font-family: f6b;
       }
+   }
+
+   input[data-name] {
+      background: transparent;
+      width: 100%;
+      height: 100%;
+      outline: none;
+      border: none;
+      font-size: calc(var(--s) * 1.4);
+      font-family: f6b;
+      text-align: center;
+      pointer-events: none;
    }
 
    /* &:has( input[type="checkbox"].btn#IS_STOP:checked) {

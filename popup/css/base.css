@@ -5,17 +5,21 @@
    --switch-color-off: var(--white);
    --switch-color-on: #85ff7a;
 
-   --ww: 300px;
+   --ww: 400px;
    --wh: 600px;
 
    --s: 12px;
    /* adjust this to control the size of switch input[type="checkbox"]*/
 
    --grid-min: 35px;
-
    --product-width: 250px;
-
    --nav-height: calc(var(--s) * 10);
+   --editor-font-size: calc(var(--s) * 2.5);
+
+   --color: light-dark(#000, #fff);
+   --bg: light-dark(#fff, #000);
+
+   --bg-back: light-dark(#fff, #17132d);
 
    user-select: none;
    -moz-user-select: none;
@@ -36,6 +40,7 @@
          #ee0979 100%
       );
    }
+   
 }
 
 * {
@@ -55,28 +60,31 @@
 }
 
 body {
-   --color: light-dark(#000, #fff);
-   --bg: light-dark(#fff, #000);
    position: relative;
-   color: light-dark(var(--black), var(--white));
-   background-color: light-dark(var(--white), var(--black));
    font-family: f3;
    width: calc(var(--ww) * 2);
    height: calc(var(--wh));
    overflow: hidden;
+   padding: calc(var(--s) * 2);
+   background-color: light-dark(#cbcde2, #282a38);
+   background-image: radial-gradient(light-dark(#fff5, #0003) 1px, transparent 1px),
+                     radial-gradient(light-dark(#fff7, #0005) 1px, transparent 1px);
+   background-size: 20px 20px, 40px 40px;
 
    .cover {
       --m: calc(var(--s) * 1.8);
       position: relative;
-      width: calc(100% - var(--m) * 2);
-      height: calc(100% - var(--m) * 2);
-      margin: var(--m);
-      display: flex;
-      flex-direction: column;
+      width: calc(100% - var(--m) * 0);
+      height: calc(100% - var(--m) * 0);
+
+      /* margin: var(--m); */
+      display: grid;
       gap: calc(var(--s) / 2);
+      grid-template-rows: calc(var(--wh) * 0.16) calc(var(--wh) * 0.12) calc(var(--wh) * 0.12) 1fr;
       overflow-x: hidden;
       overflow-y: auto;
    }
+   
 }
 
 .br-tag {
@@ -93,6 +101,7 @@ body {
    position: relative;
    width: 100%;
    height: var(--gap);
+   z-index: -1;
 
    &.x2 {
       --gap: 10px;

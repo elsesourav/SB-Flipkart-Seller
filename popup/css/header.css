@@ -1,13 +1,14 @@
 header {
    --S: calc(var(--s) * 5);
    position: relative;
-   width: 100%;
+   width: calc(100% - 4px);
+   margin: 2px;
    height: auto;
    display: flex;
    gap: calc(var(--s));
    padding: calc(var(--s)) 0;
    background-color: light-dark(#8383d7, #1b1b2d);
-   outline: solid 1px light-dark(#fff, #000);
+   outline: solid 2px light-dark(#fff, #000);
    border-radius: calc(var(--s) / 2);
    justify-content: center;
    align-items: center;
@@ -66,16 +67,73 @@ header {
    }
 }
 
+.head {
+   position: relative;
+   width: calc(100% - var(--s) * 2);
+   height: auto;
+   margin: var(--s);
+   display: block;
+
+   .openMoreOptions {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      background: light-dark(#fff, #000);
+      border: solid 1px light-dark(#0007, #fff7);
+      border-radius: calc(var(--s) / 1.5);
+      opacity: 0.7;
+      scale: 1;
+      transition: opacity 300ms, scale 300ms;
+      
+      p {
+         position: relative;
+         padding: var(--s);
+         background-image: var(--bg-gradient);
+         background-position: left center;
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+         background-size: 200% auto;
+         text-fill-color: transparent;
+         white-space: nowrap;
+         font-family: f1b;
+         font-size: calc(var(--s) * 1.5);
+         color: light-dark(#000, #fff);
+         transition: all 300ms;
+      }
+
+      &:hover {
+         opacity: 1;
+         scale: 1.02;
+
+         p {
+            background-position: right center;
+            text-decoration: none;
+         }
+      }
+   }
+}
+
 nav {
    position: sticky;
    top: 0;
    width: 100%;
    height: auto;
    padding: calc(var(--s));
+   padding-top: 0;
    display: flex;
    flex-direction: column;
    gap: calc(var(--s));
-   background: light-dark(var(--white), var(--black));
+
+   background-color: light-dark(#cbcde2, #282a38);
+   background-image: radial-gradient(light-dark(#fff5, #0003) 1px, transparent 1px),
+                     radial-gradient(light-dark(#fff7, #0005) 1px, transparent 1px);
+   background-size: 20px 20px, 40px 40px;
+   
+   
    z-index: 4;
 
    .options {
@@ -127,91 +185,6 @@ nav {
 
       .button {
          display: none;
-      }
-   }
-
-   .head {
-      position: relative;
-      width: 100%;
-      height: calc(var(--s) * 3.5);
-      display: grid;
-      place-items: center;
-      grid-template-columns: 10fr 5fr 5fr;
-      gap: calc(var(--s) * 1);
-
-      .openMoreOptions {
-         position: relative;
-         width: 100%;
-         height: 100%;
-         display: grid;
-         place-items: center;
-         cursor: pointer;
-         background: light-dark(#fff, #000);
-         border: solid 1px light-dark(#0007, #fff7);
-         border-radius: calc(var(--s) / 1.5);
-         opacity: 0.7;
-         scale: 1;
-         transition: opacity 300ms, scale 300ms;
-         
-         
-         p {
-            background-image: var(--bg-gradient);
-            background-position: left center;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            text-fill-color: transparent;
-            white-space: nowrap;
-            font-family: f1b;
-            font-size: calc(var(--s) * 1.5);
-            color: light-dark(#000, #fff);
-            transition: all 300ms;
-         }
-
-         &:hover {
-            opacity: 1;
-            scale: 1.02;
-
-            p {
-               background-position: right center;
-               text-decoration: none;
-            }
-         }
-      }
-   
-      .button {
-         position: relative;
-         width: 100%;
-         height: 100%;
-         border-radius: calc(var(--s) / 1.5);
-         background: light-dark(#fff, #000);
-         display: flex;
-         justify-content: center;
-         align-items: center;
-         gap: calc(var(--s) * 0.5);
-         transition: 300ms;
-         cursor: pointer;
-         border: solid 1px light-dark(#0007, #fff7);
-         opacity: 0.7;
-         scale: 1;
-         transition: opacity 300ms, scale 300ms;
-   
-         p {
-            font-family: f1b;
-            font-size: calc(var(--s) * 1.5);
-            color: light-dark(#000, #fff);
-         }
-   
-         i {
-            font-size: calc(var(--s) * 2);
-            color: light-dark(#000, #fff);
-         }
-
-         &:hover {
-            opacity: 1;
-            scale: 1.02;
-         }
       }
    }
 }

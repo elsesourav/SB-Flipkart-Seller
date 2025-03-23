@@ -4,7 +4,7 @@ const KEYS = {
    STORAGE_INIT: "SB_Seller_Init",
    STORAGE_MAPPING: "SB_Seller_Mapping",
    STORAGE_LISTING: "SB_Seller_Listing",
-   STORAGE_ORDERS: "SB_Seller_Orders",
+   STORAGE_PRODUCT: "SB_Seller_Product",
    STORAGE_SETTINGS: "SB_Seller_Settings",
    STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
    STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
@@ -89,6 +89,8 @@ let ordersData = {
       },
    }
 };
+let PRODUCTS_DATA = {};
+
 
 function toBengaliNumber(number) {
    const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
