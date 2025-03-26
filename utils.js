@@ -5,6 +5,7 @@ const KEYS = {
    STORAGE_MAPPING: "SB_Seller_Mapping",
    STORAGE_LISTING: "SB_Seller_Listing",
    STORAGE_PRODUCT: "SB_Seller_Product",
+   STORAGE_REPLACE_LAN: "SB_Seller_Replace_Lan",
    STORAGE_SETTINGS: "SB_Seller_Settings",
    STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
    STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
@@ -47,50 +48,18 @@ const FLIPKART_SEARCH_HEADER = {
 
 const MAX_IMAGE = 12;
 let settings = {
-   listingOpen: [true, false, false, false],
+   listingOpen: [],
    currentMode: 0,
 };
-let mappingData = {};
-let listingData = {
-   COUNT: 0,
-};
-let ordersData = {
-   editor: {
-      calculateWeight: {
-         LOTUS: "100P 100G",
-      },
-      nameInBengali: {
-         BEAN: "বরবটি",
-         "BITTER GOURD": "উচ্ছে",
-         "BOTTLE GOURD": "লাউ",
-         BRINJAL: "বেগুন",
-         CABBAGE: "বাঁধাকপি",
-         CAPSICUM: "ক্যাপসিকাম",
-         "CARPET GRASS": "ঘাস",
-         CARROT: "গাজর",
-         CAULIFLOWER: "ফুলকপি",
-         CHILLY: "লঙ্কা",
-         CHILLI: "লঙ্কা",
-         CUCUMBER: "শশা",
-         DAHLIA: "ডালিয়া",
-         LOTUS: "পদ্ম ফুল",
-         MARIGOLD: "গাঁদা ফুল",
-         "MALABAR SPINACH": "পুই শাক",
-         MORINGA: "সজনে",
-         ONION: "পেঁয়াজ",
-         PAPAYA: "পেঁপে",
-         "RED SPINACH": "লাল শাক",
-         "RIDGE GOURD": "ঝিঙ্গে",
-         "RUNNER BEANS": "সিম",
-         SPINACH: "পালং শাক",
-         TOMATO: "টমেটো",
-         HALUD: "হলুদ",
-         TURMERIC: "হলুদ",
-      },
-   }
-};
-let PRODUCTS_DATA = {};
 
+let mappingData = {};
+let listingData = { COUNT: 0 };
+let ordersData = { editor: "", rowData: {} };
+let PRODUCTS_DATA = {};
+let REPLACE_LAN_DATA = {
+   editorRow: `/*  Enter Product Name = new Name, example:\nLOTUS = পদ্ম,\nCUCUMBER = শসা,\t\t\t\t\t\t\t\t\t\t*/\n\n\n\n\n// this numbers replace with bengali numbers\n1=১, 2=২, 3=৩, 4=৪, 5=৫, 6=৬, 7=৭, 8=৮, 9=৯, 0=০,\n\n\n// others\nPIECE=পিস, KG=কেজি, G=গ্রাম, X=প্যাকেট`,
+   editorJson: {},
+};
 
 function toBengaliNumber(number) {
    const englishDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];

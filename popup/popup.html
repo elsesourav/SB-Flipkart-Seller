@@ -54,25 +54,24 @@
                                  Header
          ------------------------------------------------------------------>
          <header>
-            <div class="logo">
-               <img src="./../assets/icons/icon.png" alt="extension icon" />
+            <div class="wrap">
+               <div class="logo">
+                  <img src="./../assets/icons/icon.png" alt="extension icon" />
+               </div>
+               <section>
+                  <p>Seller Automation</p>
+                  <b>
+                     &copy;
+                     <span class="first">else</span>
+                     <span class="second">sourav</span>
+                     <span class="third">2024</span>
+                  </b>
+               </section>
             </div>
-            <section>
-               <p>Seller Automation</p>
-               <b>
-                  &copy;
-                  <span class="first">else</span>
-                  <span class="second">sourav</span>
-                  <span class="third">2024</span>
-               </b>
-            </section>
-         </header>
-
-         <div class="head">
             <div class="openMoreOptions">
                <p>OPEN MORE OPTIONS</p>
             </div>
-         </div>
+         </header>
 
          <!----------------------------------------------------------------
                   Both (Auto and Manually)
@@ -80,6 +79,17 @@
          <!-- add different switch options -->
          <nav>
             <div class="options">
+               <div class="btn">
+                  <input
+                     type="radio"
+                     name="btn"
+                     data-name="printing"
+                     id="printing"
+                     class="m option-btn"
+                     checked
+                  />
+                  <label for="printing">PRINTING</label>
+               </div>
                <div class="btn">
                   <input
                      type="radio"
@@ -115,7 +125,7 @@
                   <input
                      type="radio"
                      name="btn"
-                     data-name=""
+                     data-name="replacement"
                      id="settings_control"
                      class="s option-btn"
                   />
@@ -125,9 +135,13 @@
          </nav>
 
          <main>
-            <!-- <div class="bg-img">
-               <img src="./../assets/img/bg.png" id="bgImage" />
-            </div> -->
+
+            <!----------------------------------------------------------------
+                                 Mapping
+            ------------------------------------------------------------------>
+            <div class="container" id="printingContainer">
+               
+            </div>
 
             <!----------------------------------------------------------------
                                  Mapping
@@ -511,7 +525,7 @@
                      <span class="inp-span">PkgWeight</span>
                      <section>
                         <div class="take-value">
-                           <div class="inp num" step="0.05">
+                           <div class="inp num" step="0.001">
                               <button class="dec">
                                  <i class="sbi-minus-square"></i>
                               </button>
@@ -2147,11 +2161,11 @@
             ------------------------------------------------------------------>
             <div class="container" id="products">
                <div class="buttons">
-                  <div class="button light import" id="importButtonMain">
+                  <div class="button light import import-all-btn" id="importButtonMain">
                      <p>IMPORT</p>
                      <i class="sbi-install"></i>
                   </div>
-                  <div class="button light export" id="exportButtonMain">
+                  <div class="button light export export-all-btn" id="exportButtonMain">
                      <p>EXPORT</p>
                      <i class="sbi-save2"></i>
                   </div>
@@ -2554,40 +2568,53 @@
             <div class="container" id="settings">
                <div class="basic-grid no-flip">
                   <div class="take-inp check-box">
-                     <span class="inp-span">Replace Language</span>
+                     <span class="inp-span">Replace Text</span>
                      <section>
                         <input
                            autocomplete="off"
                            type="checkbox"
-                           id="WordInBengali"
-                           name="WORD_IN_BENGALI"
-                           class="input-c toggle"
+                           id="ReplaceLanguageInput"
+                           name="WORD_IN_DIFFERENT_LANGUAGE"
+                           class="input-setting toggle"
                         />
                      </section>
                   </div>
 
-                  <div class="take-inp check-box" id="NumberInBengaliDiv">
+                  <div class="take-inp check-box hide" id="SameSaNumberDiv">
                      <span class="inp-span">Same as Numbers</span>
                      <section>
                         <input
                            autocomplete="off"
                            type="checkbox"
-                           id="NumberInBengali"
-                           name="NUMBER_IN_BENGALI"
-                           class="input-c toggle"
+                           id="SameSaNumberInput"
+                           name="NUMBER_IN_DIFFERENT_LANGUAGE"
+                           class="input-setting toggle"
                         />
                      </section>
                   </div>
 
                   <div class="take-inp full-width big-textarea">
-                     <span class="inp-span" id="jsonEditorTitle" class="">
-                        Define Your Replacement Text
-                     </span>
+                     <div class="editor-header">
+                        <div class="inp-span" id="languageEditorTitle" class="">
+                           Define Your Show Orders Replacement Text
+                        </div>
+
+                        <div class="ext-inp-content">
+                           <div class="exp-imp imp import-all-btn" id="import">
+                              <p>IMPORT</p>
+                              <i class="sbi-install"></i>
+                           </div>
+                           <div class="exp-imp ext export-all-btn">
+                              <p>EXPORT</p>
+                              <i class="sbi-save2"></i>
+                           </div>
+                        </div>
+                     </div>
                      <section>
                         <textarea
                            name="JSON_EDITOR"
-                           class="input-c"
-                           id="jsonEditor"
+                           class=""
+                           id="languageEditor"
                         ></textarea>
                      </section>
                   </div>

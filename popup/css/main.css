@@ -308,41 +308,6 @@ main .container {
    }
 }
 
-body:has(.btn:first-child input:checked) {
-   #myListing,
-   #products,
-   #settings {
-      display: none;
-      opacity: 1;
-   }
-}
-
-body:has(.btn:nth-child(2) input:checked) {
-   #mappingContainer,
-   #products,
-   #settings {
-      display: none;
-      opacity: 1;
-   }
-}
-
-body:has(.btn:nth-child(3) input:checked) {
-   #mappingContainer,
-   #myListing,
-   #settings {
-      display: none;
-      opacity: 1;
-   }
-}
-body:has(.btn:nth-child(4) input:checked) {
-   #mappingContainer,
-   #myListing,
-   #products {
-      display: none;
-      opacity: 1;
-   }
-}
-
 .take-inp,
 .show-output {
    position: relative;

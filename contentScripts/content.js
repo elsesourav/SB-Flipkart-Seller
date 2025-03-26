@@ -55,7 +55,7 @@ async function setup_listing() {
 }
 
 function setup_orders_print() {
-   let expandOrdersBtn, openInputBtn, closeBtn, printBtn, downloadBtn;
+   let expandOrdersBtn, checkBtn, openInputBtn, closeBtn, printBtn, downloadBtn;
    const sku_ids = document.querySelectorAll(".krECZe .hXpCNJ");
    if (sku_ids.length <= 0) return;
 
@@ -69,6 +69,10 @@ function setup_orders_print() {
       (expandOrdersBtn = CE(
          { class: "__btn__", "data-text": "EXPAND", style: "--delay: 200ms" },
          "EXPAND"
+      )),
+      (checkBtn = CE(
+         { class: "__btn__", "data-text": "CHECK", style: "--delay: 500ms" },
+         "CHECK"
       )),
       (openInputBtn = CE(
          { class: "__btn__", "data-text": "SHOW", style: "--delay: 400ms" },
@@ -124,6 +128,11 @@ function setup_orders_print() {
       }
    });
 
+   checkBtn.addEventListener("click", async () => {
+      const selectAllBtn = document.querySelector("#sub-app-container tr th input");
+      if (selectAllBtn) selectAllBtn.click();
+   })
+
    openInputBtn.addEventListener("click", async () => {
       const IS = {
          pack: isUrlContains("orderState=shipments_to_pack"),
@@ -135,6 +144,7 @@ function setup_orders_print() {
          closeBtn.style.display = "block";
          printBtn.style.display = "block";
          downloadBtn.style.display = "block";
+         checkBtn.style.display = "none";
          openInputBtn.style.display = "none";
          expandOrdersBtn.style.display = "none";
          TABLE.style.display = "flex";
@@ -146,6 +156,7 @@ function setup_orders_print() {
       closeBtn.style.display = "none";
       printBtn.style.display = "none";
       downloadBtn.style.display = "none";
+      checkBtn.style.display = "block";
       openInputBtn.style.display = "block";
       expandOrdersBtn.style.display = "block";
       TABLE.style.display = "none";

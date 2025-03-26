@@ -14,7 +14,7 @@
    --grid-min: 35px;
    --product-width: 250px;
    --nav-height: calc(var(--s) * 10);
-   --editor-font-size: calc(var(--s) * 2.5);
+   --editor-font-size: calc(var(--s) * 1.8);
 
    --color: light-dark(#000, #fff);
    --bg: light-dark(#fff, #000);
@@ -80,7 +80,7 @@ body {
       /* margin: var(--m); */
       display: grid;
       gap: calc(var(--s) / 2);
-      grid-template-rows: calc(var(--wh) * 0.16) calc(var(--wh) * 0.12) calc(var(--wh) * 0.12) 1fr;
+      grid-template-rows: calc(var(--wh) * 0.17) calc(var(--wh) * 0.11) 1fr;
       overflow-x: hidden;
       overflow-y: auto;
    }

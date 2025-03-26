@@ -10,8 +10,8 @@ const loginUserForm = I("#loginUserForm");
 const createUserMainButton = I("#createUser");
 const loginUserMainButton = I("#loginUser");
 
-const exportButtonElement = I("#exportButtonMain");
-const importButtonElement = I("#importButtonMain");
+const exportButtonElements = I(".export-all-btn");
+const importButtonElements = I(".import-all-btn");
 
 const importWindow = I("#importWindow");
 const exportWindow = I("#exportWindow");
@@ -216,16 +216,21 @@ exportButtons.click(async (_) => {
    }
 });
 
-exportButtonElement.click(async () => {
+exportButtonElements.click(async () => {
    const type = I(".options .btn input:checked")[0]?.dataset.name;
    if (!type) return;
 
    exportWindow.removeClass("hide");
-   exportTypes[0].innerHTML = type.toUpperCase();
 
-   const { username, password } = await chromeStorageGetLocal(
-      KEYS.STORAGE_USER_LOGIN
-   );
+   exportTypes[0].innerHTML = type.toUpperCase();
+   const DATA = await chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN);
+   let username;
+   let password;
+   if (DATA) {
+      username = DATA.username;
+      password = DATA.password;
+   }
+
    exportUsernames[0].value = username || "";
    exportPasswords[0].value = password || "";
    exportFileNames[0].value = "";
@@ -262,7 +267,8 @@ importButtons.click(async (_) => {
    );
 });
 
-importButtonElement.click(async () => {
+
+importButtonElements.click(async () => {
    const type = I(".options .btn input:checked")[0]?.dataset.name;
    if (!type) return;
    importWindow.removeClass("hide");
@@ -270,6 +276,7 @@ importButtonElement.click(async () => {
 
    const DATA = await chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN);
    let username;
+
    if (DATA) {
       username = DATA.username;
       importUsernames[0].value = username;

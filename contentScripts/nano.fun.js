@@ -244,6 +244,10 @@ function getBengaliUnit(num, data) {
    return [toBengaliNumber(num), data.typeInBengali.times];
 }
 
+function numberChangeLen(replaceLan, text) {
+   return text.split("").map((e) => replaceLan[e] || e).join("");
+}
+
 function extractNumbers(input) {
    const regex = /(\d+(\.\d+)?)([a-zA-Z]+)/g;
    const numbers = [];

@@ -290,40 +290,20 @@ async function showOrders() {
    const unit = document.querySelectorAll(".hCSXUa .hXpCNJ");
    const DATA = await getOrderData();
 
-   // console.log(DATA);
+   const { products, replaceJson: REPLACE, settings, changesSKU } = DATA;
+   const {
+      WORD_IN_DIFFERENT_LANGUAGE: IS_WORD_LEN,
+      NUMBER_IN_DIFFERENT_LANGUAGE: IS_NUM_LEN,
+   } = settings;
 
-   const { WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor, changesSKU } = DATA;
-
-   const { calculateWeight, nameInBengali } = editor;
-
-   const TYPE_IN_BENGALI = {
-      PIECE: "পিস",
-      KG: "কেজি",
-      G: "গ্রাম",
-      TIMES: "প্যাকেট",
-   };
-
-   // console.log(WORD_IN_BENGALI, NUMBER_IN_BENGALI, editor);
-
-   let NAMES = {};
-   for (const [key, value] of Object.entries(nameInBengali)) {
-      NAMES[key.toUpperCase()] = WORD_IN_BENGALI && value ? value : key;
-   }
-
-   let TYPES = {};
-
-   Object.entries(TYPE_IN_BENGALI).forEach(([key, value]) => {
-      TYPES[key] = WORD_IN_BENGALI ? value : key;
-   });
-
-   // if (WORD_IN_BENGALI) TABLE.style.fontSize = "18px";
-   // else
    TABLE.style.fontSize = "18px";
 
-   const SKU = [...sku_ids].map((el) => el.innerText);
-   const UNIT = [...unit].map((el) => parseInt(el.innerText));
-   const PRODUCTS_INFO = SKU.map((el) => {
-      const correctSku = changesSKU[el] ? changesSKU[el].NEW_SKU_ID : el;
+   const SKU = [...sku_ids].map((ele) => ele.innerText);
+   const UNIT = [...unit].map((ele) => parseInt(ele.innerText));
+
+   const PRODUCTS_INFO = SKU.map((ele) => {
+      const name = changesSKU[ele.replace(/ /g, "").toLowerCase()];
+      const correctSku = name ? name.NEW_SKU_ID : ele;
       return correctSku.split("__");
    });
 
@@ -331,35 +311,42 @@ async function showOrders() {
 
    PRODUCTS_INFO.forEach((p_info, i) => {
       if (p_info.length >= 3) {
-         const [nm, quantity, type] = p_info;
+         let [nm, quantity, type] = p_info;
          const splitName = nm.split("-");
-         // const isMy = splitName.length > 1;
-         const name = splitName[splitName.length - 1];
 
-         const NAME_IN_LAN = NAMES[name] || name;
-         const TYPE_IN_LAN = TYPES[type];
-         const QUANTITY_IN_LAN = NUMBER_IN_BENGALI
-            ? toBengaliNumber(quantity)
-            : quantity;
-         const WEIGHT = calculateWeight[name] || null;
+         // const isMy = splitName.length > 1;
+         let name = splitName[splitName.length - 1].toLowerCase();
 
          let IN_GRAM = "";
 
          // calculate weight if type is PIECE
-         if (type === "PIECE" && WEIGHT) {
-            const [_p_, _g_] = extractNumbers(WEIGHT);
-            const result = (quantity * _g_) / _p_;
-            const formattedResult = result.toFixed(2);
-            const temp = NUMBER_IN_BENGALI
-               ? toBengaliNumber(formattedResult)
-               : formattedResult;
-            IN_GRAM = ` 〉〈 ${temp} ${TYPES["G"]}`;
+         if (type.toUpperCase() === "PIECE" && products[name]) {
+            const { unit, weight } = products[name];
+
+            const per = 1000 / (unit / weight);
+            const inGram = quantity * per;
+            let fixedResult = inGram.toFixed(2);
+            if (IS_NUM_LEN) {
+               fixedResult = numberChangeLen(REPLACE, fixedResult);
+            }
+
+            const G = IS_WORD_LEN ? REPLACE["g"] || "G" : "G";
+
+            IN_GRAM = ` 〉〈 ${fixedResult} ${G}`;
          }
 
-         !PRODUCTS[NAME_IN_LAN] && (PRODUCTS[NAME_IN_LAN] = {});
-         const key = `${QUANTITY_IN_LAN} ${TYPE_IN_LAN}${IN_GRAM}`;
-         PRODUCTS[NAME_IN_LAN][key] =
-            (PRODUCTS[NAME_IN_LAN][key] || 0) + UNIT[i];
+         if (IS_WORD_LEN) {
+            name = REPLACE[name] || name;
+            type = REPLACE[type.toLowerCase()] || type;
+         }
+
+         if (IS_NUM_LEN) {
+            quantity = numberChangeLen(REPLACE, quantity);
+         }
+
+         !PRODUCTS[name] && (PRODUCTS[name] = {});
+         const key = `${quantity} ${type}${IN_GRAM}`;
+         PRODUCTS[name][key] = (PRODUCTS[name][key] || 0) + UNIT[i];
       } else {
          console.log("SKU NOT MATCHING THE FORMAT -> ", SKU[i]);
       }
@@ -372,23 +359,24 @@ async function showOrders() {
    const OBJECT_ORDERS = Object.fromEntries(ARRAY_PRODUCTS);
 
    const tableRows = Object.entries(OBJECT_ORDERS)
-      .map(([name, quantities]) => {
-         const TOTAL = Object.values(quantities).reduce((a, b) => a + b, 0);
-         const TOTAL_IN_LAN = NUMBER_IN_BENGALI
-            ? toBengaliNumber(TOTAL)
-            : TOTAL;
+      .map(([name, multi]) => {
+         let TOTAL = Object.values(multi).reduce((a, b) => a + b, 0);
+         TOTAL = TOTAL > 1 ? `(${TOTAL})` : "";
 
+         if (IS_NUM_LEN) {
+            TOTAL = numberChangeLen(REPLACE, TOTAL);
+         }
+
+         const NAME = name.toUpperCase();
          const header = `
             <input type="checkbox" class="_-checkbox" />
-            <div class="_-cell _-header">${name}&nbsp;&nbsp;&nbsp;(${TOTAL_IN_LAN})</div>
+            <div class="_-cell _-header">${NAME}&nbsp;&nbsp;&nbsp;${TOTAL}</div>
          `;
 
-         const cells = Object.entries(quantities)
+         const cells = Object.entries(multi)
             .map(([quantity, multi]) => {
-               const MULTI = WORD_IN_BENGALI
-                  ? `${NUMBER_IN_BENGALI ? toBengaliNumber(multi) : multi} ${
-                       TYPES["TIMES"]
-                    }`
+               let MULTI = IS_NUM_LEN
+                  ? `${numberChangeLen(REPLACE, `${multi} x`)}`
                   : `${multi}x`;
 
                const isMulti =

@@ -79,7 +79,7 @@ runtimeOnMessage("c_b_listing_data_request", (__, _, sendResponse) => {
 });
 
 runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
-   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, async (val) => {
+   chromeStorageGetLocal(KEYS.STORAGE_PRODUCT, async (DATA) => {
       const purav = chrome.runtime.getURL("./../assets/changes/sku.purav.json");
       const sbarui = chrome.runtime.getURL(
          "./../assets/changes/sku.sbarui.json"
@@ -90,8 +90,14 @@ runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
          const puravSKUs = await puravResponse.json();
          const sbaruiSKUs = await sbaruiResponse.json();
 
+         const replace = await chromeStorageGetLocal(KEYS.STORAGE_REPLACE_LAN);
+
+         const settings = await chromeStorageGetLocal(KEYS.STORAGE_SETTINGS);
+
          sendResponse({
-            ...val,
+            replaceJson: JSON.parse(replace.editorJson),
+            settings,
+            products: DATA,
             changesSKU: {
                ...puravSKUs,
                ...sbaruiSKUs,
@@ -99,7 +105,7 @@ runtimeOnMessage("c_b_order_data_request", async (__, _, sendResponse) => {
          });
       } catch (error) {
          console.log("Error loading products.json:", error);
-         sendResponse(val);
+         sendResponse(DATA);
       }
    });
 });

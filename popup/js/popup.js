@@ -1,10 +1,11 @@
 const aInputs = I(".take-inp .input-a");
 const bInputs = I(".take-inp .input-b");
-const cInputs = I(".take-inp .input-c");
+const settingsInputs = I("input.input-setting");
 
 const imageSection = I(".take-inp.image");
 const imageInputFields = I(".take-inp.image .inp-image");
 const imageView = I(".take-inp.image .img-box");
+const flipGrid = I(".grid-flip");
 
 const START_BTN = I("#IS_START");
 const PAUSE_BTN = I("#IS_PAUSE");
@@ -15,7 +16,6 @@ const numInpLimitB = I(".input-b.inp-limit");
 const addProductInpLimit = I("#addProductWindow input.inp-limit");
 const addProductInpIndDec = I("#addProductWindow button:is(.dec,.inc)");
 const addProductInputsData = I("#addProductWindow .p-win-inp");
-
 
 let holdTimer;
 let clearSingleListingButton = I("#MyListingClearBtn .clear");
@@ -31,7 +31,7 @@ I(".openMoreOptions").click(() => {
    chrome.runtime.openOptionsPage();
 });
 
-[aInputs, bInputs, cInputs].forEach((inp) => {
+[aInputs, bInputs].forEach((inp) => {
    inp.on("input", (_, __, ele) => {
       if (
          ele?.getAttribute("inputmode") === "numeric" &&
@@ -57,21 +57,33 @@ I(".openMoreOptions").click(() => {
 async function updateStorage() {
    await chromeStorageGetLocal(KEYS.STORAGE_INIT, (val) => {
       if (!val) {
+         const settings = {
+            listingOpen: [...flipGrid].map((e) => e.checked),
+            WORD_IN_DIFFERENT_LANGUAGE: false,
+            NUMBER_IN_DIFFERENT_LANGUAGE: false,
+            currentMode: 0,
+         };
+
+         setContent(REPLACE_LAN_DATA.editorRow);
+         REPLACE_LAN_DATA.editorJson = getJsonContent();
+
          chromeStorageSetLocal(KEYS.STORAGE_MAPPING, mappingData);
          chromeStorageSetLocal(KEYS.STORAGE_LISTING, listingData);
          chromeStorageSetLocal(KEYS.STORAGE_PRODUCT, PRODUCTS_DATA);
+         chromeStorageSetLocal(KEYS.STORAGE_REPLACE_LAN, REPLACE_LAN_DATA);
          chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
          chromeStorageSetLocal(KEYS.STORAGE_INIT, true);
       }
    });
 
    chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
+      if (!val) val = mappingData;
       mappingData = val;
-      // Helper function to set input value based on type
+
       const setInputValue = (input, data) => {
          const value = data[input.name];
 
-         if (input.name == "PRODUCT_NAME") {
+         if (input.name == "PRODUCT_NAME" && data[input.name]) {
             input.innerHTML = `
                <option>SELECT PRODUCT</option>
                <option selected value="${value}">${value.toUpperCase()}</option>
@@ -79,7 +91,7 @@ async function updateStorage() {
             return;
          }
 
-         switch(true) {
+         switch (true) {
             case input.type === "number":
                input.value = value || 0;
                break;
@@ -90,7 +102,8 @@ async function updateStorage() {
                input.value = value;
                if (!value) input.selectedIndex = 0;
                break;
-            case input.getAttribute("inputmode") === "numeric" && input.type === "text":
+            case input.getAttribute("inputmode") === "numeric" &&
+               input.type === "text":
                input.value = N(value || 0).toLocaleString("en-IN");
                break;
             default:
@@ -99,16 +112,13 @@ async function updateStorage() {
       };
 
       // Load input fields
-      aInputs.forEach(input => setInputValue(input, mappingData));
+      aInputs.forEach((input) => setInputValue(input, mappingData));
    });
-
 
    chromeStorageGetLocal(KEYS.STORAGE_PRODUCT, (val) => {
       PRODUCTS_DATA = val;
       addProductsInProductList(PRODUCTS_DATA);
    });
-
-
 
    chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
       listingData = val;
@@ -143,34 +153,30 @@ async function updateStorage() {
       setTotalCount();
    });
 
-   // chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
-   //    ordersData = val;
-   //    cInputs.forEach((inp) => {
-   //       if (inp.type === "checkbox")
-   //          inp.checked = ordersData[inp.name] || false;
-   //       else if (
-   //          inp.getAttribute("inputmode") === "numeric" &&
-   //          inp.type === "text"
-   //       )
-   //          inp.value = N(ordersData[inp.name] || 0).toLocaleString("en-IN");
-   //    });
-   //    jsonEditorTitle.removeClass("error");
-   //    setJsonContent(ordersData.editor);
-   //    I("#NumberInBengaliDiv")[0].classList.toggle(
-   //       "hide",
-   //       !ordersData.WORD_IN_BENGALI
-   //    );
-   // });
+   chromeStorageGetLocal(KEYS.STORAGE_REPLACE_LAN, (val) => {
+      REPLACE_LAN_DATA = val;
+      setContent(REPLACE_LAN_DATA.editorRow);
+   });
 
    // load settings
-   
-   
    chromeStorageGetLocal(KEYS.STORAGE_SETTINGS, (val) => {
       settings = val;
-      // settings.listingOpen.forEach(
-      //    (is, i) => (I(".grid-flip")[i].checked = is)
-      // );
-      I("nav .options .btn input")[settings.currentMode].checked = true;
+      const { currentMode, listingOpen } = settings;
+      listingOpen.forEach((e, i) => {
+         flipGrid[i].checked = e;
+      });
+      I("nav .options .btn input")[currentMode].checked = true;
+
+      I("input.input-setting").each((e) => {
+         e.checked = settings[e.name];
+      });
+
+      if (ReplaceLanguageInput.checked) {
+         I("#SameSaNumberDiv").removeClass("hide");
+      } else {
+         I("#SameSaNumberInput")[0].checked = false;
+         I("#SameSaNumberDiv").addClass("hide");
+      }
    });
 
    chromeStorageGetLocal(KEYS.STORAGE_USER_LOGIN, (val) => {
@@ -210,7 +216,11 @@ function setupIncDecAction(inputElements, saveFunction) {
          const v = inInc ? 1 : -1;
 
          ele.value = isFloat
-            ? handleFloatValue(parseFloat(ele.value.replace(/,/g, "") || 0), step, v)
+            ? handleFloatValue(
+                 parseFloat(ele.value.replace(/,/g, "") || 0),
+                 step,
+                 v
+              )
             : handleIntValue(ele.value.replace(/,/g, ""), step, v);
 
          saveFunction();
@@ -341,24 +351,134 @@ function saveDataB() {
    });
 }
 
-function saveDataC() {
-   chromeStorageGetLocal(KEYS.STORAGE_ORDERS, (val) => {
-      if (!val)
-         val = {
-            nameInBengali: {},
-         };
-      cInputs.forEach((inp) => {
-         if (inp.type === "checkbox") val[inp.name] = inp.checked;
+function saveSettings() {
+   chromeStorageGetLocal(KEYS.STORAGE_SETTINGS, (DATA) => {
+      if (!DATA) DATA = settings;
+
+      // save input setting
+      settingsInputs.forEach((inp) => {
+         if (inp.type === "checkbox") DATA[inp.name] = inp.checked;
          else if (
             inp.getAttribute("inputmode") === "numeric" &&
             inp.type === "text"
          )
-            val[inp.name] = inp.value.replace(/,/g, "") || 0;
+            DATA[inp.name] = inp.value.replace(/,/g, "") || 0;
       });
-      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, val);
+
+      // save flip gird setting
+      DATA.listingOpen = [...flipGrid].map((e) => e.checked);
+
+      // save current mode
+      DATA.currentMode = [...I("nav .options .btn input")].findIndex(
+         (e) => e.checked
+      );
+
+      chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, DATA);
+   });
+
+   EDITOR_AREA.refresh();
+}
+
+function saveReplaceLanguage() {
+   chromeStorageGetLocal(KEYS.STORAGE_REPLACE_LAN, (DATA) => {
+      if (!DATA) DATA = REPLACE_LAN_DATA;
+      DATA.editorJson = getJsonContent();
+      DATA.editorRow = getRowContent();
+      chromeStorageSetLocal(KEYS.STORAGE_REPLACE_LAN, DATA);
    });
 }
 
+function getLocalMappingData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function getLocalListingData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function getLocalProductsData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(KEYS.STORAGE_PRODUCT, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function getLocalReplacementData() {
+   return new Promise((resolve) => {
+      chromeStorageGetLocal(KEYS.STORAGE_REPLACE_LAN, (val) => {
+         resolve(val);
+      });
+   });
+}
+
+function setLocalMappingData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
+      updateStorage();
+      resolve();
+   });
+}
+
+function setLocalListingData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
+      updateStorage();
+      resolve();
+   });
+}
+
+function setLocalProductsData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(KEYS.STORAGE_PRODUCT, val);
+      updateStorage();
+      resolve();
+   });
+}
+
+function setLocalReplacementData(val) {
+   return new Promise((resolve) => {
+      chromeStorageSetLocal(KEYS.STORAGE_REPLACE_LAN, val);
+      updateStorage();
+      resolve();
+   });
+}
+
+async function getLocalFile(fileType) {
+   switch (fileType) {
+      case "MAPPING":
+         return await getLocalMappingData();
+      case "LISTING":
+         return await getLocalListingData();
+      case "PRODUCTS":
+         return await getLocalProductsData();
+      case "REPLACEMENT":
+         return await getLocalReplacementData();
+   }
+}
+
+async function setLocalFile(fileType, val) {
+   switch (fileType) {
+      case "MAPPING":
+         return await setLocalMappingData(val);
+      case "LISTING":
+         return await setLocalListingData(val);
+      case "PRODUCTS":
+         return await setLocalProductsData(val);
+      case "REPLACEMENT":
+         return await setLocalReplacementData(val);
+   }
+}
+
+// Old Automation Technique
 async function startAutoMationAction() {
    START_BTN[0].checked = false;
    PAUSE_BTN[0].checked = true;
@@ -410,7 +530,9 @@ async function pauseAutoMationAction() {
 async function setTotalCount() {
    const startCount = I("#START_COUNT")[0]?.value || 0;
    const endCount = I("#END_COUNT")[0]?.value || 0;
-   const repeat = (await chromeStorageGetLocal(`storage-images-small-0`))?.files?.length || 0;
+   const repeat =
+      (await chromeStorageGetLocal(`storage-images-small-0`))?.files?.length ||
+      0;
    const stapes = I("#STAPES_BY")[0]?.value || 1;
 
    const total = Math.abs(((endCount - startCount) / stapes) * repeat);
@@ -428,73 +550,3 @@ async function setTotalCount() {
 //       }
 //    }
 // });
-
-function getLocalMappingData() {
-   return new Promise((resolve) => {
-      chromeStorageGetLocal(KEYS.STORAGE_MAPPING, (val) => {
-         resolve(val);
-      });
-   });
-}
-
-function getLocalListingData() {
-   return new Promise((resolve) => {
-      chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
-         resolve(val);
-      });
-   });
-}
-
-function getLocalProductsData() {
-   return new Promise((resolve) => {
-      chromeStorageGetLocal(KEYS.STORAGE_PRODUCT, (val) => {
-         resolve(val);
-      });
-   });
-}
-
-function setLocalMappingData(val) {
-   return new Promise((resolve) => {
-      chromeStorageSetLocal(KEYS.STORAGE_MAPPING, val);
-      updateStorage();
-      resolve();
-   });
-}
-
-function setLocalListingData(val) {
-   return new Promise((resolve) => {
-      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
-      updateStorage();
-      resolve();
-   });
-}
-
-function setLocalProductsData(val) {
-   return new Promise((resolve) => {
-      chromeStorageSetLocal(KEYS.STORAGE_PRODUCT, val);
-      updateStorage();
-      resolve();
-   });
-}
-
-async function getLocalFile(fileType) {
-   switch (fileType) {
-      case "MAPPING":
-         return await getLocalMappingData();
-      case "LISTING":
-         return await getLocalListingData();
-      case "PRODUCTS":
-         return await getLocalProductsData();
-   }
-}
-
-async function setLocalFile(fileType, val) {
-   switch (fileType) {
-      case "MAPPING":
-         return await setLocalMappingData(val);
-      case "LISTING":
-         return await setLocalListingData(val);
-      case "PRODUCTS":
-         return await setLocalProductsData(val);
-   }
-}

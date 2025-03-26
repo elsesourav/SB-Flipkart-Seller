@@ -1,32 +1,24 @@
 aInputs.on("input", saveDataA);
 bInputs.on("input", saveDataB);
-cInputs.on("input", saveDataC);
+settingsInputs.on("input", saveSettings);
 updateStorage();
 
 setupIncDecAction(numInpLimitA, saveDataA);
 setupIncDecAction(numInpLimitB, saveDataB);
 setupIncDecAction(addProductInpLimit, () => {});
 
-I("#WordInBengali").click((_, __, ele) => {
+I("#ReplaceLanguageInput").click((_, __, ele) => {
    if (ele.checked) {
-      I("#NumberInBengaliDiv").removeClass("hide");
+      I("#SameSaNumberDiv").removeClass("hide");
    } else {
-      I("#NumberInBengali")[0].checked = false;
-      I("#NumberInBengaliDiv").addClass("hide");
+      I("#SameSaNumberInput")[0].checked = false;
+      I("#SameSaNumberDiv").addClass("hide");
    }
-   saveDataC();
+   saveSettings();
 });
 
-I(".grid-flip").click((_, i) => {
-   settings.listingOpen[i] = _.target.checked;
-   chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
-});
-
-I("nav .options .btn").click((_, i) => {
-   settings.currentMode = i;
-   chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, settings);
-   jsonEditor.refresh();
-});
+flipGrid.click(saveSettings);
+I("nav .options .btn").click(saveSettings);
 
 clearSingleListingButton.on("mousedown", __clear_data_listing__);
 clearSingleListingButton.on("mouseup", __clear_mapping__);
@@ -36,18 +28,7 @@ clearMappingButton.on("mousedown", __clear_data_mapping__);
 clearMappingButton.on("mouseup", __clear_mapping__);
 clearMappingButton.on("mouseleave", __clear_mapping__);
 
-jsonEditor.on("change", () => {
-   try {
-      const editorValue = getJsonContent();
-      ordersData.editor = editorValue;
-      chromeStorageSetLocal(KEYS.STORAGE_ORDERS, ordersData);
-      jsonEditorTitle.removeClass("error");
-   } catch (e) {
-      console.log("Invalid JSON");
-      jsonEditorTitle.addClass("error");
-   }
-});
-
+EDITOR_AREA.on("change", saveReplaceLanguage);
 START_BTN.click(startAutoMationAction);
 PAUSE_BTN.click(pauseAutoMationAction);
 STOP_BTN.click(stopAutoMationAction);
