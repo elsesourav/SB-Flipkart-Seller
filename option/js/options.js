@@ -8,10 +8,11 @@ let EXTENSION_MAPPING_DATA = null;
 let FK_CSRF_TOKEN = null;
 let SELLER_ID = null;
 let ALL_BRAND_NAMES = {};
+let OPTIONS_SETTINGS = {};
 let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
 
 
-(async () => {
+onload = async () => {
    SELLER_LISTING_DATA = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
 
    if (SELLER_LISTING_DATA) {
@@ -21,6 +22,18 @@ let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
       updateCompleteProgress(100, 0);
    }
 
+
+   OPTIONS_SETTINGS = getDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS);
+
+   if (OPTIONS_SETTINGS) {
+      const { listingType, ratingSelected, pageSelected } = OPTIONS_SETTINGS;
+      
+      I(`input[name="listing-type"][value="${listingType}"]`)[0].checked = true;
+      selectRating.setAttribute("selectedstart", ratingSelected.start);
+      selectRating.setAttribute("selectedend", ratingSelected.end);
+      selectPages.setAttribute("selectedstart", pageSelected.start);
+      selectPages.setAttribute("selectedend", pageSelected.end);
+   }
    
    if (!FK_CSRF_TOKEN) {
       const data = await getFkCsrfToken();
@@ -29,14 +42,25 @@ let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
          SELLER_ID = data.sellerId;
       }
    }
-})();
+};
 
 // rating.addEventListener(
 //    "change",
 //    debounce(filterProducts, () => 1000)
 // );
 
-selectRating.addEventListener("selectionchange", debounce(filterProducts, () => 1000));
+
+I(`input[name="listing-type"]`).on("change", saveOptionSettings);
+selectRating.addEventListener("selectionchange", debounce(__callBack__, () => 1000));
+function __callBack__() {
+   saveOptionSettings();
+   filterProducts(); 
+}
+selectPages.addEventListener("selectionchange", () => {
+   saveOptionSettings();
+});
+
+
 matchNames.addEventListener("input", debounce(filterProducts, () => 1000));
 searchSubmit.addEventListener("click", searchSubmitAction);
 searchProduct.addEventListener("keydown", (e) => {
@@ -144,10 +168,11 @@ previewWindow.addEventListener("click", (e) => {
 // Handle confirmation input
 confirmationInput.addEventListener("input", () => {
    const value = confirmationInput.value.trim();
-   startFinalMapping.disabled = value !== EXTENSION_MAPPING_DATA?.SKU_NAME;
+   const NAME = EXTENSION_MAPPING_DATA?.PRODUCT_NAME?.toUpperCase()?.trim();
+   startFinalMapping.disabled = value !== NAME;
 
-   if (value && value !== EXTENSION_MAPPING_DATA?.SKU_NAME) {
-      confirmationError.textContent = `Please type "${EXTENSION_MAPPING_DATA?.SKU_NAME}" exactly`;
+   if (value && value !== NAME) {
+      confirmationError.textContent = `Please type "${NAME}" exactly`;
    } else {
       confirmationError.textContent = "";
    }
@@ -263,8 +288,25 @@ addBrandName.addEventListener("click", () => {
    setupBrandNames();
 });
 
+
 function saveBrandNames() {
    setDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES)
+}
+
+function saveOptionSettings() {
+   const listingType = I(`input[name="listing-type"]:checked`).value;
+   OPTIONS_SETTINGS = {
+      listingType,
+      ratingSelected: {
+         start: selectRating.selectedstart,
+         end: selectRating.selectedend,
+      },
+      pageSelected: {
+         start: selectPages.selectedstart,
+         end: selectPages.selectedend,
+      }
+   }
+   setDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS, OPTIONS_SETTINGS);
 }
 
 function loadBrandNames() {

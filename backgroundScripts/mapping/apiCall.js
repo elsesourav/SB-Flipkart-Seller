@@ -194,10 +194,11 @@ function verifyProductUsingUserData(product, sellerProducts) {
       try {
          // Search for product details
          const { productBrand, vertical, media, id } = product;
+         
          const myListingData = sellerProducts[id];
          const imageUrl = newImgPath(media.images?.[0]?.url)
 
-         if (myListingData?.alreadySelling) {
+         if (myListingData) {
             const data = await getProductSellers(id);
             resolve({ ...data, is: true, imageUrl, ...myListingData });
          } else {
@@ -327,6 +328,115 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
       }
    });
 };
+
+function createNewProductMappingBulk(DATA) {
+   return new Promise(async (resolve) => {
+      const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS } = DATA;
+
+      const BULK_REQUESTS = PRODUCTS.map((product) => {
+         // console.log(product);
+
+         const {
+            ID,
+            SKU,
+            MRP,
+            LISTING_STATUS,
+            PROCUREMENT_TYPE,
+            SHIPPING_DAYS,
+            STOCK_SIZE,
+            SELLING_PRICE,
+            HSN,
+            MINIMUM_ORDER_QUANTITY,
+            DELIVERY_LOCAL,
+            DELIVERY_NATIONAL,
+            DELIVERY_ZONAL,
+            EARLIEST_MFG_DATE,
+            SHELF_LIFE,
+            MANUFACTURER_DETAILS,
+            PACKER_DETAILS,
+            TOTAL_WEIGHT,
+            PACKAGING_LENGTH,
+            PACKAGING_BREADTH,
+            PACKAGING_HEIGHT,
+         } = product;
+
+         const PRODUCT_DATA = {
+            sku_id: [{ value: SKU, qualifier: "" }],
+            country_of_origin: [{ value: "IN", qualifier: "" }],
+            earliest_mfg_date: [{ value: EARLIEST_MFG_DATE, qualifier: "" }],
+            flipkart_selling_price: [{ value: SELLING_PRICE, qualifier: "INR" }],
+            hsn: [{ value: HSN, qualifier: "" }],
+            listing_status: [{ value: LISTING_STATUS, qualifier: "" }],
+            local_shipping_fee_from_buyer: [{ value: DELIVERY_LOCAL, qualifier: "INR" }],
+            luxury_cess: [{ qualifier: "Percentage" }],
+            manufacturer_details: [{ value: MANUFACTURER_DETAILS, qualifier: "" }],
+            minimum_order_quantity: [{ value: MINIMUM_ORDER_QUANTITY, qualifier: "" }],
+            mrp: [{ value: MRP, qualifier: "INR" }],
+            national_shipping_fee_from_buyer: [{ value: DELIVERY_NATIONAL, qualifier: "INR" }],
+            packer_details: [{ value: PACKER_DETAILS, qualifier: "" }],
+            procurement_type: [{ value: PROCUREMENT_TYPE, qualifier: "" }],
+            service_profile: [{ value: "NON_FBF", qualifier: "" }],
+            shelf_life: [{ value: SHELF_LIFE, qualifier: "Months" }],
+            shipping_days: [{ value: SHIPPING_DAYS, qualifier: "HR" }],
+            shipping_provider: [{ value: "FLIPKART", qualifier: "" }],
+            stock_size: [{ value: STOCK_SIZE, qualifier: "" }],
+            tax_code: [{ value: "GST_5", qualifier: "" }],
+            zonal_shipping_fee_from_buyer: [{ value: DELIVERY_ZONAL, qualifier: "INR" }],
+         };
+
+         const PACKAGE_DATA = {
+            id: { value: "packages-0" },
+            length: { value: PACKAGING_LENGTH, qualifier: "CM" },
+            breadth: { value: PACKAGING_BREADTH, qualifier: "CM" },
+            height: { value: PACKAGING_HEIGHT, qualifier: "CM" },
+            weight: { value: TOTAL_WEIGHT, qualifier: "KG" },
+            sku_id: { value: SKU, qualifier: "" },
+         };
+
+         return {
+            attributeValues: PRODUCT_DATA,
+            context: { ignore_warnings: true },
+            packages: [PACKAGE_DATA],
+            productId: ID,
+            skuId: SKU,
+         };
+      });
+
+      const HEADER = {
+         accept: "*/*",
+         "content-type": "application/json",
+         "fk-csrf-token": FK_CSRF_TOKEN,
+      };
+
+      const REQUEST_BODY = {
+         sellerId: SELLER_ID,
+         bulkRequests: BULK_REQUESTS,
+      };
+
+      const REQUEST_OPTIONS = {
+         method: "POST",
+         headers: HEADER,
+         body: JSON.stringify(REQUEST_BODY),
+         credentials: "include",
+      };
+
+      try {
+         const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
+         if (!response.ok) {
+            console.log("Mapping failed:", await response.text());
+            resolve([]);
+            return;
+         }
+
+         const data = await response.json();
+
+         resolve(data?.result?.bulkResponse);
+      } catch (error) {
+         console.log("Error mapping product:", error);
+         resolve([]);
+      }
+   });
+}
 
 function createProductMappingBulk(DATA) {
    return new Promise(async (resolve) => {

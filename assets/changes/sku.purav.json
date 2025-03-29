@@ -747,5 +747,12 @@
       "NAME": "BITTER GOURD",
       "TYPE": "PIECE",
       "QUANTITY": 108
+   },
+   "undefined__105__PIECE__E6G3": {
+      "SKU_ID": "CUCUMBER__105__PIECE__E6G3",
+      "NEW_SKU_ID": "CUCUMBER__105__PIECE__E6G3",
+      "NAME": "CUCUMBER",
+      "TYPE": "PIECE",
+      "QUANTITY": 105
    }
 }

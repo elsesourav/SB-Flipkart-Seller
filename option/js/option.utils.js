@@ -14,13 +14,23 @@ function getFkCsrfToken() {
    });
 }
 
-function getMappingPossibleProductData(data, sellerId) {
+function getMappingPossibleProductData(data, listingType, sellerId) {
    return new Promise((resolve) => {
-      runtimeSendMessage(
-         "c_b_get_mapping_product_data",
-         { ...data, sellerId },
-         (r) => resolve(r)
-      );
+      if (listingType === "new") {
+         runtimeSendMessage(
+            "c_b_get_new_mapping_product_data",
+            { ...data, sellerId },
+            (r) => resolve(r)
+         );
+      } else {
+         if (data.productName.length < 3) resolve([]);
+
+         runtimeSendMessage(
+            "c_b_get_old_mapping_product_data",
+            { ...data, sellerId },
+            (r) => resolve(r)
+         );
+      }
    });
 }
 
@@ -54,7 +64,7 @@ runtimeOnMessage(
 function createMappingSendRequest() {
    return new Promise((resolve) => {
       runtimeSendMessage(
-         "c_b_create_all_selected_product_mapping",
+         "c_b_create_new_product_mapping",
          {
             products: SELECTED_PRODUCTS_DATA.reverse(),
             fkCsrfToken: FK_CSRF_TOKEN,
@@ -154,17 +164,24 @@ async function searchSubmitAction() {
    showLoading();
 
    const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
+   const { listingType } = getDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS);
 
    const data = {
       productName,
       startingPage: start,
       endingPage: end,
-      sellerListing: listingData,
+      sellerListing: listingData.data || {},
       fkCsrfToken: FK_CSRF_TOKEN,
    };
 
    try {
-      PRODUCTS = await getMappingPossibleProductData(data, SELLER_ID);
+      PRODUCTS = await getMappingPossibleProductData(
+         data,
+         listingType,
+         SELLER_ID
+      );
+
+      console.log(PRODUCTS);
 
       PRODUCTS = PRODUCTS.sort((a, b) => {
          const priority = { G: 1, PIECE: 2 };
@@ -204,7 +221,7 @@ function getHTMLProductCards(ps, searchNames = []) {
             PRICE,
             PROFIT,
             SIGNAL,
-            NATIONAL_FEE,
+            NATIONAL_PROFIT,
             internal_state,
          } = p;
 
@@ -253,7 +270,7 @@ function getHTMLProductCards(ps, searchNames = []) {
                <div class="list new">
                   <div class="rs price-new">${PRICE}</div>
                   <div class="rs profit">${PROFIT}</div>
-                  <div class="rs national-fee">${NATIONAL_FEE}</div>
+                  <div class="rs national-fee">${NATIONAL_PROFIT}</div>
                </div>
             </div>
          </div>`;
@@ -274,7 +291,7 @@ function createProductCard() {
    // old | new
    const type = I(`input[name="listing-type"]:checked`).value;
    // console.log(PRODUCTS);
-   
+
    const $PRODUCTS = PRODUCTS.filter((p) =>
       type === "new" ? !p.alreadySelling : p.alreadySelling
    );
@@ -285,7 +302,7 @@ function createProductCard() {
       checkbox.addEventListener("click", () => {
          updateSelectedCount();
       });
-   })
+   });
 }
 
 function highlightMatches(title, searchNames = []) {
@@ -317,20 +334,22 @@ function filterByRating() {
    const ratingEnd = (selectRating.selectedend || 1) / 2;
 
    const min = Math.min(ratingStart, ratingEnd);
-   const max = Math.max(ratingStart, ratingEnd);
-   if (max <= 0.5) return;
+   // const max = Math.max(ratingStart, ratingEnd);
+   if (min <= 0.5) return;
 
-   PRODUCTS = PRODUCTS.sort(
-      (a, b) => b?.rating?.average - a?.rating?.average
-   ).filter((x) => x?.rating?.count > 0 && x?.rating?.average >= min);
+   PRODUCTS = PRODUCTS.map((p) => {
+      p.r = p?.rating?.average || min;
+      return p;
+   });
+   PRODUCTS = PRODUCTS.filter((p) => p.r >= min).sort((a, b) => b.r - a.r);
 }
 
 function filterByNames() {
    let searchNames = matchNames?.value?.toLowerCase();
-   if (!searchNames) {
-      PRODUCTS = [...SAVED_PRODUCTS];
-      return;
-   }
+   // if (!searchNames) {
+   //    PRODUCTS = [...SAVED_PRODUCTS];
+   //    return;
+   // }
    const names = searchNames.split("-").map((n) => n.trim());
 
    // Sort products: matching names first, non-matching last
@@ -377,23 +396,32 @@ function showConfirmationWindow() {
    confirmationError.textContent = "";
    startFinalMapping.disabled = true;
 
+   console.log(EXTENSION_MAPPING_DATA);
+
    const {
-      SKU_NAME,
-      MIN_PROFIT,
-      MAX_PROFIT,
+      PRODUCT_NAME,
+      MIN_PROFIT_LZ,
+      MAX_PROFIT_LZ,
+      MIN_PROFIT_N,
+      MAX_PROFIT_N,
       FIXED_COST,
       PACKING_COST,
-      DELIVERY_NATIONAL,
       MANUFACTURER_DETAILS,
    } = EXTENSION_MAPPING_DATA;
 
-   productName.innerHTML = SKU_NAME;
-   productProfit.innerHTML = `${MIN_PROFIT} <-> ${MAX_PROFIT}`;
+   const NAME = PRODUCT_NAME.toUpperCase().trim();
+   const NATIONAL_FEE = `${22 - (MAX_PROFIT_LZ - MAX_PROFIT_N)} <-> ${
+      22 - (MIN_PROFIT_LZ - MIN_PROFIT_N)
+   }`;
+   const PROFIT = `${MIN_PROFIT_LZ}, ${MIN_PROFIT_N} <-> ${MAX_PROFIT_LZ}, ${MAX_PROFIT_N}`;
+
+   productName.innerHTML = NAME;
+   productProfit.innerHTML = PROFIT;
    productFixedCost.innerHTML = FIXED_COST;
    productPackingCost.innerHTML = PACKING_COST;
-   productNationalDelivery.innerHTML = DELIVERY_NATIONAL;
+   productNationalDelivery.innerHTML = NATIONAL_FEE;
    productManufacturer.innerHTML = MANUFACTURER_DETAILS;
-   confirmationInputValue.innerHTML = SKU_NAME.toUpperCase().trim();
+   confirmationInputValue.innerHTML = NAME;
 
    confirmationInput.focus();
 }
@@ -403,7 +431,6 @@ function hideConfirmationWindow() {
    confirmationInput.value = "";
    confirmationError.textContent = "";
 }
-
 
 // need to remove or update
 function getOldAndNewProductSize(DATA) {
@@ -456,7 +483,7 @@ function getHTMLPreviewProductCards(ps) {
             PRICE,
             PROFIT,
             SIGNAL,
-            NATIONAL_FEE,
+            NATIONAL_PROFIT,
             internal_state,
          } = p;
 
@@ -497,7 +524,7 @@ function getHTMLPreviewProductCards(ps) {
                <div class="list new">
                   <div class="rs price-new">${PRICE}</div>
                   <div class="rs profit">${PROFIT}</div>
-                  <div class="rs national-fee">${NATIONAL_FEE}</div>
+                  <div class="rs national-fee">${NATIONAL_PROFIT}</div>
                </div>
             </div>
             <div class="remove-product-btn">

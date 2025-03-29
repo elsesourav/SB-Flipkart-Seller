@@ -9,8 +9,9 @@ const KEYS = {
    STORAGE_SETTINGS: "SB_Seller_Settings",
    STORAGE_USER_LOGIN: "SB_Seller_UserLogin",
    STORAGE_FILTER_SKUS: "SB_Seller_FilterSkus",
-   STORAGE_BRAND_NAME: "SB_Seller_BrandName",
    STORAGE_SELLER_LISTING: "SB_Seller_SellerListing",
+   STORAGE_BRAND_NAME: "SB_Seller_BrandName",
+   STORAGE_OPTION_SETTINGS: "SB_Seller_Options_Settings",
 };
 
 const URLS = {
@@ -154,6 +155,13 @@ const N = (string) => Number(string);
    document.body.appendChild(divWithChild); 
 */
 
+function map(os, oe, ns, ne, t, isRound = true) {
+   const r = (ne - ns) / (oe - os);
+   let v = r * (t - os) + ns;
+   v = Math.min(ne, Math.max(ns, v));
+   return isRound ? Math.round(v) : v;
+}
+
 function setDataToLocalStorage(key, object) {
    var data = JSON.stringify(object);
    localStorage.setItem(key, data);
@@ -292,6 +300,7 @@ function chromeStorageSetLocal(key, value, callback) {
       }
    });
 }
+
 function chromeStorageGetLocal(key, callback) {
    return new Promise((resolve) => {
       chrome.storage.local.get([key]).then((result) => {

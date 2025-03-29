@@ -8,6 +8,7 @@ importScripts(
    "./bgUtils.js",
    "./apiCall.js",
 
+   "./mapping/calculation.js",
    "./mapping/bg.js",
    "./mapping/apiCall.js",
    "./mapping/control.js"
