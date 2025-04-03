@@ -106,6 +106,7 @@ function setup_orders_print() {
          pack: isUrlContains("orderState=shipments_to_pack"),
          dispatch: isUrlContains("orderState=shipments_to_dispatch"),
          handover: isUrlContains("orderState=shipments_to_handover"),
+         transit: isUrlContains("orderState=shipments_in_transit"),
       };
       const element = [
          ...document.querySelectorAll(`button[data-testid="button"]`),
@@ -118,7 +119,7 @@ function setup_orders_print() {
          parent.dispatchEvent(new Event("change", { bubbles: true }));
       }
 
-      if (IS.pack || IS.dispatch || IS.handover) {
+      if (IS.pack || IS.dispatch || IS.handover || IS.transit) {
          const select = document.querySelector(`select[name="default"]`);
          const value = select?.value;
          if (select && value != "70") {
@@ -138,9 +139,10 @@ function setup_orders_print() {
          pack: isUrlContains("orderState=shipments_to_pack"),
          dispatch: isUrlContains("orderState=shipments_to_dispatch"),
          handover: isUrlContains("orderState=shipments_to_handover"),
+         transit: isUrlContains("orderState=shipments_in_transit"),
       };
 
-      if (IS.pack || IS.dispatch || IS.handover) {
+      if (IS.pack || IS.dispatch || IS.handover || IS.transit) {
          closeBtn.style.display = "block";
          printBtn.style.display = "block";
          downloadBtn.style.display = "block";
@@ -166,89 +168,109 @@ function setup_orders_print() {
    downloadBtn.addEventListener("click", downloadAsImage);
 }
 
-async function setup_mapping() {
-   let openInputBtn, copyInputBtn;
+// async function setup_mapping() {
+//    let openInputBtn, copyInputBtn;
 
-   CE(
-      { id: "__fwm__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs"))
-      // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
-   ).parent(document.body);
+//    CE(
+//       { id: "__fwm__", class: "__fw__" },
+//       (openInputBtn = CE({ class: "__btn__" }, "Fill Inputs"))
+//       // (copyInputBtn = CE({ class: "__btn__ __1__" }, "Copy Inputs"))
+//    ).parent(document.body);
 
-   openInputBtn.addEventListener("click", () => fillMappingInputs());
-   // copyInputBtn.addEventListener("click", () => copyMappingInputs());
+//    openInputBtn.addEventListener("click", () => fillMappingInputs());
+//    // copyInputBtn.addEventListener("click", () => copyMappingInputs());
 
-   document.querySelector(".hTTPSU")?.addEventListener("click", () => {
-      openInputBtn.removeEventListener("click", () => fillMappingInputs());
-      // copyInputBtn.removeEventListener("click", () => copyMappingInputs());
-   });
-}
+//    document.querySelector(".hTTPSU")?.addEventListener("click", () => {
+//       openInputBtn.removeEventListener("click", () => fillMappingInputs());
+//       // copyInputBtn.removeEventListener("click", () => copyMappingInputs());
+//    });
+// }
 
-function setup_flipkart_product_url() {
-   let openInputBtn, closeBtn, main;
-   CE(
-      { id: "__fws__", class: "__fw__" },
-      (openInputBtn = CE({ class: "__btn__" }, "OPEN URLS")),
-      (closeBtn = CE({ class: "__btn__ __1__" }, "CLOSE"))
-   ).parent(document.body);
+// function setup_flipkart_product_url() {
+//    let openInputBtn, closeBtn, main;
+//    CE(
+//       { id: "__fws__", class: "__fw__" },
+//       (openInputBtn = CE({ class: "__btn__" }, "OPEN URLS")),
+//       (closeBtn = CE({ class: "__btn__ __1__" }, "CLOSE"))
+//    ).parent(document.body);
 
-   closeBtn.style.display = "none";
+//    closeBtn.style.display = "none";
 
-   main = document.createElement("div");
-   main.setAttribute("id", "__flipkartFW__");
+//    main = document.createElement("div");
+//    main.setAttribute("id", "__flipkartFW__");
 
-   openInputBtn.addEventListener("click", () => {
-      closeBtn.style.display = "block";
-      openInputBtn.style.display = "none";
+//    openInputBtn.addEventListener("click", () => {
+//       closeBtn.style.display = "block";
+//       openInputBtn.style.display = "none";
 
-      const set = new Set(
-         [...document.querySelectorAll("a[target='_blank']")].map(
-            (a) => a.parentNode
-         )
-      );
+//       const set = new Set(
+//          [...document.querySelectorAll("a[target='_blank']")].map(
+//             (a) => a.parentNode
+//          )
+//       );
 
-      const itemWidth = 100 / 3 - (10 * 2) / 3;
+//       const itemWidth = 100 / 3 - (10 * 2) / 3;
 
-      set.forEach((el) => {
-         const link = el.querySelector('a[target="_blank"]');
-         if (link) {
-            el.style.cssText = `
-            flex: 0 0 ${itemWidth}%;
-            margin: 5px;
-            box-sizing: border-box;
-            cursor: pointer;
-         `;
-            el.addEventListener("click", (evt) => {
-               evt.stopPropagation();
-               evt.preventDefault();
-               const FSN = getFSNFromPID(link.href);
-               // open new tab with link
-               window.open(`${URLS.addMapping}${FSN}`, "_blank");
-            });
-            main.appendChild(el);
-         }
-      });
-      document.body.appendChild(main);
-      main.style.display = "flex";
-   });
+//       set.forEach((el) => {
+//          const link = el.querySelector('a[target="_blank"]');
+//          if (link) {
+//             el.style.cssText = `
+//             flex: 0 0 ${itemWidth}%;
+//             margin: 5px;
+//             box-sizing: border-box;
+//             cursor: pointer;
+//          `;
+//             el.addEventListener("click", (evt) => {
+//                evt.stopPropagation();
+//                evt.preventDefault();
+//                const FSN = getFSNFromPID(link.href);
+//                // open new tab with link
+//                window.open(`${URLS.addMapping}${FSN}`, "_blank");
+//             });
+//             main.appendChild(el);
+//          }
+//       });
+//       document.body.appendChild(main);
+//       main.style.display = "flex";
+//    });
 
-   closeBtn.addEventListener("click", () => {
-      closeBtn.style.display = "none";
-      openInputBtn.style.display = "block";
-      main.style.display = "none";
-      main.innerHTML = "";
-   });
-}
+//    closeBtn.addEventListener("click", () => {
+//       closeBtn.style.display = "none";
+//       openInputBtn.style.display = "block";
+//       main.style.display = "none";
+//       main.innerHTML = "";
+//    });
+// }
 
 onload = async () => {
    if (ifMatchSingleListingLocation() && ifHaveSaveButton()) {
       setStyle();
       setup_listing();
    }
+   
 
    if (ifMatchSingleOrderLocation()) {
       setStyle();
       setup_orders_print();
+   }
+
+   if (ItIsFlipkartPage()) {
+      const { theme } = await isDarkMode();
+      console.log(theme);
+      
+
+      if (theme === "dark") {
+         document.documentElement.style.filter = "invert(1) hue-rotate(180deg)";
+         function fixMedia() {
+            document.querySelectorAll("img, video").forEach(el => {
+               el.style.filter = "invert(1) hue-rotate(180deg)";
+            });
+         }
+   
+         fixMedia();
+         const observer = new MutationObserver(fixMedia);
+         observer.observe(document.body, { childList: true, subtree: true });
+      }
    }
 
    // if (ifFlipkartSearchLocation()) {
@@ -281,26 +303,27 @@ addEventListener("mousedown", async (_) => {
          fwl.style.display = "none";
       }
 
-      const fwm = I("#__fwm__")[0];
-      const isFWM = fwm instanceof Node;
+      // const fwm = I("#__fwm__")[0];
+      // const isFWM = fwm instanceof Node;
 
-      if (ifHaveFloatingDialog() && !isFWM) {
-         setStyle();
-         setup_mapping();
-      } else if (ifHaveFloatingDialog() && isFWM) {
-         fwm.style.display = "flex";
-      } else if (fwm) {
-         fwm.style.display = "none";
-      }
+      // if (ifHaveFloatingDialog() && !isFWM) {
+      //    setStyle();
+      //    setup_mapping();
+      // } else if (ifHaveFloatingDialog() && isFWM) {
+      //    fwm.style.display = "flex";
+      // } else if (fwm) {
+      //    fwm.style.display = "none";
+      // }
    }
 
    const IS = {
       pack: isUrlContains("orderState=shipments_to_pack"),
       dispatch: isUrlContains("orderState=shipments_to_dispatch"),
       handover: isUrlContains("orderState=shipments_to_handover"),
+      transit: isUrlContains("orderState=shipments_in_transit"),
    };
 
-   if (IS.pack || IS.dispatch || IS.handover) {
+   if (IS.pack || IS.dispatch || IS.handover || IS.transit) {
       const fwo = I("#__fwo__")[0];
       const isFWO = fwo instanceof Node;
 

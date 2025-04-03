@@ -1,5 +1,5 @@
 {
-   "name": "Seller Automation ES",
+   "name": "Seller Automation",
    "version": "1.5.0",
    "description": "A tool for online sellers, automating listings and mapping to streamline e-commerce operations. (Copyright SouravBarui2025).",
    "manifest_version": 3,
@@ -43,7 +43,7 @@
          "24": "assets/icons/icon.png",
          "32": "assets/icons/icon.png"
       },
-      "default_title": "Testing",
+      "default_title": "Seller Automation",
       "default_popup": "./popup/popup.html"
    },
    "icons": {

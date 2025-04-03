@@ -14,7 +14,8 @@
    --grid-min: 35px;
    --product-width: 250px;
    --nav-height: calc(var(--s) * 10);
-   --editor-font-size: calc(var(--s) * 1.8);
+   --editor-height: calc(var(--s) * 30);
+   --editor-font-size: calc(var(--s) * 1.4);
 
    --color: light-dark(#000, #fff);
    --bg: light-dark(#fff, #000);

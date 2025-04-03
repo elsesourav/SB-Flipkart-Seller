@@ -1,0 +1,193 @@
+{
+   "data": {
+      "getAverageSettlementPrice": {
+         "LSTPAEGBJHFGH2DTHUUIATFRO": {
+            "selling_price": 150,
+            "settlement_status": "SETTLEMENT_VALUE_ACHIEVED",
+            "zone_level_splits": [
+               {
+                  "fulfilment_type": "NON_FBF",
+                  "fulfilment_message": "Fulfilled by You",
+                  "order_share": 0,
+                  "return_share": 0,
+                  "settlement_calculator": {
+                     "feeGroups": [
+                        {
+                           "displayName": "Commission",
+                           "feeKey": "platform_fee",
+                           "localValue": "24.00",
+                           "zonalValue": "24.00",
+                           "nationalValue": "26.24"
+                        },
+                        {
+                           "displayName": "Shipping Fee",
+                           "feeKey": "forward_shipping_fee",
+                           "localValue": "0.00",
+                           "zonalValue": "0.00",
+                           "nationalValue": "16.00"
+                        },
+                        {
+                           "displayName": "Fixed Fee",
+                           "feeKey": "closing_fee",
+                           "localValue": "71.00",
+                           "zonalValue": "71.00",
+                           "nationalValue": "71.00"
+                        },
+                        {
+                           "displayName": "Collection Fee",
+                           "feeKey": "payment_fee",
+                           "localValue": "0.00",
+                           "zonalValue": "0.00",
+                           "nationalValue": "0.00"
+                        }
+                     ],
+                     "gstGroups": [
+                        {
+                           "displayName": "Commission",
+                           "taxKey": "platform_fee",
+                           "localValue": "4.32",
+                           "zonalValue": "4.32",
+                           "nationalValue": "4.72"
+                        },
+                        {
+                           "displayName": "Shipping Fee",
+                           "taxKey": "forward_shipping_fee",
+                           "localValue": "0.00",
+                           "zonalValue": "0.00",
+                           "nationalValue": "2.88"
+                        },
+                        {
+                           "displayName": "Fixed Fee",
+                           "taxKey": "closing_fee",
+                           "localValue": "12.78",
+                           "zonalValue": "12.78",
+                           "nationalValue": "12.78"
+                        },
+                        {
+                           "displayName": "Collection Fee",
+                           "taxKey": "payment_fee",
+                           "localValue": "0.00",
+                           "zonalValue": "0.00",
+                           "nationalValue": "0.00"
+                        }
+                     ],
+                     "shippingCharges": {
+                        "local": "0",
+                        "zonal": "0",
+                        "national": "14"
+                     },
+                     "settlementValue": {
+                        "local": 37.13,
+                        "zonal": 37.13,
+                        "national": 29.55
+                     },
+                     "inputGstCredit": {
+                        "local": 17.74,
+                        "zonal": 17.74,
+                        "national": 21.07
+                     },
+                     "returnCharges": {
+                        "local": 160.48,
+                        "zonal": 184.08,
+                        "national": 226.56
+                     },
+                     "netAmount": {
+                        "local": 95,
+                        "zonal": 95,
+                        "national": 113.24
+                     },
+                     "gstNetAmount": {
+                        "local": 17.1,
+                        "zonal": 17.1,
+                        "national": 20.38
+                     },
+                     "showPaymentType": true,
+                     "inputGstCreditNetAmount": {
+                        "local": 17.87,
+                        "zonal": 17.87,
+                        "national": 21.21
+                     },
+                     "inputTaxCreditGroups": [
+                        {
+                           "displayName": "Input TCS Credits",
+                           "feeKey": "input_tcs_credits",
+                           "localValue": "0.64",
+                           "zonalValue": "0.64",
+                           "nationalValue": "0.69"
+                        },
+                        {
+                           "displayName": "Input TDS Credits",
+                           "feeKey": "input_tds_credits",
+                           "localValue": "0.13",
+                           "zonalValue": "0.13",
+                           "nationalValue": "0.14"
+                        },
+                        {
+                           "displayName": "Input GST Credits",
+                           "feeKey": "input_gst_credits",
+                           "localValue": "17.10",
+                           "zonalValue": "17.10",
+                           "nationalValue": "20.38"
+                        }
+                     ],
+                     "tcs": {
+                        "local": 0.64,
+                        "zonal": 0.64,
+                        "national": 0.69
+                     },
+                     "tds": {
+                        "local": 0.13,
+                        "zonal": 0.13,
+                        "national": 0.14
+                     },
+                     "taxesNetAmount": {
+                        "local": 17.87,
+                        "zonal": 17.87,
+                        "national": 21.21
+                     },
+                     "pick_and_pack_fee_note": null,
+                     "totalSettlementAmount": {
+                        "local": 55,
+                        "zonal": 55,
+                        "national": 50.76
+                     },
+                     "selling_price": 150,
+                     "simplifiedRateCard": false,
+                     "hideReturnFee": false
+                  },
+                  "local": {
+                     "settlement_value": 37,
+                     "split_percentage": 0,
+                     "fees_and_taxes": 113,
+                     "shipping_charge_to_buyer": 0
+                  },
+                  "zonal": {
+                     "settlement_value": 37,
+                     "split_percentage": 0,
+                     "fees_and_taxes": 113,
+                     "shipping_charge_to_buyer": 0
+                  },
+                  "national": {
+                     "settlement_value": 30,
+                     "split_percentage": 100,
+                     "fees_and_taxes": 134,
+                     "shipping_charge_to_buyer": 14
+                  }
+               }
+            ],
+            "settlement_value": 30,
+            "total_shipping_charge": 14,
+            "total_fees_and_taxes": 134,
+            "listing_details": {
+               "title": "WHYGI Cucumber Seed",
+               "img": "https://img.fkcdn.com/image/xif0q/plant-seed/7/n/e/300-envy-of-the-neighbors-f1-pickling-heirloom-cucumber-original-imagbjhefvn99nvh.jpeg",
+               "sku": "CUCUMBER__150__PIECE__H4C2",
+               "fsn": "PAEGBJHFGH2DTHUU",
+               "mrp": 499
+            },
+            "hierarchy_message": "Future expected settlement at a price of ₹150, based on order fulfilment data from 18 Feb to 19 Mar for this listing",
+            "hierarchy": "LISTING"
+         }
+      }
+   }
+}

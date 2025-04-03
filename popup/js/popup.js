@@ -61,6 +61,8 @@ async function updateStorage() {
             listingOpen: [...flipGrid].map((e) => e.checked),
             WORD_IN_DIFFERENT_LANGUAGE: false,
             NUMBER_IN_DIFFERENT_LANGUAGE: false,
+            EXTENSION_THEME_DARK: true,
+            FLIPKART_THEME_DARK: false,
             currentMode: 0,
          };
 
@@ -165,10 +167,32 @@ async function updateStorage() {
       listingOpen.forEach((e, i) => {
          flipGrid[i].checked = e;
       });
-      I("nav .options .btn input")[currentMode].checked = true;
 
-      I("input.input-setting").each((e) => {
-         e.checked = settings[e.name];
+      I("nav .options .btn input")[currentMode].checked = true;
+      const themeType = settings.EXTENSION_THEME_DARK ? "dark": "light";
+      document.documentElement.style.setProperty("color-scheme", themeType);
+
+      I("input.input-setting").each((input) => {
+         let value = settings[input.name];
+
+         switch (true) {
+            case input.type === "number":
+               input.value = value || 0;
+               break;
+            case input.type === "checkbox":
+               input.checked = value || false;
+               break;
+            case input.type === "select-one":
+               input.value = value;
+               if (!value) input.selectedIndex = 0;
+               break;
+            case input.getAttribute("inputmode") === "numeric" &&
+               input.type === "text":
+               input.value = N(value || 0).toLocaleString("en-IN");
+               break;
+            default:
+               input.value = value || "";
+         }
       });
 
       if (ReplaceLanguageInput.checked) {
@@ -188,7 +212,9 @@ async function updateStorage() {
          logoutUserButton.classList.add("hide");
       }
    });
+
    setupSavedImages();
+
 }
 
 // increase decrease button (only switch limit .input)
@@ -327,27 +353,27 @@ function saveDataA() {
 }
 
 function saveDataB() {
-   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (val) => {
-      if (!val) val = {};
+   chromeStorageGetLocal(KEYS.STORAGE_LISTING, (DATA) => {
+      if (!DATA) DATA = {};
 
       bInputs.forEach((inp) => {
          if (inp.type !== "file") {
-            if (inp.type === "number") val[inp.name] = inp.value || 0;
-            else if (inp.type === "checkbox") val[inp.name] = inp.checked;
-            else if (inp.type === "select-one") val[inp.name] = inp.value;
+            if (inp.type === "number") DATA[inp.name] = inp.value || 0;
+            else if (inp.type === "checkbox") DATA[inp.name] = inp.checked;
+            else if (inp.type === "select-one") DATA[inp.name] = inp.value;
             else if (
                inp.getAttribute("inputmode") === "numeric" &&
                inp.type === "text"
             )
-               val[inp.name] = inp.value.replace(/,/g, "") || 0;
-            else val[inp.name] = inp.value || "";
+               DATA[inp.name] = inp.value.replace(/,/g, "") || 0;
+            else DATA[inp.name] = inp.value || "";
          }
       });
 
       setTotalCount();
 
-      listingData = val;
-      chromeStorageSetLocal(KEYS.STORAGE_LISTING, val);
+      listingData = DATA;
+      chromeStorageSetLocal(KEYS.STORAGE_LISTING, DATA);
    });
 }
 
@@ -357,12 +383,15 @@ function saveSettings() {
 
       // save input setting
       settingsInputs.forEach((inp) => {
-         if (inp.type === "checkbox") DATA[inp.name] = inp.checked;
+         if (inp.type === "number") DATA[inp.name] = inp.value || 0;
+         else if (inp.type === "checkbox") DATA[inp.name] = inp.checked;
+         else if (inp.type === "select-one") DATA[inp.name] = inp.value;
          else if (
             inp.getAttribute("inputmode") === "numeric" &&
             inp.type === "text"
          )
-            DATA[inp.name] = inp.value.replace(/,/g, "") || 0;
+         DATA[inp.name] = inp.value.replace(/,/g, "") || 0;
+         else DATA[inp.name] = inp.value || "";
       });
 
       // save flip gird setting
@@ -372,6 +401,14 @@ function saveSettings() {
       DATA.currentMode = [...I("nav .options .btn input")].findIndex(
          (e) => e.checked
       );
+
+      // save replace language
+      if (ReplaceLanguageInput.checked) {
+         I("#SameSaNumberDiv").removeClass("hide");
+      } else {
+         I("#SameSaNumberInput")[0].checked = false;
+         I("#SameSaNumberDiv").addClass("hide");
+      }
 
       chromeStorageSetLocal(KEYS.STORAGE_SETTINGS, DATA);
    });

@@ -35,6 +35,7 @@ const URLS = {
    productSellers:
       "https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
    brandApproval: "https://seller.flipkart.com/napi/regulation/approvalStatus?",
+   graphql: "https://seller.flipkart.com/napi/graphql",
 };
 
 const FLIPKART_SEARCH_HEADER = {

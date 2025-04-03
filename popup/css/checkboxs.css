@@ -21,18 +21,24 @@ input[type="checkbox"]:not(.btn) {
 input[type="checkbox"]:not(.btn):before {
    content: "";
    padding: calc(var(--S) / 10);
-   --_g: radial-gradient(circle closest-side at calc(100% - var(--S) / 2) 50%,
-         #000 96%,
-         #0000);
+   --_g: radial-gradient(
+      circle closest-side at calc(100% - var(--S) / 2) 50%,
+      #000 96%,
+      #0000
+   );
    background: var(--_g) 0 / var(--_p, var(--S)) 100% no-repeat content-box,
       var(--_g) var(--_p, 0) / var(--S) 100% no-repeat content-box, #fff;
    mix-blend-mode: darken;
    filter: blur(calc(var(--S) / 12)) contrast(11);
    transition: 400ms, background-position 400ms 100ms,
-      padding cubic-bezier(0,
-         calc(var(--_i, -1) * 200),
-         1,
-         calc(var(--_i, -1) * 200)) 250ms 100s;
+      padding
+         cubic-bezier(
+            0,
+            calc(var(--_i, -1) * 200),
+            1,
+            calc(var(--_i, -1) * 200)
+         )
+         250ms 100s;
 }
 
 input[type="checkbox"]:not(.btn):checked {
@@ -87,4 +93,55 @@ input[type="number"] {
          background: #00ff00;
       }
    }
+}
+
+/* ---------------- for dark and light theme toggle --------------- */
+/* Theme Toggle Styles */
+
+
+input.theme-switch {
+   opacity: 0;
+}
+.theme-label {
+   position: absolute;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   width: calc(var(--s) * 5);
+   height: calc(var(--s) * 2.5);
+   background: light-dark(#e0e0e0, #2d2d2d);
+   outline: solid 1px light-dark(#fff, #000);
+   border-radius: 20px;
+   padding: calc(var(--s) * 0.5);
+   cursor: pointer;
+   transition: background-color 0.3s;
+
+   &::after {
+      content: "";
+      position: absolute;
+      left: calc(var(--s) * 0.25);
+      width: calc(var(--s) * 2);
+      height: calc(var(--s) * 2);
+      background: light-dark(#ffffff, #333333);
+      border-radius: 50%;
+      transition: transform 0.3s;
+   }
+
+   i {
+      font-size: calc(var(--s) * 1.5);
+      color: light-dark(#ffd700, #ffffff);
+      transition: transform 0.3s;
+   }
+}
+
+.theme-switch:checked + .theme-label::after {
+   transform: translateX(calc(var(--s) * 2.5));
+}
+
+.theme-switch:checked + .theme-label {
+   background: light-dark(#2d2d2d, #e0e0e0);
+}
+
+.theme-switch:focus + .theme-label {
+   box-shadow: 0 0 0 2px var(--primary);
 }

@@ -7,15 +7,8 @@ setupIncDecAction(numInpLimitA, saveDataA);
 setupIncDecAction(numInpLimitB, saveDataB);
 setupIncDecAction(addProductInpLimit, () => {});
 
-I("#ReplaceLanguageInput").click((_, __, ele) => {
-   if (ele.checked) {
-      I("#SameSaNumberDiv").removeClass("hide");
-   } else {
-      I("#SameSaNumberInput")[0].checked = false;
-      I("#SameSaNumberDiv").addClass("hide");
-   }
-   saveSettings();
-});
+settingsInputs.on("input", saveSettings);
+
 
 flipGrid.click(saveSettings);
 I("nav .options .btn").click(saveSettings);
@@ -70,3 +63,9 @@ selectNameElement.addEventListener("change", async (e) => {
 })
 
 sortProductDataInput.on("input", sortProductDataAction);
+
+// action extension theme 
+extensionTheme.click((e) => {
+   const type = e.target.checked ? "dark": "light";
+   document.documentElement.style.setProperty("color-scheme", type);
+})

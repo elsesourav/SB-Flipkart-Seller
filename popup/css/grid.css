@@ -125,7 +125,7 @@
 
       &.big-textarea {
          grid-template-columns: 1fr;
-         height: calc(var(--s) * 40);
+         height: var(--editor-height);
          grid-template-rows: calc(var(--s) * 3.5) 1fr;
 
          .editor-header {
@@ -235,7 +235,7 @@
       }
    }
 
-   label {
+   label:not(.theme-label) {
       position: absolute;
       top: calc(var(--s) / 2 * -1);
       left: 50%;

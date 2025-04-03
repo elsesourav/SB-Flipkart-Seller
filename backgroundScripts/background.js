@@ -43,6 +43,12 @@ runtimeOnMessage("c_b_get_seller_info", async (__, _, sendResponse) => {
 });
 
 
+runtimeOnMessage("c_b_get_flipkart_theme", async (data, _, sendResponse) => {
+   const settings = await chromeStorageGetLocal(KEYS.STORAGE_SETTINGS);
+   const theme = settings?.FLIPKART_THEME_DARK ? "dark": "light";
+   sendResponse({ theme });
+});
+
 runtimeOnMessage("c_b_get_product_data", async (data, _, sendResponse) => {
    sendResponse(await getProductData(data.url));
 });

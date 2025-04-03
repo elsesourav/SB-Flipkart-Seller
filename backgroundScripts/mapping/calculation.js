@@ -88,3 +88,67 @@ function calculatePriceFromProfit({
 
    return isRound ? Math.round(price) : price;
 }
+
+function getLowPriceValues(sellers, uId, sell, mrp, cost, profit, fCost) {
+   const totalPrice = sellers?.[0]?.totalPrice || 0;
+   const sellerId = sellers?.[0]?.sellerId || "";
+   const price90 = mrp * 0.1;
+
+   if (!sell && sellerId != uId) {
+      return {
+         lowPrice: totalPrice - 1,
+         price90,
+      };
+   }
+
+   const secondSeller = sellers?.[1];
+   if (secondSeller) {
+      return { lowPrice: secondSeller.totalPrice - 1, price90 };
+   }
+
+   return {
+      lowPrice: calculatePriceFromProfit({
+         desiredProfit: cost + profit,
+         fCost,
+      }),
+      price90,
+   };
+}
+
+function calculateOptimizedValues(
+   price,
+   COST,
+   MIN_PROFIT,
+   MAX_PROFIT,
+   fixedCost
+) {
+   let profit = getProfitUsingBankSettlement({ price, cost: COST, fixedCost });
+   let signal;
+
+   if (profit > 0 && profit < MIN_PROFIT) {
+      signal = "#4B3C00";
+      profit = MIN_PROFIT;
+      price = calculatePriceFromProfit({
+         desiredProfit: COST + MIN_PROFIT,
+         fixedCost,
+      });
+   } else if (profit <= 0) {
+      signal = "#4A0000";
+      profit = MIN_PROFIT;
+      price = calculatePriceFromProfit({
+         desiredProfit: COST + MIN_PROFIT,
+         fixedCost,
+      });
+   } else if (profit > MAX_PROFIT) {
+      signal = "#003925";
+      profit = MAX_PROFIT;
+      price = calculatePriceFromProfit({
+         desiredProfit: COST + MAX_PROFIT,
+         fixedCost,
+      });
+   } else {
+      signal = "#1D3B1E";
+   }
+
+   return { price, profit, signal };
+}

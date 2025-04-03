@@ -61,20 +61,35 @@ runtimeOnMessage(
    }
 );
 
-function createMappingSendRequest() {
+function createMappingSendRequest(listingType) {
    return new Promise((resolve) => {
-      runtimeSendMessage(
-         "c_b_create_new_product_mapping",
-         {
-            products: SELECTED_PRODUCTS_DATA.reverse(),
-            fkCsrfToken: FK_CSRF_TOKEN,
-            mappingData: EXTENSION_MAPPING_DATA,
-            sellerId: SELLER_ID,
-         },
-         (response = []) => {
-            resolve(response);
-         }
-      );
+      if (listingType == "new") {
+         runtimeSendMessage(
+            "c_b_create_new_product_mapping",
+            {
+               products: SELECTED_PRODUCTS_DATA.reverse(),
+               fkCsrfToken: FK_CSRF_TOKEN,
+               mappingData: EXTENSION_MAPPING_DATA,
+               sellerId: SELLER_ID,
+            },
+            (response = []) => {
+               resolve(response);
+            }
+         );
+      } else {
+         runtimeSendMessage(
+            "c_b_update_old_product_mapping",
+            {
+               products: SELECTED_PRODUCTS_DATA.reverse(),
+               fkCsrfToken: FK_CSRF_TOKEN,
+               mappingData: EXTENSION_MAPPING_DATA,
+               sellerId: SELLER_ID,
+            },
+            (response = []) => {
+               resolve(response);
+            }
+         );
+      }
    });
 }
 
@@ -131,21 +146,6 @@ function updateSelectedCount() {
    showSelectedAndReady.classList.toggle("active", len > 0);
 }
 
-// showNewMappingProducts.addEventListener("change", (e) => {
-//    if (e.target.classList.contains("select-product")) {
-//       updateSelectedCount();
-//    }
-// });
-// showOldMappingProducts.addEventListener("change", (e) => {
-//    if (e.target.classList.contains("select-product")) {
-//       updateSelectedCount();
-//    }
-// });
-
-// showMyProducts.addEventListener("change", (e) => {
-//    createProductCard();
-// });
-
 function updateSuccessStats(total, oldSuccess, newSuccess, failed) {
    totalProducts.textContent = total;
    updateProducts.textContent = oldSuccess;
@@ -164,7 +164,9 @@ async function searchSubmitAction() {
    showLoading();
 
    const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
-   const { listingType } = getDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS);
+   const { listingType } = getDataFromLocalStorage(
+      KEYS.STORAGE_OPTION_SETTINGS
+   );
 
    const data = {
       productName,
@@ -181,7 +183,7 @@ async function searchSubmitAction() {
          SELLER_ID
       );
 
-      console.log(PRODUCTS);
+      // console.log(PRODUCTS);
 
       PRODUCTS = PRODUCTS.sort((a, b) => {
          const priority = { G: 1, PIECE: 2 };
@@ -283,7 +285,8 @@ function createProductCard() {
    let searchNames = matchNames?.value?.toLowerCase();
 
    if (searchNames) {
-      searchNames = searchNames.split("-").map((n) => n.trim());
+      const { tag, content } = splitStringByTag(searchNames);
+      searchNames = content.split("-").map((n) => n.trim());
    } else {
       searchNames = [];
    }
@@ -344,13 +347,36 @@ function filterByRating() {
    PRODUCTS = PRODUCTS.filter((p) => p.r >= min).sort((a, b) => b.r - a.r);
 }
 
+function splitStringByTag(str) {
+   const match = str.match(/(#active|#inactive|#error)\s*(.*)/);
+   if (match) {
+      return { tag: match[1], content: match[2] };
+   }
+   return { tag: null, content: str.toLowerCase() };
+}
+
 function filterByNames() {
    let searchNames = matchNames?.value?.toLowerCase();
    // if (!searchNames) {
    //    PRODUCTS = [...SAVED_PRODUCTS];
    //    return;
    // }
-   const names = searchNames.split("-").map((n) => n.trim());
+   const { tag, content } = splitStringByTag(searchNames);
+   const names = content.split("-").map((n) => n.trim());
+
+   if (tag) {
+      if (tag === "#active") {
+         PRODUCTS = PRODUCTS.filter(
+            (p) => p.internal_state.toLowerCase() == "active"
+         );
+      } else if (tag === "#inactive") {
+         PRODUCTS = PRODUCTS.filter(
+            (p) => p.internal_state.toLowerCase() != "active"
+         );
+      } else if (tag === "#error") {
+         PRODUCTS = PRODUCTS.filter((p) => p?.isError);
+      }
+   }
 
    // Sort products: matching names first, non-matching last
    PRODUCTS.sort((a, b) => {
@@ -396,7 +422,7 @@ function showConfirmationWindow() {
    confirmationError.textContent = "";
    startFinalMapping.disabled = true;
 
-   console.log(EXTENSION_MAPPING_DATA);
+   // console.log(EXTENSION_MAPPING_DATA);
 
    const {
       PRODUCT_NAME,
@@ -434,11 +460,31 @@ function hideConfirmationWindow() {
 
 // need to remove or update
 function getOldAndNewProductSize(DATA) {
+   const map = new Map();
+   for (let i = DATA.length - 1; i >= 0; i--) {
+      map.set(DATA[i].productID, DATA[i]);
+   }
+
+   DATA = Array.from(map.values());
+
+   DATA.forEach((p) => {
+      if (p?.status === "failure") {
+         const index = SAVED_PRODUCTS.findIndex((e) => e.id === p.productID);
+         const product = index !== -1 ? SAVED_PRODUCTS[index] : null;
+
+         if (product) {
+            SAVED_PRODUCTS[index].isError = true;
+         }
+      }
+   });
+   
+   const failureData = DATA.filter((p) => p?.status === "failure");
    DATA = DATA?.filter((p) => p?.status !== "failure");
+
+
    let oldSize = 0;
    let newSize = 0;
 
-   const failureData = DATA.filter((p) => p?.status === "failure");
 
    console.table(failureData);
 
@@ -457,7 +503,10 @@ function getOldAndNewProductSize(DATA) {
 
 async function createAllSelectedProductMapping() {
    showLoading();
-   const response = await createMappingSendRequest();
+   const { listingType } = getDataFromLocalStorage(
+      KEYS.STORAGE_OPTION_SETTINGS
+   );
+   const response = await createMappingSendRequest(listingType);
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;

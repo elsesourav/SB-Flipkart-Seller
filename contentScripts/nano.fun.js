@@ -1,3 +1,11 @@
+async function isDarkMode() {
+   return new Promise((resolve) => {
+      runtimeSendMessage("c_b_get_flipkart_theme", (r) => {
+         resolve(r);
+      });
+   });
+}
+
 async function getProductData(url) {
    return new Promise((resolve) => {
       runtimeSendMessage("c_b_get_product_data", { url }, (r) => {
@@ -13,6 +21,7 @@ function getMappingData() {
       });
    });
 }
+
 function updateMappingValues(values) {
    runtimeSendMessage("c_b_update_mapping", values, (r) => {
       console.log("Copy Successfully");
@@ -55,6 +64,11 @@ function ifMatchSingleListingLocation() {
 function ifMatchSingleOrderLocation() {
    return window.location.href.includes(URLS.singleOrder);
 }
+
+function ItIsFlipkartPage() {
+   return window.location.href.includes("flipkart.com");
+}
+
 function isUrlContains(name) {
    return window.location.href.includes(name);
 }

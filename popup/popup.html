@@ -75,7 +75,7 @@
 
          <!----------------------------------------------------------------
                   Both (Auto and Manually)
-   ------------------------------------------------------------------>
+         ------------------------------------------------------------------>
          <!-- add different switch options -->
          <nav>
             <div class="options">
@@ -135,13 +135,10 @@
          </nav>
 
          <main>
-
             <!----------------------------------------------------------------
                                  Printing
             ------------------------------------------------------------------>
-            <div class="container" id="printingContainer">
-               
-            </div>
+            <div class="container" id="printingContainer"></div>
 
             <!----------------------------------------------------------------
                                  Mapping
@@ -155,7 +152,12 @@
                      <section>
                         <div class="take-value">
                            <div class="inp selection">
-                              <select id="selectNameElement" data-name="name" name="PRODUCT_NAME" class="input-a inp-limit">
+                              <select
+                                 id="selectNameElement"
+                                 data-name="name"
+                                 name="PRODUCT_NAME"
+                                 class="input-a inp-limit"
+                              >
                                  <option>SELECT PRODUCT</option>
                               </select>
                            </div>
@@ -170,7 +172,12 @@
                               1<i class="sbi-inr"></i> Increment Per ? Qty
                            </label>
                            <div class="out">
-                              <input name="INCREMENT_UNIT" inputmode="numeric" data-name="increment" class="input-a inp-limit" />
+                              <input
+                                 name="INCREMENT_UNIT"
+                                 inputmode="numeric"
+                                 data-name="increment"
+                                 class="input-a inp-limit"
+                              />
                            </div>
                         </div>
                      </section>
@@ -178,7 +185,12 @@
                         <div class="show-data">
                            <label class="out-label">Self Life (In Month)</label>
                            <div class="out">
-                              <input name="SHELF_LIFE" inputmode="numeric" data-name="self_life" class="input-a inp-limit" />
+                              <input
+                                 name="SHELF_LIFE"
+                                 inputmode="numeric"
+                                 data-name="self_life"
+                                 class="input-a inp-limit"
+                              />
                            </div>
                         </div>
                      </section>
@@ -189,7 +201,12 @@
                         <div class="show-data">
                            <label class="out-label">Weight in KG</label>
                            <div class="out">
-                              <input name="UNIT_WEIGHT" inputmode="numeric" data-name="weight" class="input-a inp-limit" />
+                              <input
+                                 name="UNIT_WEIGHT"
+                                 inputmode="numeric"
+                                 data-name="weight"
+                                 class="input-a inp-limit"
+                              />
                            </div>
                         </div>
                      </section>
@@ -197,7 +214,12 @@
                         <div class="show-data">
                            <label class="out-label">of Cost</label>
                            <div class="out">
-                              <input name="UNIT_OF_COST" inputmode="numeric" data-name="cost" class="input-a inp-limit" />
+                              <input
+                                 name="UNIT_OF_COST"
+                                 inputmode="numeric"
+                                 data-name="cost"
+                                 class="input-a inp-limit"
+                              />
                            </div>
                         </div>
                      </section>
@@ -205,7 +227,12 @@
                         <div class="show-data">
                            <label class="out-label">Unit</label>
                            <div class="out">
-                              <input name="UNIT" inputmode="numeric" data-name="unit" class="input-a inp-limit" />
+                              <input
+                                 name="UNIT"
+                                 inputmode="numeric"
+                                 data-name="unit"
+                                 class="input-a inp-limit"
+                              />
                            </div>
                         </div>
                      </section>
@@ -330,6 +357,31 @@
                      </section>
                   </div>
 
+                  <div class="take-inp full-width center">
+                     <span class="inp-span">
+                        Packing <i class="sbi-inr"></i>
+                     </span>
+                     <section>
+                        <div class="take-value">
+                           <div class="inp num" step="1">
+                              <button class="dec">
+                                 <i class="sbi-minus-square"></i>
+                              </button>
+                              <input
+                                 autocomplete="off"
+                                 name="PACKING_COST"
+                                 type="text"
+                                 inputmode="numeric"
+                                 class="input-a inp-limit"
+                              />
+                              <button class="inc">
+                                 <i class="sbi-plus-square"></i>
+                              </button>
+                           </div>
+                        </div>
+                     </section>
+                  </div>
+
                   <div class="take-inp">
                      <span class="inp-span">
                         FixedCost<i class="sbi-inr"></i>
@@ -357,102 +409,24 @@
 
                   <div class="take-inp">
                      <span class="inp-span">
-                        Packing <i class="sbi-inr"></i>
+                        Current Tier
                      </span>
                      <section>
                         <div class="take-value">
-                           <div class="inp num" step="1">
-                              <button class="dec">
-                                 <i class="sbi-minus-square"></i>
-                              </button>
-                              <input
-                                 autocomplete="off"
-                                 name="PACKING_COST"
-                                 type="text"
-                                 inputmode="numeric"
-                                 class="input-a inp-limit"
-                              />
-                              <button class="inc">
-                                 <i class="sbi-plus-square"></i>
-                              </button>
+                           <div class="inp selection">
+                              <select name="CURRENT_TIER" class="input-a">
+                                 <option>SELECT</option>
+                                 <option value="diamond">Diamond</option>
+                                 <option value="platinum">Platinum</option>
+                                 <option value="gold">Gold</option>
+                                 <option value="silver">Silver</option>
+                                 <option value="bronze" selected>Bronze</option>
+                                 <option value="wood">Wood</option>
+                              </select>
                            </div>
                         </div>
                      </section>
                   </div>
-
-                  <!-- <div class="take-inp">
-               <span class="inp-span">Delivery <i class="sbi-inr"></i></span>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <label>Min National</label>
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input autocomplete="off" name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div> -->
-
-                  <!-- <div class="take-inp check-box">
-               <span class="inp-span">Delivery <i class="sbi-inr"></i> Included</span>
-               <section>
-                  <input autocomplete="off" type="checkbox" name="IS_INCLUDED" class="input-a toggle" />
-               </section>
-            </div> -->
-
-                  <!-- <div class="show-output one-label">
-               <span class="out-span">Delivery Charges in Min Profit</span>
-            </div> -->
-
-                  <!-- <div class="take-inp full-width three-input">
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <label>Local</label>
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input autocomplete="off" name="DELIVERY_LOCAL" type="text" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <label>Zonal</label>
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input autocomplete="off" name="DELIVERY_ZONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-               <section>
-                  <div class="take-value">
-                     <div class="inp num" step="1">
-                        <label>National</label>
-                        <button class="dec">
-                           <i class="sbi-minus-square"></i>
-                        </button>
-                        <input autocomplete="off" name="DELIVERY_NATIONAL" type="text" inputmode="numeric" class="input-a inp-limit" />
-                        <button class="inc">
-                           <i class="sbi-plus-square"></i>
-                        </button>
-                     </div>
-                  </div>
-               </section>
-            </div> -->
 
                   <div class="show-output one-label">
                      <span class="out-span">Packaging Sizes</span>
@@ -2161,11 +2135,17 @@
             ------------------------------------------------------------------>
             <div class="container" id="products">
                <div class="buttons">
-                  <div class="button light import import-all-btn" id="importButtonMain">
+                  <div
+                     class="button light import import-all-btn"
+                     id="importButtonMain"
+                  >
                      <p>IMPORT</p>
                      <i class="sbi-install"></i>
                   </div>
-                  <div class="button light export export-all-btn" id="exportButtonMain">
+                  <div
+                     class="button light export export-all-btn"
+                     id="exportButtonMain"
+                  >
                      <p>EXPORT</p>
                      <i class="sbi-save2"></i>
                   </div>
@@ -2267,7 +2247,7 @@
                            </div>
                         </section>
                      </div>
-                     
+
                      <div class="take-inp full-width three-input">
                         <section>
                            <div class="take-value">
@@ -2567,6 +2547,12 @@
             ------------------------------------------------------------------>
             <div class="container" id="settings">
                <div class="basic-grid no-flip">
+                  <div class="show-output one-label">
+                     <span class="out-span">
+                        Order Language Replacement Options
+                     </span>
+                  </div>
+
                   <div class="take-inp check-box">
                      <span class="inp-span">Replace Text</span>
                      <section>
@@ -2620,7 +2606,53 @@
                   </div>
                </div>
 
+               <div class="gap x10"></div>
+               <div class="basic-grid no-flip">
+                  <div class="show-output one-label">
+                     <span class="out-span">System Options</span>
+                  </div>
+
+                  <div class="take-inp check-box">
+                     <span class="inp-span">Extension Theme</span>
+                     <section>
+                        <input
+                           type="checkbox"
+                           id="extensionTheme"
+                           name="EXTENSION_THEME_DARK"
+                           class="input-setting toggle theme-switch"
+                           checked
+                        />
+                        <label for="extensionTheme" class="theme-label">
+                           <i class="sbi-sun"></i>
+                           <i class="sbi-moon"></i>
+                        </label>
+                     </section>
+                  </div>
+
+                  <div class="take-inp check-box">
+                     <span class="inp-span">Flipkart Theme</span>
+                     <section>
+                        <input
+                           type="checkbox"
+                           id="flipkartTheme"
+                           name="FLIPKART_THEME_DARK"
+                           class="input-setting toggle theme-switch"
+                        />
+                        <label for="flipkartTheme" class="theme-label">
+                           <i class="sbi-sun"></i>
+                           <i class="sbi-moon"></i>
+                        </label>
+                     </section>
+                  </div>
+               </div>
+
+               <div class="gap x10"></div>
+               <div class="show-output one-label">
+                  <span class="out-span">Account Options</span>
+               </div>
+
                <div class="gap x4"></div>
+
                <footer class="create-user">
                   <div class="user-button" id="createUserButton">
                      <i class="sbi-user-plus"></i>
@@ -2961,7 +2993,6 @@
                </div>
             </div>
 
-
             <!----------------------------------------------------------------
                                  Add Product Window
             ---------------------------------------------------------------->
@@ -2976,14 +3007,23 @@
                      <section>
                         <div class="take-value">
                            <div class="inp text">
-                              <input name="name" class="p-win-inp" autocomplete="off" type="text" placeholder="Enter Name" style="text-transform: uppercase;" />
+                              <input
+                                 name="name"
+                                 class="p-win-inp"
+                                 autocomplete="off"
+                                 type="text"
+                                 placeholder="Enter Name"
+                                 style="text-transform: uppercase"
+                              />
                            </div>
                         </div>
                      </section>
-                  </div>  
+                  </div>
 
                   <div class="take-inp full-width">
-                     <span class="inp-span">1<i class="sbi-inr"></i> Increment Per ? Qty</span>
+                     <span class="inp-span"
+                        >1<i class="sbi-inr"></i> Increment Per ? Qty</span
+                     >
                      <section>
                         <div class="take-value">
                            <div class="inp num" step="1">
@@ -3004,7 +3044,7 @@
                            </div>
                         </div>
                      </section>
-                  </div>  
+                  </div>
 
                   <div class="take-inp full-width">
                      <span class="inp-span">Self Life (In Month)</span>
@@ -3099,19 +3139,25 @@
                   </div>
 
                   <div class="buttons">
-                     <div class="button" class="cancle" id="hideAddProductButton">
+                     <div
+                        class="button"
+                        class="cancle"
+                        id="hideAddProductButton"
+                     >
                         <p>CANCEL</p>
-                        <i class="sbi-close" style="padding-bottom: 4px;"></i>
+                        <i class="sbi-close" style="padding-bottom: 4px"></i>
                      </div>
-                     <div class="button" class="cancle" id="saveAddProductButton">
+                     <div
+                        class="button"
+                        class="cancle"
+                        id="saveAddProductButton"
+                     >
                         <p>SAVE</p>
-                        <i class="sbi-save1"  style="padding-bottom: 2px;"></i>
+                        <i class="sbi-save1" style="padding-bottom: 2px"></i>
                      </div>
                   </div>
-
                </div>
             </div>
-
          </main>
       </div>
       <canvas id="testCanvas"></canvas>
