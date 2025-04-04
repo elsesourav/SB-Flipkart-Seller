@@ -306,11 +306,7 @@ function GET_SELLER_INFO() {
    return new Promise(async (resolve) => {
       try {
          const res = await fetch(URLS.flipkartFeaturesForSeller);
-         console.log(res);
-         
          const json = await res?.json();
-         console.log(json);
-         
          const info = {
             sellerId: json?.sellerId,
             userId: json?.userId,
