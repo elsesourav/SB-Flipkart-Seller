@@ -534,7 +534,17 @@ header {
          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
 
-      &.select {
+      /* &.select {
+         background: #a701e9;
+
+         &:hover,
+         &:focus,
+         &:active {
+            background: #b302ff;
+         }
+      } */
+
+      &.selectOnly {
          background: #00c660;
 
          &:hover,
@@ -544,17 +554,7 @@ header {
          }
       }
 
-      &.select-only {
-         background: #a701e9;
-
-         &:hover,
-         &:focus,
-         &:active {
-            background: #b302ff;
-         }
-      }
-
-      &.select-not {
+      &.selectNot {
          background: #c10000;
 
          &:hover,

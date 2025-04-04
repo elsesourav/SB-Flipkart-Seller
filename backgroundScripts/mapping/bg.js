@@ -18,17 +18,19 @@ runtimeOnMessage(
 runtimeOnMessage(
    "c_b_get_new_mapping_product_data",
    async (data, sender, sendResponse) => {
-      const { productName, startingPage, endingPage, sellerId } = data;
+      const { productName, brands, startingPage, endingPage, sellerId } = data;
       optionsTabId = sender.tab.id;
 
       try {
          const verifiedProducts = [];
          approvalBrands = {};
+         const { selectOnly, selectNot } = brands;
+         const pageUri = getSearchUri(selectOnly, productName);
 
          // search flipkart page one by one
          for (let i = startingPage, j = 1; i <= endingPage; i++, j++) {
             const products = [];
-            const productData = await fetchFlipkartSearchData(productName, i);
+            const productData = await fetchFlipkartSearchData(pageUri, selectNot, i);
             if (productData) {
                products.push(...productData);
             }
@@ -66,13 +68,14 @@ runtimeOnMessage(
 runtimeOnMessage(
    "c_b_get_old_mapping_product_data",
    async (data, sender, sendResponse) => {
-      let { productName, sellerListing, sellerId } = data;
+      let { productName, brands, sellerListing, sellerId } = data;
       optionsTabId = sender.tab.id;
 
       try {
          const verifiedProducts = [];
+
          let products = Object.values(sellerListing);
-         products = filterProductsByNameAndSku(products, productName);
+         products = filterProductsByNameSkuAndSelect(products, productName, brands);
 
          // Process products in batches
          const productLen = products.length;

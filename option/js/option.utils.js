@@ -167,11 +167,24 @@ async function searchSubmitAction() {
    const { listingType } = getDataFromLocalStorage(
       KEYS.STORAGE_OPTION_SETTINGS
    );
+   const brandsObj = await getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME);
+   let brands = {
+      default: [],
+      selectOnly: [],
+      selectNot: [],
+   };
+
+   for (const key in brandsObj) {
+      const { type } = brandsObj[key];
+      const tab = BRAND_NAME_TAGS[type];
+      brands[tab].push(key.toUpperCase());
+   }
 
    const data = {
       productName,
       startingPage: start,
       endingPage: end,
+      brands,
       sellerListing: listingData.data || {},
       fkCsrfToken: FK_CSRF_TOKEN,
    };
@@ -477,14 +490,12 @@ function getOldAndNewProductSize(DATA) {
          }
       }
    });
-   
+
    const failureData = DATA.filter((p) => p?.status === "failure");
    DATA = DATA?.filter((p) => p?.status !== "failure");
 
-
    let oldSize = 0;
    let newSize = 0;
-
 
    console.table(failureData);
 

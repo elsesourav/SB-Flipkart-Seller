@@ -18,12 +18,23 @@
       <link href="./css/checkboxs.css" rel="stylesheet" type="text/css" />
       <link href="./css/main.css" rel="stylesheet" type="text/css" />
       <link href="./css/grid.css" rel="stylesheet" type="text/css" />
+      <link href="./css/print.css" rel="stylesheet" type="text/css" />
 
-      <link href="./css/codemirror.css" rel="stylesheet" type="text/css" />
-      <link href="./css/monokai.css" rel="stylesheet" type="text/css" />
-      <link href="./css/dracula.css" rel="stylesheet" type="text/css" />
-      <link href="./css/foldgutter.css" rel="stylesheet" type="text/css" />
+      <!-- for code editor css -->
+      <link
+         href="./css/editor/codemirror.css"
+         rel="stylesheet"
+         type="text/css"
+      />
+      <link href="./css/editor/monokai.css" rel="stylesheet" type="text/css" />
+      <link href="./css/editor/dracula.css" rel="stylesheet" type="text/css" />
+      <link
+         href="./css/editor/foldgutter.css"
+         rel="stylesheet"
+         type="text/css"
+      />
 
+      <!-- for code editor js -->
       <script src="./js/editor/codemirror.js"></script>
       <script src="./js/editor/mode.js"></script>
       <script src="./js/editor/closebrackets.js"></script>
@@ -35,8 +46,15 @@
       <script src="./js/editor/searchcursor.js"></script>
       <script src="./js/editor/matchHighlighter.js"></script>
 
+      <!-- for code print pdf js -->
+      <script src="./js/print/libs/download.min.js"></script>
+      <script src="./js/print/libs/pdf-lib.min.js"></script>
+      <script src="./js/print/libs/pdf.min.js"></script>
+      <script src="./js/print/libs/pdf.worker.min.js"></script>
+
       <script defer src="./../querySelector.js"></script>
       <script defer src="./../utils.js"></script>
+      <script defer src="./js/print/utils.js"></script>
       <script defer src="./js/fun.js"></script>
       <script defer src="./js/lan.js"></script>
       <script defer src="./js/alert.js"></script>
@@ -46,6 +64,7 @@
       <script defer src="./js/event.js"></script>
       <script defer src="./js/import.export.js"></script>
       <script defer src="./js/online.js"></script>
+      <script defer src="./js/print/print.js"></script>
    </head>
 
    <body>
@@ -138,7 +157,95 @@
             <!----------------------------------------------------------------
                                  Printing
             ------------------------------------------------------------------>
-            <div class="container" id="printingContainer"></div>
+            <div class="container" id="printingContainer">
+               <div class="pdf-viewer-modal" id="pdfViewerModal">
+                  <div class="modal-content">
+                     <div class="modal-header">
+                        <h2>PDF VIEWER</h2>
+                        <span class="close-modal" id="closeModal">
+                           <i class="sbi-times"></i>
+                        </span>
+                     </div>
+                     <div class="pdf-container">
+                        <button id="downloadPdfBtn" class="download-button">
+                           <i class="sbi-file-download"></i>
+                        </button>
+                        <iframe id="pdf-viewer"></iframe>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="container">
+                  <form id="pdfForm" novalidate>
+                     <label class="file-upload" for="file-upload">
+                        Choose PDF <span>* Only PDF files allowed</span>
+                     </label>
+                     <input
+                        type="file"
+                        id="file-upload"
+                        name="pdf"
+                        accept=".pdf"
+                     />
+                     <span id="selectedFileName"></span>
+                     <div class="select-container">
+                        <label>Select Type</label>
+                        <div class="toggle-container">
+                           <input
+                              type="radio"
+                              id="type1"
+                              name="crop"
+                              value="type1"
+                              checked
+                           />
+                           <label for="type1" class="toggle-label">Label</label>
+                           <input
+                              type="radio"
+                              id="type2"
+                              name="crop"
+                              value="type2"
+                           />
+                           <label for="type2" class="toggle-label">Bill</label>
+                        </div>
+                     </div>
+                     <div class="checkbox-container">
+                        <p>Show Serial Number</p>
+                        <input
+                           type="checkbox"
+                           id="serialNumber"
+                           name="showSerialNumber"
+                           checked
+                        />
+                     </div>
+
+                     <div
+                        class="serial-input-container"
+                        id="serialInputContainer"
+                     >
+                        <p>Start From:</p>
+                        <input
+                           type="number"
+                           id="startSerial"
+                           name="startSerial"
+                           class="serial-input"
+                           value="1"
+                           min="1"
+                        />
+                     </div>
+
+                     <div class="checkbox-container" id="productNameContainer">
+                        <p>Show Product Name</p>
+                        <input
+                           type="checkbox"
+                           id="showProductName"
+                           name="showProductName"
+                           checked
+                        />
+                     </div>
+
+                     <button type="submit">PROCESS PDF</button>
+                  </form>
+               </div>
+            </div>
 
             <!----------------------------------------------------------------
                                  Mapping
@@ -408,9 +515,7 @@
                   </div>
 
                   <div class="take-inp">
-                     <span class="inp-span">
-                        Current Tier
-                     </span>
+                     <span class="inp-span"> Current Tier </span>
                      <section>
                         <div class="take-value">
                            <div class="inp selection">

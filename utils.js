@@ -38,6 +38,19 @@ const URLS = {
    graphql: "https://seller.flipkart.com/napi/graphql",
 };
 
+/* 
+https://www.flipkart.com/search?q=cucumber+seeds&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&p%5B%5D=facets.brand%255B%255D%3DKANAYA&p%5B%5D=facets.brand%255B%255D%3Dibains
+
+
+https://www.flipkart.com/search?q=cucumber+seeds&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&p[]=facets.brand[]=KANAYA&p[]=facets.brand[]=ibains
+
+https://www.flipkart.com/search?q=cucumber%20seeds&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off
+
+https://www.flipkart.com/search?q=
+*/
+
+
+
 const FLIPKART_SEARCH_HEADER = {
    accept: "*/*",
    "accept-language": "en-US,en;q=0.9",

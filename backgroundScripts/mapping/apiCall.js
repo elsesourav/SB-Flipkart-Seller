@@ -320,7 +320,7 @@ function GET_SELLER_INFO() {
    });
 }
 
-const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
+const fetchFlipkartSearchData = async (pageUri, selectNot, pageNumber = 1) => {
    return new Promise(async (resolve) => {
       const response = await fetch(URLS.flipkartSearchUrl, {
          method: "POST",
@@ -331,7 +331,7 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
                paginatedFetch: false,
                pageNumber: pageNumber,
             },
-            pageUri: `/search?q=${productName.split(" ").join("%20")}`,
+            pageUri,
             requestContext: {
                type: "BROWSE_PAGE",
             },
@@ -343,7 +343,7 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
          const { slots } = data?.RESPONSE;
 
          // Extract and transform product data [[10,20,32],[5,6,3]] => [10,20,32,5,6,3]
-         const products = slots?.reduce((acc, slot) => {
+         let products = slots?.reduce((acc, slot) => {
             const slotProducts = slot?.widget?.data?.products || [];
 
             const validProducts = slotProducts
@@ -359,6 +359,10 @@ const fetchFlipkartSearchData = async (productName, pageNumber = 1) => {
             return [...acc, ...validProducts];
          }, []);
 
+         products = products?.filter(({ productBrand }) => {
+            return !selectNot.includes(productBrand.toUpperCase());
+         });
+         
          resolve(products || []);
       } else {
          console.log(`Error: ${response.status}`);
@@ -895,7 +899,7 @@ function getProductsFeesAndTaxes(products, darwin_tier, fkCsrfToken) {
                localPercentage: local?.split_percentage,
                zonalPercentage: zonal?.split_percentage,
                nationalPercentage: national?.split_percentage,
-            }
+            };
          });
 
          resolve(products);

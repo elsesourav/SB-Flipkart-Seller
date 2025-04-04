@@ -369,9 +369,12 @@ async function getMixDataForOldMapping(DATA) {
    // if new price is higher then old price 5% then store multiple request data
    const multiRequestSameProductData = [];
 
-   products = await getProductsFeesAndTaxes(products, CURRENT_TIER, fkCsrfToken);
+   products = await getProductsFeesAndTaxes(
+      products,
+      CURRENT_TIER,
+      fkCsrfToken
+   );
    // console.log(products);
-   
 
    let newData = products.map((product) => {
       const {
@@ -395,8 +398,6 @@ async function getMixDataForOldMapping(DATA) {
       //                                  if zonal + local = 50% -> 0.50%
       const extra = (22 - NATIONAL_FEE) * ((zp + lp) / 100);
       const NEW_SRCELEMENT_AMOUNT = Math.floor(SRCELEMENT_AMOUNT - extra);
-
-
 
       const TOTAL_WEIGHT = getTotalWeight(MD, QUANTITY, CATEGORY);
 
@@ -435,7 +436,7 @@ async function getMixDataForOldMapping(DATA) {
       }
 
       let difference = esp;
-      
+
       if (esp && NEW_SRCELEMENT_AMOUNT > difference) {
          let tempEsp = difference + 1;
          let i = -1;
@@ -446,18 +447,18 @@ async function getMixDataForOldMapping(DATA) {
             tempEsp++;
             i++;
          }
-         pushMultiRequestData(NEW_SRCELEMENT_AMOUNT, i);  // update esp
+         pushMultiRequestData(NEW_SRCELEMENT_AMOUNT, i); // update esp
       } else if (esp && NEW_SRCELEMENT_AMOUNT < difference) {
-         let tempEsp = Math.round(difference * 0.80);;
+         let tempEsp = Math.round(difference * 0.8);
          let i = -1;
 
          while (NEW_SRCELEMENT_AMOUNT < tempEsp) {
             if (i === -1) result = getObjByPrice(tempEsp); // update esp
             else pushMultiRequestData(tempEsp, i); // update esp
-            tempEsp = Math.round(tempEsp * 0.80);
+            tempEsp = Math.round(tempEsp * 0.8);
             i++;
          }
-         pushMultiRequestData(NEW_SRCELEMENT_AMOUNT, i);  // update esp
+         pushMultiRequestData(NEW_SRCELEMENT_AMOUNT, i); // update esp
       } else {
          result = getObjByPrice(NEW_SRCELEMENT_AMOUNT); // update esp
       }
@@ -506,15 +507,40 @@ function newImgPath(url, ratio = 400, quality = 60) {
       ?.replace("{@quality}", quality);
 }
 
-function filterProductsByNameAndSku(products, name) {
+function filterProductsByNameSkuAndSelect(products, name, brands) {
    const isOnlySkuMatch = name?.[0] == "#";
    if (isOnlySkuMatch) name = name.slice(1);
+   const { selectOnly, selectNot } = brands;
+
    const NAME = name.toLowerCase().replace(/\s*seeds?/g, "");
 
-   return products.filter((p) => {
+   products = products.filter((p) => {
       return (
          p.sku_id.toLowerCase().includes(NAME) ||
          (!isOnlySkuMatch && p.name.includes(NAME))
       );
    });
+
+   if (selectOnly.length > 0) {
+      products = products.filter((p) => selectOnly.includes(p.brand));
+   } else if (selectNot.length > 0) {
+      products = products.filter((p) => !selectNot.includes(p.brand));
+   }
+
+   return products;
+}
+
+function getSearchUri(selectOnly, productName) {
+   if (selectOnly.length > 0) {
+      let uri = `/search?q=${productName.replace(
+         /\s+/g,
+         "+"
+      )}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=off&as=off`;
+      selectOnly.forEach((brand) => {
+         uri += `&p%5B%5D=facets.brand%255B%255D%3D${brand}`;
+      });
+      return uri;
+   }
+
+   return `/search?q=${productName.replace(/\s+/g, "+")}`;
 }

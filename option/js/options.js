@@ -9,7 +9,7 @@ let FK_CSRF_TOKEN = null;
 let SELLER_ID = null;
 let ALL_BRAND_NAMES = {};
 let OPTIONS_SETTINGS = {};
-let BRAND_NAME_TAGS = ["default", "select", "select-only", "select-not"];
+let BRAND_NAME_TAGS = ["default", "selectOnly", "selectNot"];
 
 
 onload = async () => {
@@ -250,7 +250,7 @@ function setupBrandNames() {
       brandNameContainer.append(brandElement);
 
       brandElement.addEventListener("click", () => {
-         const type = (ALL_BRAND_NAMES[name].type + 1) % 4;
+         const type = (ALL_BRAND_NAMES[name].type + 1) % 3;
          ALL_BRAND_NAMES[name].type = type;
          saveBrandNames();
          brandElement.classList = [];
@@ -290,7 +290,7 @@ addBrandName.addEventListener("click", () => {
 
 
 function saveBrandNames() {
-   setDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES)
+   setDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES);
 }
 
 function saveOptionSettings() {
