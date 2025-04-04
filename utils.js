@@ -101,6 +101,8 @@ function setDataFromLocalStorage(key, object) {
 }
 
 function getDataFromLocalStorage(key) {
+   console.log(localStorage);
+   
    return JSON.parse(localStorage.getItem(key));
 }
 
