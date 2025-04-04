@@ -13,7 +13,7 @@ let BRAND_NAME_TAGS = ["default", "selectOnly", "selectNot"];
 
 
 onload = async () => {
-   SELLER_LISTING_DATA = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
+   SELLER_LISTING_DATA = await chromeStorageGetLocal(KEYS.STORAGE_SELLER_LISTING);
 
    if (SELLER_LISTING_DATA) {
       const { count } = SELLER_LISTING_DATA;
@@ -23,7 +23,7 @@ onload = async () => {
    }
 
 
-   OPTIONS_SETTINGS = getDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS);
+   OPTIONS_SETTINGS = await chromeStorageGetLocal(KEYS.STORAGE_OPTION_SETTINGS);
 
    if (OPTIONS_SETTINGS) {
       const { listingType, ratingSelected, pageSelected } = OPTIONS_SETTINGS;
@@ -228,13 +228,13 @@ function toggleSection(header, cardsSection) {
 refreshButton.addEventListener("click", async () => {
    const data = await getAllListingSellerData(FK_CSRF_TOKEN);
    if (data) {
-      setDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING, data)
+      chromeStorageSetLocal(KEYS.STORAGE_SELLER_LISTING, data)
    }
 })
 
-function setupBrandNames() {
+async function setupBrandNames() {
    brandNameContainer.innerHTML = "";
-   loadBrandNames();
+   await loadBrandNames();
 
    for (const name in ALL_BRAND_NAMES) {
       const type = ALL_BRAND_NAMES[name].type;
@@ -257,17 +257,17 @@ function setupBrandNames() {
          brandElement.classList.add("brand-tag", BRAND_NAME_TAGS[type]);
       });
 
-      deleteBtn.addEventListener("click", (e) => {
+      deleteBtn.addEventListener("click", async (e) => {
          e.stopPropagation();
          delete ALL_BRAND_NAMES[name];
          saveBrandNames();
-         setupBrandNames();
+         await setupBrandNames();
       });
    }
 }
 setupBrandNames();
 
-addBrandName.addEventListener("click", () => {
+addBrandName.addEventListener("click", async () => {
    const brandName = brandNameInput.value.toUpperCase();
    console.log(brandName);
    
@@ -285,12 +285,12 @@ addBrandName.addEventListener("click", () => {
 
    ALL_BRAND_NAMES[brandName] = { type: 0 }
    saveBrandNames();
-   setupBrandNames();
+   await setupBrandNames();
 });
 
 
 function saveBrandNames() {
-   setDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES);
+   chromeStorageSetLocal(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES);
 }
 
 function saveOptionSettings() {
@@ -306,11 +306,11 @@ function saveOptionSettings() {
          end: selectPages.selectedend,
       }
    }
-   setDataFromLocalStorage(KEYS.STORAGE_OPTION_SETTINGS, OPTIONS_SETTINGS);
+   chromeStorageSetLocal(KEYS.STORAGE_OPTION_SETTINGS, OPTIONS_SETTINGS);
 }
 
-function loadBrandNames() {
-   ALL_BRAND_NAMES = getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME) || {};
+async function loadBrandNames() {
+   ALL_BRAND_NAMES = await chromeStorageGetLocal(KEYS.STORAGE_BRAND_NAME) || {};
 }
 
 

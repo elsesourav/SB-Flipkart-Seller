@@ -163,12 +163,12 @@ async function searchSubmitAction() {
    if (!(await verifyUserMustLogin())) return;
    showLoading();
 
-   const listingData = getDataFromLocalStorage(KEYS.STORAGE_SELLER_LISTING);
-   const { listingType } = getDataFromLocalStorage(
+   const listingData = await chromeStorageGetLocal(KEYS.STORAGE_SELLER_LISTING);
+   const { listingType } = await chromeStorageGetLocal(
       KEYS.STORAGE_OPTION_SETTINGS
    ); 
 
-   const brandsObj = await getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME);
+   const brandsObj = await chromeStorageGetLocal(KEYS.STORAGE_BRAND_NAME);
    let brands = {
       default: [],
       selectOnly: [],
@@ -515,7 +515,7 @@ function getOldAndNewProductSize(DATA) {
 
 async function createAllSelectedProductMapping() {
    showLoading();
-   const { listingType } = getDataFromLocalStorage(
+   const { listingType } = await chromeStorageGetLocal(
       KEYS.STORAGE_OPTION_SETTINGS
    );
    const response = await createMappingSendRequest(listingType);
