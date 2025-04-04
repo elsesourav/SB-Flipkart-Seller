@@ -167,6 +167,10 @@ async function searchSubmitAction() {
    const { listingType } = getDataFromLocalStorage(
       KEYS.STORAGE_OPTION_SETTINGS
    );
+
+   console.log(listingData);
+   console.log(listingType);  
+
    const brandsObj = await getDataFromLocalStorage(KEYS.STORAGE_BRAND_NAME);
    let brands = {
       default: [],
