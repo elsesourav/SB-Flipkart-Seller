@@ -216,55 +216,77 @@ function printTable() {
                   padding: 0;
                   box-sizing: border-box;
                   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                  font-size: 12px;
+                  font-size: 18px;
+               }
+               ._-table-cover {
+                  position: relative;
+                  width: 800px;
+                  max-height: 100%;
+                  display: flex;
+                  justify-content: center;
+                  background: #dddddd;
+                  border-radius: 10px;
+                  box-shadow: 0 0 10px #000;
+                  padding: 10px;
+                  margin: 0 auto;
                }
                ._-table {
                   position: relative;
-                  width: 400px;
-                  background: #fff;
-                  flex-direction: column;
+                  box-sizing: border-box;
+                  width: 100%;
+                  height: 100%;
+                  margin: 5px;
+                  display: grid;
+                  grid-template-columns: 1fr;
+                  gap: 10px;
                   color: #000
                }
                ._-row {
                   position: relative;
                   width: 100%;
-                  padding: 4px;
-                  display: grid;
-                  place-items: center;
-                  grid-template-columns: repeat(3, 1fr);
-                  border-bottom: 1px double #000;
+                  padding: 6px;
+                  border-bottom: 3px double #000;
+                  border-radius: 8px;
+                  background: #eeeeee;
                }
-
+               ._-row:nth-child(4n + 1),
+               ._-row:nth-child(4n) {
+                  background: #ffffff;
+               }
                ._-checkbox {
                   display: none;
                }
-
                ._-cell {
                   width: 100%;
                   position: relative;
                   padding: 8px;
-                  border-right: 1px solid #ddd;
-                  border-left: 1px solid #ddd;
+                  opacity: 1;
                }
-
+               ._-multi {
+                  color: #ff7600;
+               }
                ._-header {
                   width: 100%;
                   border-radius: 10px;
                   border: 1px dashed #000;
                   font-weight: bold;
+                  background: #00f9ff8a;
+                  text-shadow: 1px 1px 0 #fff;
                }
-
                ._-seed-type {
                   font-weight: bold;
                   background-color: #f8f8f8;
                }
                @media print {
                   @page { margin: 0.5cm; }
+                  ._-table-cover {
+                     box-shadow: none;
+                  }
                }
             </style>
          </head>
          <body>
-            ${TABLE.outerHTML}
+            ${TABLE.outerHTML.replace(/〉/g, " ]").replace(/〈/g, " [")}
          </body>
       </html>
    `);
@@ -380,7 +402,7 @@ async function showOrders() {
                   : `${multi}x`;
 
                const isMulti =
-                  multi > 1 ? ` ==> <span class="_-multi">${MULTI}</span>` : "";
+                  multi > 1 ? ` -> <span class="_-multi">${MULTI}</span>` : "";
                return `<div class="_-cell">${quantity}${isMulti}</div>`;
             })
             .join("");
