@@ -362,7 +362,7 @@ const fetchFlipkartSearchData = async (pageUri, selectNot, pageNumber = 1) => {
          products = products?.filter(({ productBrand }) => {
             return !selectNot.includes(productBrand.toUpperCase());
          });
-         
+
          resolve(products || []);
       } else {
          console.log(`Error: ${response.status}`);
@@ -742,8 +742,9 @@ function getProductAllSellerInfo(productId) {
    return new Promise(async (resolve) => {
       if (!productId) return resolve(null);
       const header = {
-         "X-User-Agent":
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop",
+         "X-User-Agent": `${navigator.userAgent} FKUA/website/42/website/Desktop`,
+
+         //`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop`,
       };
 
       try {
@@ -755,7 +756,6 @@ function getProductAllSellerInfo(productId) {
          });
          const { RESPONSE } = await response.json();
          console.log(RESPONSE);
-         
 
          const data = RESPONSE?.data?.product_seller_detail_1?.data;
          const [productSummary] = RESPONSE?.data?.product_summary_1?.data;
