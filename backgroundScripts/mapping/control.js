@@ -516,8 +516,8 @@ function filterProductsByNameSkuAndSelect(products, name, brands) {
 
    products = products.filter((p) => {
       return (
-         p.sku_id.toLowerCase().includes(NAME) ||
-         (!isOnlySkuMatch && p.name.includes(NAME))
+         p.sku_id.toLowerCase()?.includes(NAME) ||
+         (!isOnlySkuMatch && p?.name?.includes(NAME))
       );
    });
 
