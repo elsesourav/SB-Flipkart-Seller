@@ -754,6 +754,8 @@ function getProductAllSellerInfo(productId) {
             body,
          });
          const { RESPONSE } = await response.json();
+         console.log(RESPONSE);
+         
 
          const data = RESPONSE?.data?.product_seller_detail_1?.data;
          const [productSummary] = RESPONSE?.data?.product_summary_1?.data;
