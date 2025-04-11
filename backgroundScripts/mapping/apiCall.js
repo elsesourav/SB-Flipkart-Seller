@@ -738,6 +738,9 @@ function createProductMappingBulk(DATA) {
    });
 }
 
+console.log(`${navigator.userAgent} FKUA/website/42/website/Desktop`);
+
+
 function getProductAllSellerInfo(productId) {
    return new Promise(async (resolve) => {
       if (!productId) return resolve(null);
@@ -747,9 +750,11 @@ function getProductAllSellerInfo(productId) {
          //`Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 FKUA/website/42/website/Desktop`,
       };
 
+
       try {
          const body = JSON.stringify({ requestContext: { productId } });
-         const response = await fetch(URLS.productSellers, {
+         // const response = await fetch(URLS.productSellers, {
+         const response = await fetch(URLS.productSellers_2, {
             method: "POST",
             headers: header,
             body,
