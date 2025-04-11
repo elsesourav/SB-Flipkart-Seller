@@ -25,6 +25,7 @@ const URLS = {
    addMapping:
       "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
    flipkartSearchUrl: "https://2.rome.api.flipkart.com/api/4/page/fetch",
+   flipkartSearchUrl_2: "https://1.rome.api.flipkart.com/api/4/page/fetch",
    flipkartAPIMapping:
       "https://seller.flipkart.com/napi/listing/create-update-listings",
    flipkartSellerIndexPage: "https://seller.flipkart.com/index.html",

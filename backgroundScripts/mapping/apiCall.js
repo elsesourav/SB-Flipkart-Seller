@@ -322,7 +322,8 @@ function GET_SELLER_INFO() {
 
 const fetchFlipkartSearchData = async (pageUri, selectNot, pageNumber = 1) => {
    return new Promise(async (resolve) => {
-      const response = await fetch(URLS.flipkartSearchUrl, {
+      // const response = await fetch(URLS.flipkartSearchUrl, {
+      const response = await fetch(URLS.flipkartSearchUrl_2, {
          method: "POST",
          headers: FLIPKART_SEARCH_HEADER,
          body: JSON.stringify({
