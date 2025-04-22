@@ -273,7 +273,7 @@ function adjustPriceLimits(O, price90, MRP, COST, fixedCost) {
 
 function getMixDataForNewMapping(DATA) {
    const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
-   const CHUNK_SIZE = 25;
+
 
    console.log(DATA);
 
@@ -342,14 +342,14 @@ function getMixDataForNewMapping(DATA) {
       PRODUCTS_CHUNK: splitIntoChunks(
          newData,
          multiRequestSameProductData,
-         CHUNK_SIZE
+         BATCH_SIZE
       ),
    };
 }
 
 async function getMixDataForOldMapping(DATA) {
    let { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
-   const CHUNK_SIZE = 25;
+   let result = [];
 
    const SHIPPING_DAYS = MD?.SHIPPING_DAYS || 1;
    const STOCK_SIZE = MD?.STOCK_SIZE || 1000;
@@ -475,7 +475,7 @@ async function getMixDataForOldMapping(DATA) {
       PRODUCTS_CHUNK: splitIntoChunks(
          newData,
          multiRequestSameProductData,
-         CHUNK_SIZE
+         BATCH_SIZE
       ),
    };
 }

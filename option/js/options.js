@@ -1,6 +1,7 @@
 let SELLER_LISTING_DATA = {};
 let SAVED_PRODUCTS = [];
 let PRODUCTS = [];
+let PRODUCTS_PAGES = [];
 let SELECTED_PRODUCTS = [];
 
 let SELECTED_PRODUCTS_DATA = [];
@@ -12,8 +13,39 @@ let OPTIONS_SETTINGS = {};
 let BRAND_NAME_TAGS = ["default", "selectOnly", "selectNot"];
 
 
+// Pagination
+const pagesElement = document.getElementById("_pages_");
+
+let MAX_PAGE_RENDER = 100;
+const MAX_PAGE_BUTTON = 5;
+let currentPageIndex = 0;
+let maxPagePossible = 0;
+const PAGES = new Pages(
+   MAX_PAGE_BUTTON,
+   pagesElement,
+   pageClickAction,
+   pageClickAction
+);
+PAGES.update(maxPagePossible, currentPageIndex);
+
+selectTotalDisplay.addEventListener("change", (e) => {
+   MAX_PAGE_RENDER = +e.target.value;
+   removeSelectAll();
+   currentPageIndex = 0;
+   filterAndCreateProductCards();
+});
+
+function pageClickAction(current) {
+   if (current === currentPageIndex) return;
+   currentPageIndex = current;
+   setPagesAndCreateProductCards(current);
+   removeSelectAll(); // remove all selected products
+}
+
 onload = async () => {
-   SELLER_LISTING_DATA = await chromeStorageGetLocal(KEYS.STORAGE_SELLER_LISTING);
+   SELLER_LISTING_DATA = await chromeStorageGetLocal(
+      KEYS.STORAGE_SELLER_LISTING
+   );
 
    if (SELLER_LISTING_DATA) {
       const { count } = SELLER_LISTING_DATA;
@@ -22,19 +54,18 @@ onload = async () => {
       updateCompleteProgress(100, 0);
    }
 
-
    OPTIONS_SETTINGS = await chromeStorageGetLocal(KEYS.STORAGE_OPTION_SETTINGS);
 
    if (OPTIONS_SETTINGS) {
       const { listingType, ratingSelected, pageSelected } = OPTIONS_SETTINGS;
-      
+
       I(`input[name="listing-type"][value="${listingType}"]`)[0].checked = true;
       selectRating.setAttribute("selectedstart", ratingSelected.start);
       selectRating.setAttribute("selectedend", ratingSelected.end);
       selectPages.setAttribute("selectedstart", pageSelected.start);
       selectPages.setAttribute("selectedend", pageSelected.end);
    }
-   
+
    if (!FK_CSRF_TOKEN) {
       const data = await getFkCsrfToken();
       if (data) {
@@ -46,22 +77,26 @@ onload = async () => {
 
 // rating.addEventListener(
 //    "change",
-//    debounce(filterProducts, () => 1000)
+//    debounce(filterAndCreateProductCards, () => 1000)
 // );
 
-
 I(`input[name="listing-type"]`).on("change", saveOptionSettings);
-selectRating.addEventListener("selectionchange", debounce(__callBack__, () => 1000));
+selectRating.addEventListener(
+   "selectionchange",
+   debounce(__callBack__, () => 1000)
+);
 function __callBack__() {
    saveOptionSettings();
-   filterProducts(); 
+   filterAndCreateProductCards();
 }
 selectPages.addEventListener("selectionchange", () => {
    saveOptionSettings();
 });
 
-
-matchNames.addEventListener("input", debounce(filterProducts, () => 1000));
+matchNames.addEventListener(
+   "input",
+   debounce(filterAndCreateProductCards, () => 1000)
+);
 searchSubmit.addEventListener("click", searchSubmitAction);
 searchProduct.addEventListener("keydown", (e) => {
    if (e.key === "Enter") {
@@ -72,6 +107,7 @@ searchProduct.addEventListener("keydown", (e) => {
 function removeSelectAll() {
    selectAllProducts.classList.remove("active");
    selectNameMatchProducts.classList.remove("active");
+   updateSelectedCount();
 }
 
 function selectProducts(element, parent = document) {
@@ -190,7 +226,6 @@ confirmationWindow.addEventListener("click", (e) => {
 
 // Start final mapping process
 startFinalMapping.addEventListener("click", async () => {
-   showLoading();
    hideConfirmationWindow();
    createAllSelectedProductMapping();
 });
@@ -223,14 +258,12 @@ function toggleSection(header, cardsSection) {
 //    toggleSection(oldMappingHeader, showOldMappingProducts)
 // );
 
-
-
 refreshButton.addEventListener("click", async () => {
    const data = await getAllListingSellerData(FK_CSRF_TOKEN);
    if (data) {
-      chromeStorageSetLocal(KEYS.STORAGE_SELLER_LISTING, data)
+      chromeStorageSetLocal(KEYS.STORAGE_SELLER_LISTING, data);
    }
-})
+});
 
 async function setupBrandNames() {
    brandNameContainer.innerHTML = "";
@@ -270,24 +303,23 @@ setupBrandNames();
 addBrandName.addEventListener("click", async () => {
    const brandName = brandNameInput.value.toUpperCase();
    console.log(brandName);
-   
-   if(brandName == "" || brandName.length <= 2) {
+
+   if (brandName == "" || brandName.length <= 2) {
       alert("Please enter a valid brand name");
       return;
    }
 
    for (const name in ALL_BRAND_NAMES) {
-      if(name == brandName) {
+      if (name == brandName) {
          alert("Brand name already exists");
          return;
       }
    }
 
-   ALL_BRAND_NAMES[brandName] = { type: 0 }
+   ALL_BRAND_NAMES[brandName] = { type: 0 };
    saveBrandNames();
    await setupBrandNames();
 });
-
 
 function saveBrandNames() {
    chromeStorageSetLocal(KEYS.STORAGE_BRAND_NAME, ALL_BRAND_NAMES);
@@ -304,15 +336,12 @@ function saveOptionSettings() {
       pageSelected: {
          start: selectPages.selectedstart,
          end: selectPages.selectedend,
-      }
-   }
+      },
+   };
    chromeStorageSetLocal(KEYS.STORAGE_OPTION_SETTINGS, OPTIONS_SETTINGS);
 }
 
 async function loadBrandNames() {
-   ALL_BRAND_NAMES = await chromeStorageGetLocal(KEYS.STORAGE_BRAND_NAME) || {};
+   ALL_BRAND_NAMES =
+      (await chromeStorageGetLocal(KEYS.STORAGE_BRAND_NAME)) || {};
 }
-
-
-
-

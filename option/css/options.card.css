@@ -77,6 +77,21 @@
    font-size: calc(var(--s) * 1.6);
 }
 
+.card .copy {
+   position: absolute;
+   right: calc(var(--s) * 0.4);
+   top: calc(var(--s) * 0.4);
+   font-size: calc(var(--s) * 1.6);
+   color: #fff7;
+   transition: 200ms color;
+   cursor: grab;
+   z-index: 100;
+
+   &:hover {
+      color: #62ff00;
+   }
+}
+
 .card.listed .icon {
    display: block;
 }

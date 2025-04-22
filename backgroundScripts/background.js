@@ -14,7 +14,7 @@ importScripts(
    "./mapping/control.js"
 );
 
-const BATCH_SIZE = 8; // Number of concurrent requests
+let BATCH_SIZE = 2; // Number of concurrent requests
 
 console.log("background loaded");
 

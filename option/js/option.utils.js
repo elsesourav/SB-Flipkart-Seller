@@ -16,10 +16,13 @@ function getFkCsrfToken() {
 
 function getMappingPossibleProductData(data, listingType, sellerId) {
    return new Promise((resolve) => {
+      const server = selectServer.value;
+      const batchSize = +selectBatch.value;
+
       if (listingType === "new") {
          runtimeSendMessage(
             "c_b_get_new_mapping_product_data",
-            { ...data, sellerId },
+            { ...data, sellerId, server, batchSize  },
             (r) => resolve(r)
          );
       } else {
@@ -27,7 +30,7 @@ function getMappingPossibleProductData(data, listingType, sellerId) {
 
          runtimeSendMessage(
             "c_b_get_old_mapping_product_data",
-            { ...data, sellerId },
+            { ...data, sellerId, server, batchSize },
             (r) => resolve(r)
          );
       }
@@ -213,7 +216,7 @@ async function searchSubmitAction() {
          return;
       }
       SAVED_PRODUCTS = [...PRODUCTS];
-      filterProducts();
+      filterAndCreateProductCards();
    } catch (error) {
       console.log("Error:", error);
    } finally {
@@ -272,6 +275,8 @@ function getHTMLProductCards(ps, searchNames = []) {
          <div class="card product ${className}" id="${id}" style="--c-bg: ${SIGNAL};">
             <input type="checkbox" class="select-product" data-product-id="${id}">
             <i class="sbi-asterisk icon"></i>
+            <div class="copy" id="copy-${id}"><i class="sbi-content-copy"></i></div>
+            
             <div class="show-img">
                <img src="${imageUrl}" alt="product-image-${id}">
                <div class="rating ${classRating}">${rating?.average}</div>
@@ -295,7 +300,7 @@ function getHTMLProductCards(ps, searchNames = []) {
    return result;
 }
 
-function createProductCard() {
+function createProductCard(PRODUCTS_PAGES = PRODUCTS) {
    let searchNames = matchNames?.value?.toLowerCase();
 
    if (searchNames) {
@@ -309,15 +314,22 @@ function createProductCard() {
    const type = I(`input[name="listing-type"]:checked`).value;
    // console.log(PRODUCTS);
 
-   const $PRODUCTS = PRODUCTS.filter((p) =>
+   const $PRODUCTS = PRODUCTS_PAGES.filter((p) =>
       type === "new" ? !p.alreadySelling : p.alreadySelling
    );
    displayChards.innerHTML = getHTMLProductCards($PRODUCTS, searchNames);
 
    $PRODUCTS.forEach(({ id }) => {
       const checkbox = II(`#${id} > input`, displayChards);
+      const copy = II(`#copy-${id}`, displayChards);
+
       checkbox.addEventListener("click", () => {
          updateSelectedCount();
+      });
+
+      copy.addEventListener("click", (e) => {
+         e.preventDefault();
+         copyTextToClipboard(id);
       });
    });
 }
@@ -407,13 +419,35 @@ function filterByNames() {
    });
 }
 
-function filterProducts() {
+
+function setPagesAndCreateProductCards(currentPageI = 0) {
+   createProductCard(PRODUCTS_PAGES[currentPageI]);
+}
+
+function filterAndCreateProductCards() {
    PRODUCTS = [...SAVED_PRODUCTS];
 
    // Apply filters in sequence
    filterByRating();
    filterByNames();
-   createProductCard();
+
+   // calculate possible pages
+   const totalDisplay = +selectTotalDisplay.value;
+   const totalPages = Math.ceil(PRODUCTS.length / totalDisplay);
+   PAGES.update(totalPages, 0);
+
+
+   // make a array of sates of pages products
+   const pageStates = [];
+   for (let i = 0; i < totalPages; i++) {
+      const start = i * totalDisplay;
+      const end = start + totalDisplay;
+      const products = PRODUCTS.slice(start, end);
+      pageStates.push(products);
+   }
+   PRODUCTS_PAGES = pageStates;
+   
+   setPagesAndCreateProductCards(0);
 }
 
 async function verifyUserMustLogin() {

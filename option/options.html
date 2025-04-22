@@ -9,15 +9,19 @@
       <link rel="stylesheet" href="./css/checkboxs.css" />
 
       <link rel="stylesheet" href="./css/options.css" />
+      <link rel="stylesheet" href="./css/pagination.css" />
       <link rel="stylesheet" href="./css/options.card.css" />
       <link rel="stylesheet" href="./css/options.nav.css" />
       <link rel="stylesheet" href="./css/options.loading.css" />
       <link rel="stylesheet" href="./css/options.prewiew.css" />
       <link rel="stylesheet" href="./css/options.confirmation.css" />
       <link rel="stylesheet" href="./css/options.success.css" />
+
+
       <script defer src="./../utils.js"></script>
       <script defer src="./../querySelector.js"></script>
       <script defer src="./js/range-selector.js"></script>
+      <script defer src="./js/pagination.js"></script>
       <script defer src="./js/drag-select.js"></script>
       <script defer src="./js/option.utils.js"></script>
       <script defer src="./js/options.js"></script>
@@ -45,6 +49,46 @@
 
          <div class="header-2">
             <div class="dashboard-container">
+               <div class="backhand-config">
+                  <div class="config-selection">
+                     <label for="select-server">Select Server</label>
+                     <select name="select-server" id="selectServer">
+                        <option selected value="india">India</option>
+                        <option value="bahrain">Bahrain</option>
+                     </select>
+                  </div>
+                  <div class="config-selection">
+                     <label for="batch-size">Batch Size</label>
+                     <select name="batch-size" id="selectBatch">
+                        <option selected value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="8">8</option>
+                        <option value="10">10</option>
+                     </select>
+                  </div>
+                  <div class="config-selection">
+                     <label for="total-display">Total Display</label>
+                     <select name="total-display" id="selectTotalDisplay">
+                        <option selected value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                        <option value="70">70</option>
+                        <option selected value="100">100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                        <option value="250">250</option>
+                        <option value="300">300</option>
+                        <option value="400">400</option>
+                        <option value="500">500</option>
+                        <option value="9999">9999</option>
+                     </select>
+                  </div>
+               </div>
+               
+
                <div class="progress-section">
                   <div class="progress-bar">
                      <div id="progressFill" class="progress-fill"></div>
@@ -89,7 +133,7 @@
                            placeholder="Enter Brand Name"
                         />
                      </div>
-                     <div id="addBrandName" class="brand-add-btn">Add Brand Name</div>
+                     <div id="addBrandName" class="brand-add-btn">Add Brand</div>
                   </div>
                   <div id="brandNameContainer" class="brand-tags-container">
                      <!-- <div class="brand-tag">
@@ -127,6 +171,9 @@
                   <button id="searchSubmit">
                      <i class="sbi-search"></i>
                   </button>
+               </div>
+               <div class="pagination">
+                  <div id="_pages_"></div>
                </div>
             </div>
          </div>

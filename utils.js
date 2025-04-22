@@ -14,32 +14,42 @@ const KEYS = {
    STORAGE_OPTION_SETTINGS: "SB_Seller_Options_Settings",
 };
 
-const URLS = {
-   singleListing: "https://seller.flipkart.com/index.html#dashboard/listings",
-   singleAddListing:
-      "https://seller.flipkart.com/index.html#dashboard/addListings",
-   singleOrder: "https://seller.flipkart.com/index.html#dashboard/my-orders",
-   flipkartSearch: "https://www.flipkart.com/search?q=",
-   newListing:
-      "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed",
-   addMapping:
-      "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=",
-   flipkartSearchUrl: "https://2.rome.api.flipkart.com/api/4/page/fetch",
-   flipkartSearchUrl_2: "https://1.rome.api.flipkart.com/api/4/page/fetch",
-   flipkartAPIMapping:
-      "https://seller.flipkart.com/napi/listing/create-update-listings",
-   flipkartSellerIndexPage: "https://seller.flipkart.com/index.html",
-   flipkartFeaturesForSeller:
-      "https://seller.flipkart.com/getFeaturesForSeller",
-   listingsDataForStates:
-      "https://seller.flipkart.com/napi/listing/listingsDataForStates",
-   productSellers:
-      "https://2.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
-   productSellers_2:
-      "https://1.rome.api.flipkart.com/api/3/page/dynamic/product-sellers",
-   brandApproval: "https://seller.flipkart.com/napi/regulation/approvalStatus?",
-   graphql: "https://seller.flipkart.com/napi/graphql",
-};
+const URLS = {};
+
+function setURLSUsingServer(server = "india") {
+   let number = 2;
+   if (server.toLocaleLowerCase() == "india") {
+      number = 2;
+   } else {
+      number = 1;
+   }
+   console.log(server, number);
+
+   URLS.singleListing =
+      "https://seller.flipkart.com/index.html#dashboard/listings";
+   URLS.singleAddListing =
+      "https://seller.flipkart.com/index.html#dashboard/addListings";
+   URLS.singleOrder =
+      "https://seller.flipkart.com/index.html#dashboard/my-orders";
+   URLS.flipkartSearch = "https://www.flipkart.com/search?q=";
+   URLS.newListing =
+      "https://seller.flipkart.com/index.html#dashboard/addListings/single?vertical=plant_seed";
+   URLS.addMapping =
+      "https://seller.flipkart.com/index.html#dashboard/listings/product/na?fsn=";
+   URLS.flipkartSearchUrl = `https://${number}.rome.api.flipkart.com/api/4/page/fetch`;
+   URLS.flipkartAPIMapping =
+      "https://seller.flipkart.com/napi/listing/create-update-listings";
+   URLS.flipkartSellerIndexPage = "https://seller.flipkart.com/index.html";
+   URLS.flipkartFeaturesForSeller =
+      "https://seller.flipkart.com/getFeaturesForSeller";
+   URLS.listingsDataForStates =
+      "https://seller.flipkart.com/napi/listing/listingsDataForStates";
+   URLS.productSellers = `https://${number}.rome.api.flipkart.com/api/3/page/dynamic/product-sellers`;
+   URLS.brandApproval =
+      "https://seller.flipkart.com/napi/regulation/approvalStatus?";
+   URLS.graphql = "https://seller.flipkart.com/napi/graphql";
+}
+setURLSUsingServer();
 
 /* 
 https://www.flipkart.com/search?q=cucumber+seeds&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&p%5B%5D=facets.brand%255B%255D%3DKANAYA&p%5B%5D=facets.brand%255B%255D%3Dibains
@@ -51,8 +61,6 @@ https://www.flipkart.com/search?q=cucumber%20seeds&otracker=search&otracker1=sea
 
 https://www.flipkart.com/search?q=
 */
-
-
 
 const FLIPKART_SEARCH_HEADER = {
    accept: "*/*",
@@ -105,7 +113,7 @@ function setDataFromLocalStorage(key, object) {
 
 function getDataFromLocalStorage(key) {
    console.log(localStorage);
-   
+
    return JSON.parse(localStorage.getItem(key));
 }
 
@@ -182,7 +190,7 @@ function map(os, oe, ns, ne, t, isRound = true) {
 }
 
 function setDataToLocalStorage(key, object) {
-   var data = JSON.stringify(object);
+   let data = JSON.stringify(object);
    localStorage.setItem(key, data);
 }
 function getDataToLocalStorage(key) {
@@ -388,4 +396,22 @@ function getSecondsForMonths(months) {
 function dateToMilliseconds(dateString) {
    const date = new Date(dateString);
    return date.getTime();
+}
+
+function copyTextToClipboard(text) {
+   const textarea = document.createElement("textarea");
+   textarea.value = text;
+   textarea.style.position = "fixed"; // Prevent scrolling to bottom
+   document.body.appendChild(textarea);
+   textarea.select();
+
+   try {
+      const successful = document.execCommand("copy");
+      const msg = successful ? "successful" : "unsuccessful";
+      console.log("Copying text " + msg);
+   } catch (err) {
+      console.error("Unable to copy", err);
+   }
+
+   document.body.removeChild(textarea);
 }
