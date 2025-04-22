@@ -409,9 +409,143 @@ function copyTextToClipboard(text) {
       const successful = document.execCommand("copy");
       const msg = successful ? "successful" : "unsuccessful";
       console.log("Copying text " + msg);
+      
+      // Show toast notification if document.body exists
+      if (document.body) {
+         showToast(successful ? "Copied to clipboard!" : "Copy failed", successful ? "success" : "error");
+      }
    } catch (err) {
       console.error("Unable to copy", err);
+      // Show error toast if document.body exists
+      if (document.body) {
+         showToast("Unable to copy: " + err.message, "error");
+      }
    }
 
    document.body.removeChild(textarea);
+}
+
+// Toast notification system
+function showToast(message, type = "info", duration = 3000) {
+   // Don't show toast if document.body doesn't exist
+   if (!document.body) return;
+   
+   // Create toast container if it doesn't exist
+   let toastContainer = document.getElementById("sb-toast-container");
+   if (!toastContainer) {
+      toastContainer = document.createElement("div");
+      toastContainer.id = "sb-toast-container";
+      toastContainer.style.cssText = `
+         position: fixed;
+         bottom: 20px;
+         right: 20px;
+         z-index: 9999;
+         display: flex;
+         flex-direction: column;
+         align-items: flex-end;
+      `;
+      document.body.appendChild(toastContainer);
+   }
+   
+   // Create toast element
+   const toast = document.createElement("div");
+   toast.className = "sb-toast sb-toast-" + type;
+   toast.style.cssText = `
+      min-width: 250px;
+      margin-top: 10px;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+      animation: sb-toast-in 0.3s ease-out forwards;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateY(15px);
+   `;
+   
+   // Set background color based on type
+   switch (type) {
+      case "success":
+         toast.style.backgroundColor = "#4CAF50";
+         toast.style.color = "white";
+         break;
+      case "error":
+         toast.style.backgroundColor = "#F44336";
+         toast.style.color = "white";
+         break;
+      case "warning":
+         toast.style.backgroundColor = "#FF9800";
+         toast.style.color = "white";
+         break;
+      default: // info
+         toast.style.backgroundColor = "#2196F3";
+         toast.style.color = "white";
+   }
+   
+   // Add message
+   toast.textContent = message;
+   
+   // Add close button
+   const closeBtn = document.createElement("span");
+   closeBtn.innerHTML = "&times;";
+   closeBtn.style.cssText = `
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+   `;
+   closeBtn.addEventListener("click", () => {
+      removeToast(toast);
+   });
+   toast.appendChild(closeBtn);
+   
+   // Add animation style if not already added
+   if (!document.getElementById("sb-toast-style")) {
+      const style = document.createElement("style");
+      style.id = "sb-toast-style";
+      style.textContent = `
+         @keyframes sb-toast-in {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+         }
+         @keyframes sb-toast-out {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-15px); }
+         }
+      `;
+      document.head.appendChild(style);
+   }
+   
+   // Add to container
+   toastContainer.appendChild(toast);
+   
+   // Trigger animation
+   setTimeout(() => {
+      toast.style.opacity = "1";
+      toast.style.transform = "translateY(0)";
+   }, 10);
+   
+   // Auto remove after duration
+   setTimeout(() => {
+      removeToast(toast);
+   }, duration);
+}
+
+// Helper function to remove toast with animation
+function removeToast(toast) {
+   toast.style.animation = "sb-toast-out 0.3s ease-in forwards";
+   setTimeout(() => {
+      if (toast.parentNode) {
+         toast.parentNode.removeChild(toast);
+      }
+      
+      // Remove container if empty
+      const container = document.getElementById("sb-toast-container");
+      if (container && container.children.length === 0) {
+         document.body.removeChild(container);
+      }
+   }, 300);
 }
