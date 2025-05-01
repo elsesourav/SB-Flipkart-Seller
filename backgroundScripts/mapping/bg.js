@@ -18,9 +18,10 @@ runtimeOnMessage(
 runtimeOnMessage(
    "c_b_get_new_mapping_product_data",
    async (data, sender, sendResponse) => {
-      const { productName, brands, startingPage, endingPage, sellerId, batchSize, server } = data;
+      const { productName, brands, startingPage, endingPage, sellerId, batchSize, batchDelay, server } = data;
       optionsTabId = sender.tab.id;
       BATCH_SIZE = batchSize;
+      BATCH_DELAY = batchDelay;
       setURLSUsingServer(server);
 
       try {
@@ -70,9 +71,10 @@ runtimeOnMessage(
 runtimeOnMessage(
    "c_b_get_old_mapping_product_data",
    async (data, sender, sendResponse) => {
-      let { productName, brands, sellerListing, sellerId, batchSize, server } = data;
+      let { productName, brands, sellerListing, sellerId, batchSize, batchDelay, server } = data;
       optionsTabId = sender.tab.id;
       BATCH_SIZE = batchSize;
+      BATCH_DELAY = batchDelay;
       setURLSUsingServer(server);
 
       try {

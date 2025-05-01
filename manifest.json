@@ -17,7 +17,7 @@
       "unlimitedStorage",
       "offscreen"
    ],
-   "host_permissions": ["<all_urls>"],
+   "host_permissions": ["*://*.flipkart.com/*"],
    "background": {
       "service_worker": "./backgroundScripts/background.js"
    },
@@ -27,14 +27,22 @@
    },
    "content_scripts": [
       {
-         "matches": ["<all_urls>"],
-         "js": ["./utils.js", "./contentScripts/html2canvas.js", "./querySelector.js", "./contentScripts/style.js", "./contentScripts/nano.fun.js", "./contentScripts/small.fun.js", "./contentScripts/content.js"]
+         "matches": ["*://*.flipkart.com/*"],
+         "js": [
+            "./utils.js",
+            "./contentScripts/html2canvas.js",
+            "./querySelector.js",
+            "./contentScripts/style.js",
+            "./contentScripts/nano.fun.js",
+            "./contentScripts/small.fun.js",
+            "./contentScripts/content.js"
+         ]
       }
    ],
    "web_accessible_resources": [
       {
          "resources": ["assets/*", "css/*"],
-         "matches": ["<all_urls>"]
+         "matches": ["*://*.flipkart.com/*"]
       }
    ],
    "action": {

@@ -23,7 +23,6 @@ function setURLSUsingServer(server = "india") {
    } else {
       number = 1;
    }
-   console.log(server, number);
 
    URLS.singleListing =
       "https://seller.flipkart.com/index.html#dashboard/listings";

@@ -18,11 +18,12 @@ function getMappingPossibleProductData(data, listingType, sellerId) {
    return new Promise((resolve) => {
       const server = selectServer.value;
       const batchSize = +selectBatch.value;
+      const batchDelay = +selectDelay.value;
 
       if (listingType === "new") {
          runtimeSendMessage(
             "c_b_get_new_mapping_product_data",
-            { ...data, sellerId, server, batchSize  },
+            { ...data, sellerId, server, batchSize, batchDelay },
             (r) => resolve(r)
          );
       } else {
@@ -30,7 +31,7 @@ function getMappingPossibleProductData(data, listingType, sellerId) {
 
          runtimeSendMessage(
             "c_b_get_old_mapping_product_data",
-            { ...data, sellerId, server, batchSize },
+            { ...data, sellerId, server, batchSize, batchDelay },
             (r) => resolve(r)
          );
       }

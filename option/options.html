@@ -51,14 +51,14 @@
             <div class="dashboard-container">
                <div class="backhand-config">
                   <div class="config-selection">
-                     <label for="select-server">Select Server</label>
+                     <label for="select-server">Server</label>
                      <select name="select-server" id="selectServer">
                         <option selected value="india">India</option>
                         <option value="bahrain">Bahrain</option>
                      </select>
                   </div>
                   <div class="config-selection">
-                     <label for="batch-size">Batch Size</label>
+                     <label for="batch-size">BatchSize</label>
                      <select name="batch-size" id="selectBatch">
                         <option selected value="1">1</option>
                         <option value="2">2</option>
@@ -69,7 +69,19 @@
                      </select>
                   </div>
                   <div class="config-selection">
-                     <label for="total-display">Total Display</label>
+                     <label for="batch-delay">BatchDelay</label>
+                     <select name="batch-delay" id="selectDelay">
+                        <option value="0">0</option>
+                        <option value="50">50</option>
+                        <option selected value="100">100</option>
+                        <option value="200">200</option>
+                        <option value="300">300</option>
+                        <option value="500">500</option>
+                        <option value="700">700</option>
+                     </select>
+                  </div>
+                  <div class="config-selection">
+                     <label for="total-display">Display</label>
                      <select name="total-display" id="selectTotalDisplay">
                         <option selected value="10">10</option>
                         <option value="20">20</option>

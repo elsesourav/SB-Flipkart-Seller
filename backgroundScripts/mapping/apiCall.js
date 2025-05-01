@@ -476,6 +476,7 @@ function createNewProductMappingBulk(DATA) {
 
       try {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
+         await wait(BATCH_DELAY);
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
             resolve([]);
@@ -599,6 +600,8 @@ function updateOldProductMappingBulk(DATA) {
 
       try {
          const response = await fetch(URLS.flipkartAPIMapping, REQUEST_OPTIONS);
+         await wait(BATCH_DELAY);
+
          if (!response.ok) {
             console.log("Mapping failed:", await response.text());
             resolve([]);
@@ -737,8 +740,6 @@ function createProductMappingBulk(DATA) {
       }
    });
 }
-
-console.log(`${navigator.userAgent} FKUA/website/42/website/Desktop`);
 
 
 function getProductAllSellerInfo(productId) {

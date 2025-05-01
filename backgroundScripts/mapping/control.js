@@ -274,7 +274,6 @@ function adjustPriceLimits(O, price90, MRP, COST, fixedCost) {
 function getMixDataForNewMapping(DATA) {
    const { products, fkCsrfToken, mappingData: MD, sellerId } = DATA;
 
-
    console.log(DATA);
 
    const SKU_NAME = MD?.PRODUCT_NAME.toUpperCase();
@@ -429,10 +428,15 @@ async function getMixDataForOldMapping(DATA) {
          };
       }
 
-      function pushMultiRequestData(esp, i) {
+      function pushMultiRequestData(esp, i = 0) {
          if (!multiRequestSameProductData[i])
             multiRequestSameProductData[i] = [];
          multiRequestSameProductData[i].push(getObjByPrice(esp));
+      }
+
+      // if price same then don't return product
+      if (esp === NEW_SRCELEMENT_AMOUNT) {
+         return getObjByPrice(NEW_SRCELEMENT_AMOUNT);
       }
 
       let difference = esp;
@@ -459,8 +463,6 @@ async function getMixDataForOldMapping(DATA) {
             i++;
          }
          pushMultiRequestData(NEW_SRCELEMENT_AMOUNT, i); // update esp
-      } else {
-         result = getObjByPrice(NEW_SRCELEMENT_AMOUNT); // update esp
       }
 
       return result;
@@ -516,8 +518,9 @@ function filterProductsByNameSkuAndSelect(products, name, brands) {
 
    products = products.filter((p) => {
       return (
-         p.sku_id.toLowerCase()?.includes(NAME) ||
-         (!isOnlySkuMatch && p?.name?.includes(NAME))
+         p.internal_state === "ACTIVE" &&
+         (p.sku_id.toLowerCase()?.includes(NAME) ||
+            (!isOnlySkuMatch && p?.name?.includes(NAME)))
       );
    });
 
