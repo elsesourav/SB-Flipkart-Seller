@@ -134,6 +134,8 @@ async function modifyOldProductsData(products, userId) {
          if (!result) return { PROFIT: 0 };
          const { price, signal, profit, nationalProfit, nationalFee } = result;
 
+         const SRCELEMENT_AMOUNT = COST + Math.round(profit);
+
          return {
             ...product,
             PRICE: Math.round(price) || 0,
@@ -142,7 +144,7 @@ async function modifyOldProductsData(products, userId) {
             SIGNAL: signal,
             PROFIT: Math.round(profit) || 0,
             NATIONAL_PROFIT: nationalProfit,
-            SRCELEMENT_AMOUNT: COST + Math.round(profit),
+            SRCELEMENT_AMOUNT,
             NATIONAL_FEE: nationalFee,
          };
       })
@@ -434,6 +436,10 @@ async function getMixDataForOldMapping(DATA) {
          multiRequestSameProductData[i].push(getObjByPrice(esp));
       }
 
+      if (esp === null) {
+         return getObjByPrice(NEW_SRCELEMENT_AMOUNT);
+      }
+
       // if price same then don't return product
       if (esp === NEW_SRCELEMENT_AMOUNT) {
          return getObjByPrice(NEW_SRCELEMENT_AMOUNT);
@@ -510,17 +516,15 @@ function newImgPath(url, ratio = 400, quality = 60) {
 }
 
 function filterProductsByNameSkuAndSelect(products, name, brands) {
-   const isOnlySkuMatch = name?.[0] == "#";
-   if (isOnlySkuMatch) name = name.slice(1);
+   const { tags, content } = splitStringByTag(name, true);
    const { selectOnly, selectNot } = brands;
-
-   const NAME = name.toLowerCase().replace(/\s*seeds?/g, "");
+   const NAME = content.toLowerCase().replace(/\s*seeds?/g, "");
 
    products = products.filter((p) => {
       return (
          p.internal_state === "ACTIVE" &&
-         (p.sku_id.toLowerCase()?.includes(NAME) ||
-            (!isOnlySkuMatch && p?.name?.includes(NAME)))
+         (tags.some((e) => p.sku_id.toLowerCase()?.includes(e.substring(1))) ||
+            (NAME.length > 0 && p?.name?.includes(NAME)))
       );
    });
 

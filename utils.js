@@ -548,3 +548,21 @@ function removeToast(toast) {
       }
    }, 300);
 }
+
+
+function splitStringByTag(str, isLowerCase = false) {
+   const tagMatches = [...str.matchAll(/#\w+/g)];
+   const tags = isLowerCase
+      ? tagMatches.map((match) => match[0].toLowerCase())
+      : tagMatches.map((match) => match[0]);
+   const tagFlag = tags.length > 0;
+
+   // Remove all hashtags from the string
+   const content = str.replace(/#\w+/g, "").trim();
+
+   return {
+      tags,
+      tag: tagFlag,
+      content: content,
+   };
+}

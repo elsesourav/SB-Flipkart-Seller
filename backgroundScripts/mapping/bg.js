@@ -18,7 +18,7 @@ runtimeOnMessage(
 runtimeOnMessage(
    "c_b_get_new_mapping_product_data",
    async (data, sender, sendResponse) => {
-      const { productName, brands, startingPage, endingPage, sellerId, batchSize, batchDelay, server } = data;
+      const { productName, brands, sellerListing, startingPage, endingPage, sellerId, batchSize, batchDelay, server } = data;
       optionsTabId = sender.tab.id;
       BATCH_SIZE = batchSize;
       BATCH_DELAY = batchDelay;
@@ -26,17 +26,24 @@ runtimeOnMessage(
 
       try {
          const verifiedProducts = [];
+
          approvalBrands = {};
          const { selectOnly, selectNot } = brands;
          const pageUri = getSearchUri(selectOnly, productName);
 
          // search flipkart page one by one
          for (let i = startingPage, j = 1; i <= endingPage; i++, j++) {
-            const products = [];
-            const productData = await fetchFlipkartSearchData(pageUri, selectNot, i);
+            let products = [];
+            const productData = await fetchFlipkartSearchData(
+               pageUri,
+               selectNot,
+               i
+            );
             if (productData) {
                products.push(...productData);
             }
+            
+            products = products.filter((e) => !sellerListing[e.id]);
 
             // Process products in batches
             for (let I = 0; I < products.length; I += BATCH_LEN) {
@@ -164,6 +171,7 @@ runtimeOnMessage(
    "c_b_update_old_product_mapping",
    async (DATA, _, sendResponse) => {
       try {
+         
          const { SELLER_ID, FK_CSRF_TOKEN, PRODUCTS_CHUNK } =
             await getMixDataForOldMapping(DATA);
 

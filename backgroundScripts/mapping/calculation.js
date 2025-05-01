@@ -92,7 +92,7 @@ function calculatePriceFromProfit({
 function getLowPriceValues(sellers, uId, sell, mrp, cost, profit, fCost) {
    const totalPrice = sellers?.[0]?.totalPrice || 0;
    const sellerId = sellers?.[0]?.sellerId || "";
-   const price90 = mrp * 0.1;
+   const price90 = mrp * 0.1 + 1;
 
    if (!sell && sellerId != uId) {
       return {

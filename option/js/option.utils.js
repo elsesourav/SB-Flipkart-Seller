@@ -170,7 +170,7 @@ async function searchSubmitAction() {
    const listingData = await chromeStorageGetLocal(KEYS.STORAGE_SELLER_LISTING);
    const { listingType } = await chromeStorageGetLocal(
       KEYS.STORAGE_OPTION_SETTINGS
-   ); 
+   );
 
    const brandsObj = await chromeStorageGetLocal(KEYS.STORAGE_BRAND_NAME);
    let brands = {
@@ -275,7 +275,7 @@ function getHTMLProductCards(ps, searchNames = []) {
          return `
          <div class="card product ${className}" id="${id}" style="--c-bg: ${SIGNAL};">
             <input type="checkbox" class="select-product" data-product-id="${id}">
-            <i class="sbi-asterisk icon"></i>
+            ${"" /*<i class="sbi-asterisk icon"></i>*/}
             <div class="copy" id="copy-${id}"><i class="sbi-content-copy"></i></div>
             
             <div class="show-img">
@@ -371,40 +371,37 @@ function filterByRating() {
       p.r = p?.rating?.average || min;
       return p;
    });
-   PRODUCTS = PRODUCTS.filter((p) => p.r >= min).sort((a, b) => b.r - a.r);
-}
-
-function splitStringByTag(str) {
-   const match = str.match(/(#active|#inactive|#error)\s*(.*)/);
-   if (match) {
-      return { tag: match[1], content: match[2] };
-   }
-   return { tag: null, content: str.toLowerCase() };
+   PRODUCTS = PRODUCTS.filter((p) => p.r >= min)//.sort((a, b) => b.r - a.r);
 }
 
 function filterByNames() {
    let searchNames = matchNames?.value?.toLowerCase();
-   // if (!searchNames) {
-   //    PRODUCTS = [...SAVED_PRODUCTS];
-   //    return;
-   // }
-   const { tag, content } = splitStringByTag(searchNames);
-   const names = content.split("-").map((n) => n.trim());
 
-   if (tag) {
-      if (tag === "#active") {
-         PRODUCTS = PRODUCTS.filter(
-            (p) => p.internal_state.toLowerCase() == "active"
-         );
-      } else if (tag === "#inactive") {
-         PRODUCTS = PRODUCTS.filter(
-            (p) => p.internal_state.toLowerCase() != "active"
-         );
-      } else if (tag === "#error") {
-         PRODUCTS = PRODUCTS.filter((p) => p?.isError);
-      }
+   const { tags, content } = splitStringByTag(searchNames);
+
+   if (tags.includes("#active")) {
+      PRODUCTS = PRODUCTS.filter(
+         (p) => p.internal_state.toLowerCase() == "active"
+      );
    }
 
+   if (tags.includes("#inactive")) {
+      PRODUCTS = PRODUCTS.filter(
+         (p) => p.internal_state.toLowerCase() != "active"
+      );
+   }
+
+   if (tags.includes("#error")) {
+      PRODUCTS = PRODUCTS.filter((p) => p?.isError);
+   }
+
+   if (!tags.includes("#all")) {
+      PRODUCTS = PRODUCTS.filter((e) => e?.ssp !== e?.PRICE);
+   }
+
+
+
+   const names = content.split("-").map((n) => n.trim());
    // Sort products: matching names first, non-matching last
    PRODUCTS.sort((a, b) => {
       const titleA = a?.newTitle?.toLowerCase();
@@ -419,7 +416,6 @@ function filterByNames() {
       return 0; // Both match or both don't match -> keep original order
    });
 }
-
 
 function setPagesAndCreateProductCards(currentPageI = 0) {
    createProductCard(PRODUCTS_PAGES[currentPageI]);
@@ -437,7 +433,6 @@ function filterAndCreateProductCards() {
    const totalPages = Math.ceil(PRODUCTS.length / totalDisplay);
    PAGES.update(totalPages, 0);
 
-
    // make a array of sates of pages products
    const pageStates = [];
    for (let i = 0; i < totalPages; i++) {
@@ -447,7 +442,7 @@ function filterAndCreateProductCards() {
       pageStates.push(products);
    }
    PRODUCTS_PAGES = pageStates;
-   
+
    setPagesAndCreateProductCards(0);
 }
 
@@ -507,14 +502,8 @@ function hideConfirmationWindow() {
    confirmationError.textContent = "";
 }
 
-// need to remove or update
 function getOldAndNewProductSize(DATA) {
-   const map = new Map();
-   for (let i = DATA.length - 1; i >= 0; i--) {
-      map.set(DATA[i].productID, DATA[i]);
-   }
-
-   DATA = Array.from(map.values());
+   let errorIndexes = new Set();
 
    DATA.forEach((p) => {
       if (p?.status === "failure") {
@@ -522,9 +511,17 @@ function getOldAndNewProductSize(DATA) {
          const product = index !== -1 ? SAVED_PRODUCTS[index] : null;
 
          if (product) {
-            SAVED_PRODUCTS[index].isError = true;
+            errorIndexes.add(index);
          }
       }
+   });
+
+   errorIndexes = Array.from(errorIndexes.values());
+   console.log(errorIndexes);
+
+   SAVED_PRODUCTS.forEach((_, index) => {
+      const isErrorIndex = errorIndexes.includes(index);
+      SAVED_PRODUCTS[index].isError = isErrorIndex;
    });
 
    const failureData = DATA.filter((p) => p?.status === "failure");
@@ -536,16 +533,19 @@ function getOldAndNewProductSize(DATA) {
    console.table(failureData);
 
    DATA.forEach((p) => {
-      if (
-         SELECTED_PRODUCTS_DATA.filter((e) => e?.id === p.productID)?.[0]
-            ?.alreadySelling
-      ) {
-         oldSize++;
-      } else {
-         newSize++;
+      if (p?.status !== null) {
+         if (
+            SELECTED_PRODUCTS_DATA.filter((e) => e?.id === p.productID)?.[0]
+               ?.alreadySelling
+         ) {
+            oldSize++;
+         } else {
+            newSize++;
+         }
       }
    });
-   return { oldSize, newSize };
+
+   return { oldSize, newSize, failed: errorIndexes.length };
 }
 
 async function createAllSelectedProductMapping() {
@@ -557,11 +557,14 @@ async function createAllSelectedProductMapping() {
    hideLoading();
 
    const total = SELECTED_PRODUCTS_DATA.length;
-   const { oldSize, newSize } = getOldAndNewProductSize(response);
-
-   const failed = total - (oldSize + newSize);
+   const { oldSize, newSize, failed } = getOldAndNewProductSize(response);
    updateSuccessStats(total, oldSize, newSize, failed);
    showSuccessWindow();
+
+   if (failed > 0) {
+      matchNames.value = "#error";
+      filterAndCreateProductCards();
+   }
 }
 
 function getHTMLPreviewProductCards(ps) {
@@ -606,7 +609,7 @@ function getHTMLPreviewProductCards(ps) {
          if (!finalPrice || !mrp) return "";
          return `
          <div class="card preview-product ${className}" data-product-id="${id}" id="${id}" style="--c-bg: ${SIGNAL};">
-            <i class="sbi-asterisk icon"></i>
+            ${"" /*<i class="sbi-asterisk icon"></i>*/}
             <div class="show-img">
                <img src="${imageUrl}" alt="product-image-${id}">
                <div class="quantity">${QUANTITY} ${category}</div>

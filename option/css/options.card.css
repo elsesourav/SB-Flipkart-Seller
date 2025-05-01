@@ -81,6 +81,10 @@
    position: absolute;
    right: calc(var(--s) * 0.4);
    top: calc(var(--s) * 0.4);
+   width: calc(var(--s) * 2);
+   height: calc(var(--s) * 2);
+   display: grid;
+   place-items: center;
    font-size: calc(var(--s) * 1.6);
    color: #fff7;
    transition: 200ms color;
