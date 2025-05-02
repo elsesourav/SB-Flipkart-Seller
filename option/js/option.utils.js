@@ -503,6 +503,7 @@ function hideConfirmationWindow() {
 function getOldAndNewProductSize(DATA) {
    let errorIndexes = new Set();
    let successIndexes = new Set();
+   console.log(DATA);
 
    DATA.forEach((p) => {
       const index = SAVED_PRODUCTS.findIndex((e) => e.id === p.productID);
@@ -511,7 +512,7 @@ function getOldAndNewProductSize(DATA) {
       if (product) {
          if (p?.status === "failure") {
             errorIndexes.add(index);
-         } else if (p?.status === "success") {
+         } else if (p?.status === "created" || p?.status === "success") {
             successIndexes.add(index);
          }
       }
@@ -567,6 +568,7 @@ async function createAllSelectedProductMapping() {
    if (failed > 0) {
       matchNames.value = "#error";
       filterAndCreateProductCards();
+      updateSelectedCount();
    }
 }
 

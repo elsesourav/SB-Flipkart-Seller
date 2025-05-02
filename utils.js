@@ -17,11 +17,11 @@ const KEYS = {
 const URLS = {};
 
 function setURLSUsingServer(server = "india") {
-   let number = 2;
+   let number = 1;
    if (server.toLocaleLowerCase() == "india") {
-      number = 2;
-   } else {
       number = 1;
+   } else {
+      number = 2;
    }
 
    URLS.singleListing =
