@@ -371,7 +371,7 @@ function filterByRating() {
       p.r = p?.rating?.average || min;
       return p;
    });
-   PRODUCTS = PRODUCTS.filter((p) => p.r >= min)//.sort((a, b) => b.r - a.r);
+   PRODUCTS = PRODUCTS.filter((p) => p.r >= min); //.sort((a, b) => b.r - a.r);
 }
 
 function filterByNames() {
@@ -398,8 +398,6 @@ function filterByNames() {
    if (!tags.includes("#all")) {
       PRODUCTS = PRODUCTS.filter((e) => e?.ssp !== e?.PRICE);
    }
-
-
 
    const names = content.split("-").map((n) => n.trim());
    // Sort products: matching names first, non-matching last
@@ -504,19 +502,24 @@ function hideConfirmationWindow() {
 
 function getOldAndNewProductSize(DATA) {
    let errorIndexes = new Set();
+   let successIndexes = new Set();
 
    DATA.forEach((p) => {
-      if (p?.status === "failure") {
-         const index = SAVED_PRODUCTS.findIndex((e) => e.id === p.productID);
-         const product = index !== -1 ? SAVED_PRODUCTS[index] : null;
+      const index = SAVED_PRODUCTS.findIndex((e) => e.id === p.productID);
+      const product = index !== -1 ? SAVED_PRODUCTS[index] : null;
 
-         if (product) {
+      if (product) {
+         if (p?.status === "failure") {
             errorIndexes.add(index);
+         } else if (p?.status === "success") {
+            successIndexes.add(index);
          }
       }
    });
 
    errorIndexes = Array.from(errorIndexes.values());
+   successIndexes = Array.from(successIndexes.values());
+   console.log(successIndexes);
    console.log(errorIndexes);
 
    SAVED_PRODUCTS.forEach((_, index) => {
@@ -532,8 +535,8 @@ function getOldAndNewProductSize(DATA) {
 
    console.table(failureData);
 
-   DATA.forEach((p) => {
-      if (p?.status !== null) {
+   DATA.forEach((p, i) => {
+      if (p?.status !== null && successIndexes.includes(i)) {
          if (
             SELECTED_PRODUCTS_DATA.filter((e) => e?.id === p.productID)?.[0]
                ?.alreadySelling
