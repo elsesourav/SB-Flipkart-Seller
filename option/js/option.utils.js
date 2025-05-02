@@ -395,7 +395,7 @@ function filterByNames() {
       PRODUCTS = PRODUCTS.filter((p) => p?.isError);
    }
 
-   if (!tags.includes("#all")) {
+   if (tags.includes("#only")) {
       PRODUCTS = PRODUCTS.filter((e) => e?.ssp !== e?.PRICE);
    }
 
